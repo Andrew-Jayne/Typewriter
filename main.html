@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeWriter</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <div class="toolbar">
+            <button class="icon-btn" onclick="openFile()" title="Open file">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                </svg>
+            </button>
+            <button class="icon-btn" onclick="clearText()" title="Clear">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                </svg>
+            </button>
+            <button class="icon-btn primary" onclick="saveFile()" title="Save">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 3.75h10.5L19.5 7.5v12.75c0 .621-.504 1.125-1.125 1.125H5.625c-.621 0-1.125-.504-1.125-1.125V4.875c0-.621.504-1.125 1.125-1.125Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3.75v4.5h7.5v-4.5" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25h9v5.25h-9z" />
+                </svg>
+            </button>
+            <button class="mode-toggle" onclick="toggleMode()" title="Edit mode" id="mode-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" id="icon-edit-mode">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" id="icon-view-mode" class="hidden">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                </svg>
+            </button>
+            <div class="theme-picker" id="theme-picker">
+                <button class="theme-toggle" onclick="toggleThemePicker()" title="Change theme" id="theme-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                    </svg>
+                </button>
+                <div class="theme-picker-menu" id="theme-picker-menu">
+                    <button class="theme-option" onclick="selectTheme('daylight')">
+                        <span class="theme-option-icon" id="icon-daylight"></span>
+                        <span>Daylight</span>
+                    </button>
+                    <button class="theme-option" onclick="selectTheme('dawn')">
+                        <span class="theme-option-icon" id="icon-dawn"></span>
+                        <span>Dawn</span>
+                    </button>
+                    <button class="theme-option" onclick="selectTheme('dusk')">
+                        <span class="theme-option-icon" id="icon-dusk"></span>
+                        <span>Dusk</span>
+                    </button>
+                    <button class="theme-option" onclick="selectTheme('darkness')">
+                        <span class="theme-option-icon" id="icon-darkness"></span>
+                        <span>Darkness</span>
+                    </button>
+                    <button class="theme-option" onclick="selectTheme('diy')">
+                        <span class="theme-option-icon" id="icon-diy"></span>
+                        <span>DIY</span>
+                    </button>
+                </div>
+            </div>
+            <button class="settings-toggle" onclick="toggleSettings()" title="Settings">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+            </button>
+        <input type="file" id="file-input" accept=".txt" class="hidden" onchange="handleFileSelect(event)">
+    </div>
+
+    <div class="editor-container">
+        <div class="editor-wrap">
+            <div class="line-numbers" id="line-numbers"></div>
+            <textarea id="editor" placeholder="Start writing..." spellcheck="true"></textarea>
+        </div>
+    </div>
+
+    <div class="word-count" id="word-count">0 words</div>
+
+    <div class="settings-overlay" id="settings-modal">
+        <div class="settings-modal">
+            <h2>Settings</h2>
+
+            <div class="settings-section">
+                <h3>Editor</h3>
+                <label class="toggle-row">
+                    <span>Line numbers</span>
+                    <input type="checkbox" id="toggle-line-numbers" onchange="toggleLineNumbers(this.checked)">
+                    <span class="toggle-switch"></span>
+                </label>
+                <label class="toggle-row">
+                    <span>Monospace font</span>
+                    <input type="checkbox" id="toggle-monospace" onchange="toggleMonospace(this.checked)">
+                    <span class="toggle-switch"></span>
+                </label>
+            </div>
+
+            <div class="settings-section">
+                <h3>Custom Colors</h3>
+                <div class="settings-color-row">
+                    <input type="color" class="settings-swatch" id="diy-bg-picker" oninput="handleDiyPickerInput('bg', this.value)">
+                    <label>Background</label>
+                    <input type="text" class="settings-color-input" id="diy-bg-hex" spellcheck="false" placeholder="#faf9f5" oninput="handleDiyColorInput('bg', this.value)">
+
+                </div>
+                <div class="settings-color-row">
+                    <input type="color" class="settings-swatch" id="diy-text-picker" oninput="handleDiyPickerInput('text', this.value)">
+                    <label>Text</label>
+                    <input type="text" class="settings-color-input" id="diy-text-hex" spellcheck="false" placeholder="#141413" oninput="handleDiyColorInput('text', this.value)">
+
+                </div>
+                <div class="settings-color-row">
+                    <input type="color" class="settings-swatch" id="diy-accent-picker" oninput="handleDiyPickerInput('accent', this.value)">
+                    <label>Accent</label>
+                    <input type="text" class="settings-color-input" id="diy-accent-hex" spellcheck="false" placeholder="#d97757" oninput="handleDiyColorInput('accent', this.value)">
+
+                </div>
+                <div class="settings-color-row">
+                    <input type="color" class="settings-swatch" id="diy-border-picker" oninput="handleDiyPickerInput('border', this.value)">
+                    <label>Border</label>
+                    <input type="text" class="settings-color-input" id="diy-border-hex" spellcheck="false" placeholder="#e8e6dc" oninput="handleDiyColorInput('border', this.value)">
+
+                </div>
+                <div class="settings-color-row">
+                    <input type="color" class="settings-swatch" id="diy-save-picker" oninput="handleDiyPickerInput('save', this.value)">
+                    <label>Save button</label>
+                    <input type="text" class="settings-color-input" id="diy-save-hex" spellcheck="false" placeholder="#d97757" oninput="handleDiyColorInput('save', this.value)">
+
+                </div>
+            </div>
+
+            <div class="settings-modal-buttons">
+                <button onclick="closeSettings()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="marked.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

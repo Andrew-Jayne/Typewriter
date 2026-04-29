@@ -2,82 +2,77 @@
 """
 Compile separate HTML, CSS, and JS files into a single HTML file.
 Usage: python compile.py [input_html] [output_html] [build_dir]
-Default: python compile.py TypeWriter-dev.html TypeWriter.html build
+Default: python compile.py main.html typewriter.html build
 """
 
 import sys
-import os
 import re
+import subprocess
 from pathlib import Path
 
 
-def compile_html(input_file, output_file, build_dir='build'):
-    """Read HTML file and inline all CSS and JS files."""
+if __name__ == '__main__':
+    input_file = 'main.html'
+    output_file = 'typewriter.html'
+    build_dir = 'build'
+
+    if len(sys.argv) > 1:
+        input_file = sys.argv[1]
+    if len(sys.argv) > 2:
+        output_file = sys.argv[2]
+    if len(sys.argv) > 3:
+        build_dir = sys.argv[3]
+
     input_path = Path(input_file)
     build_path = Path(build_dir)
 
-    if not input_path.exists():
-        print(f"Error: {input_file} not found")
-        return False
+    if input_path.exists() is False:
+        print(f'Error: {input_file} not found')
+        sys.exit(1)
 
-    # Create build directory if it doesn't exist
     build_path.mkdir(exist_ok=True)
 
-    # Read the HTML file
+    try:
+        commit_sha = subprocess.check_output(
+            ['git', 'rev-parse', 'HEAD'],
+            stderr=subprocess.DEVNULL
+        ).decode().strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        commit_sha = 'unknown'
+
     with open(input_path, 'r', encoding='utf-8') as f:
         html_content = f.read()
 
-    # Find and replace CSS links
-    css_pattern = r'<link\s+rel="stylesheet"\s+href="([^"]+)">'
+    html_content = html_content.replace(
+        '<meta charset="UTF-8">',
+        f'<meta charset="UTF-8">\n    <meta name="version" content="{commit_sha}">'
+    )
 
-    def replace_css(match):
-        css_file = match.group(1)
-        css_path = input_path.parent / css_file
+    css_match = re.search(r'<link\s+rel="stylesheet"\s+href="([^"]+)">', html_content)
+    while css_match is not None:
+        css_path = input_path.parent / css_match.group(1)
+        if css_path.exists() is True:
+            with open(css_path, 'r', encoding='utf-8') as f:
+                html_content = html_content[:css_match.start()] + f'<style>\n{f.read()}\n</style>' + html_content[css_match.end():]
+            print(f'✓ Inlined {css_match.group(1)}')
+        else:
+            print(f'Warning: CSS file {css_match.group(1)} not found, skipping')
+            html_content = html_content[:css_match.start()] + html_content[css_match.end():]
+        css_match = re.search(r'<link\s+rel="stylesheet"\s+href="([^"]+)">', html_content)
 
-        if not css_path.exists():
-            print(f"Warning: CSS file {css_file} not found, skipping")
-            return match.group(0)
+    js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
+    while js_match is not None:
+        js_path = input_path.parent / js_match.group(1)
+        if js_path.exists() is True:
+            with open(js_path, 'r', encoding='utf-8') as f:
+                html_content = html_content[:js_match.start()] + f'<script>\n{f.read()}\n</script>' + html_content[js_match.end():]
+            print(f'✓ Inlined {js_match.group(1)}')
+        else:
+            print(f'Warning: JS file {js_match.group(1)} not found, skipping')
+            html_content = html_content[:js_match.start()] + html_content[js_match.end():]
+        js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
 
-        with open(css_path, 'r', encoding='utf-8') as f:
-            css_content = f.read()
-
-        print(f"✓ Inlined {css_file}")
-        return f"<style>\n{css_content}\n</style>"
-
-    html_content = re.sub(css_pattern, replace_css, html_content)
-
-    # Find and replace JS scripts
-    js_pattern = r'<script\s+src="([^"]+)"></script>'
-
-    def replace_js(match):
-        js_file = match.group(1)
-        js_path = input_path.parent / js_file
-
-        if not js_path.exists():
-            print(f"Warning: JS file {js_file} not found, skipping")
-            return match.group(0)
-
-        with open(js_path, 'r', encoding='utf-8') as f:
-            js_content = f.read()
-
-        print(f"✓ Inlined {js_file}")
-        return f"<script>\n{js_content}\n</script>"
-
-    html_content = re.sub(js_pattern, replace_js, html_content)
-
-    # Write the compiled HTML to build directory
-    output_path = build_path / output_file
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(build_path / output_file, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-    print(f"✓ Successfully compiled to {output_path}")
-    return True
-
-
-if __name__ == '__main__':
-    input_html = sys.argv[1] if len(sys.argv) > 1 else 'TypeWriter-dev.html'
-    output_html = sys.argv[2] if len(sys.argv) > 2 else 'TypeWriter.html'
-    build_dir = sys.argv[3] if len(sys.argv) > 3 else 'build'
-
-    success = compile_html(input_html, output_html, build_dir)
-    sys.exit(0 if success else 1)
+    print(f'✓ Successfully compiled to {build_path / output_file}')
