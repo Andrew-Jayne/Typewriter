@@ -1,0 +1,250 @@
+.editor-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+    min-height: 100vh;
+}
+
+.editor-container.wide {
+    max-width: none;
+}
+
+.editor-wrap {
+    display: flex;
+    align-items: stretch;
+}
+
+.line-numbers {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    line-height: 1.8;
+    padding-right: 12px;
+    margin-right: 12px;
+    border-right: 1px solid var(--light-gray);
+    color: var(--mid-gray);
+    text-align: right;
+    user-select: none;
+    white-space: pre;
+    flex-shrink: 0;
+    min-width: 32px;
+    overflow: hidden;
+}
+
+body.darkness-mode .line-numbers {
+    color: rgba(160, 170, 185, 0.4);
+    border-right-color: rgba(160, 170, 185, 0.2);
+}
+
+body.dawn-mode .line-numbers {
+    color: var(--dawn-mid-gray);
+    border-right-color: var(--dawn-border);
+}
+
+body.dusk-mode .line-numbers {
+    color: var(--dusk-mid-gray);
+    border-right-color: var(--dusk-border);
+}
+
+body.diy-mode .line-numbers {
+    color: var(--diy-mid-gray);
+    border-right-color: var(--diy-border);
+}
+
+textarea {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    border: none;
+    outline: none;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 16px;
+    line-height: 1.8;
+    resize: none;
+    background: transparent;
+    color: var(--dark);
+}
+
+body.darkness-mode textarea {
+    color: var(--light);
+}
+
+body.dawn-mode textarea {
+    color: var(--dawn-text);
+}
+
+body.dusk-mode textarea {
+    color: var(--dusk-text);
+}
+
+body.diy-mode textarea {
+    color: var(--diy-text);
+}
+
+textarea::placeholder {
+    color: var(--mid-gray);
+}
+
+body.darkness-mode textarea::placeholder {
+    color: rgba(160, 170, 185, 0.4);
+}
+
+body.dawn-mode textarea::placeholder {
+    color: var(--dawn-mid-gray);
+}
+
+body.dusk-mode textarea::placeholder {
+    color: var(--dusk-mid-gray);
+}
+
+body.diy-mode textarea::placeholder {
+    color: var(--diy-mid-gray);
+}
+
+textarea.monospace-mode {
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+    tab-size: 4;
+}
+
+/* View mode content */
+.view-content {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+.view-content h1 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    margin: 24px 0 16px 0;
+}
+
+.view-content h2 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 20px 0 12px 0;
+}
+
+.view-content h3 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+}
+
+.view-content p {
+    margin: 12px 0;
+}
+
+.view-content code {
+    background: var(--light-gray);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+body.darkness-mode .view-content code {
+    background: rgba(160, 170, 185, 0.12);
+}
+
+body.dawn-mode .view-content code {
+    background: var(--dawn-hover);
+}
+
+body.dusk-mode .view-content code {
+    background: var(--dusk-hover);
+}
+
+body.diy-mode .view-content code {
+    background: var(--diy-hover);
+}
+
+.view-content pre {
+    background: var(--light-gray);
+    border-radius: 6px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.view-content pre code {
+    padding: 0;
+    border-radius: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre;
+}
+
+body.darkness-mode .view-content pre {
+    background: rgba(160, 170, 185, 0.1);
+}
+
+body.dawn-mode .view-content pre {
+    background: var(--dawn-hover);
+}
+
+body.dusk-mode .view-content pre {
+    background: var(--dusk-hover);
+}
+
+body.diy-mode .view-content pre {
+    background: var(--diy-hover);
+}
+
+.view-content del {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.view-content blockquote {
+    border-left: 4px solid var(--orange);
+    padding-left: 16px;
+    margin: 16px 0;
+    color: var(--mid-gray);
+    font-style: italic;
+}
+
+body.diy-mode .view-content blockquote {
+    border-left-color: var(--diy-accent);
+}
+
+body.darkness-mode .view-content blockquote {
+    color: rgba(160, 170, 185, 0.7);
+}
+
+body.dawn-mode .view-content blockquote {
+    color: var(--dawn-mid-gray);
+}
+
+body.dusk-mode .view-content blockquote {
+    color: var(--dusk-mid-gray);
+}
+
+.view-content ul {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.view-content li {
+    margin: 6px 0;
+}
+
+.view-content a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px solid var(--blue);
+}
+
+.view-content a:hover {
+    opacity: 0.8;
+}
+
+.view-content strong {
+    font-weight: 600;
+}
+
+.view-content em {
+    font-style: italic;
+}
