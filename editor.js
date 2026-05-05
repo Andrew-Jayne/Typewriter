@@ -34,14 +34,17 @@ function updateModeIcon(mode) {
     const viewIcon = document.getElementById('icon-view-mode');
     const toggle = document.getElementById('mode-toggle');
 
-    if (mode === 'view') {
-        editIcon.classList.add('hidden');
-        viewIcon.classList.remove('hidden');
-        toggle.title = 'View mode';
-    } else {
-        editIcon.classList.remove('hidden');
-        viewIcon.classList.add('hidden');
-        toggle.title = 'Edit mode';
+    switch (mode) {
+        case 'view':
+            editIcon.classList.add('hidden');
+            viewIcon.classList.remove('hidden');
+            toggle.setAttribute('data-tooltip', 'Switch to editor');
+            break;
+        case 'edit':
+            editIcon.classList.remove('hidden');
+            viewIcon.classList.add('hidden');
+            toggle.setAttribute('data-tooltip', 'Switch to reader');
+            break;
     }
 }
 
@@ -67,23 +70,27 @@ function renderMode(mode) {
         existing.remove();
     }
 
-    if (mode === 'view') {
-        const rendered = markdownToHtml(editor.value);
-        const viewDiv = document.createElement('div');
-        viewDiv.id = 'view-mode';
-        viewDiv.className = 'view-content';
-        viewDiv.style.fontSize = getState('tw.fontSize') + 'px';
-        viewDiv.innerHTML = rendered;
-        container.appendChild(viewDiv);
-        editor.style.display = 'none';
-        lineNumbers.style.display = 'none';
-    } else {
-        editor.style.display = 'block';
-        if (getState('tw.lineNumbers') === 'true') {
-            lineNumbers.style.display = 'block';
-        } else {
+    switch (mode) {
+        case 'view': {
+            const rendered = markdownToHtml(editor.value);
+            const viewDiv = document.createElement('div');
+            viewDiv.id = 'view-mode';
+            viewDiv.className = 'view-content';
+            viewDiv.style.fontSize = getState('tw.fontSize') + 'px';
+            viewDiv.innerHTML = rendered;
+            container.appendChild(viewDiv);
+            editor.style.display = 'none';
             lineNumbers.style.display = 'none';
+            break;
         }
+        case 'edit':
+            editor.style.display = 'block';
+            if (getState('tw.lineNumbers') === 'true') {
+                lineNumbers.style.display = 'block';
+            } else {
+                lineNumbers.style.display = 'none';
+            }
+            break;
     }
 
     updateModeIcon(mode);

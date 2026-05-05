@@ -72,6 +72,19 @@ if __name__ == '__main__':
             html_content = html_content[:js_match.start()] + html_content[js_match.end():]
         js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
 
+    icon_match = re.search(r'\{\{icon:([^}]+)\}\}', html_content)
+    while icon_match is not None:
+        icon_path = input_path.parent / icon_match.group(1)
+        if icon_path.exists() is True:
+            with open(icon_path, 'r', encoding='utf-8') as f:
+                svg_content = f.read().strip()
+            html_content = html_content[:icon_match.start()] + svg_content + html_content[icon_match.end():]
+            print(f'✓ Inlined icon {icon_match.group(1)}')
+        else:
+            print(f'Warning: Icon {icon_match.group(1)} not found, skipping')
+            html_content = html_content[:icon_match.start()] + html_content[icon_match.end():]
+        icon_match = re.search(r'\{\{icon:([^}]+)\}\}', html_content)
+
     with open(build_path / output_file, 'w', encoding='utf-8') as f:
         f.write(html_content)
 

@@ -180,32 +180,21 @@ body.diy-mode button.primary:hover {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 13px;
     color: var(--mid-gray);
-    background: var(--light);
     padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--light-gray);
 }
 
 body.darkness-mode .word-count {
-    background: #000000;
-    border-color: rgba(160, 170, 185, 0.2);
     color: rgba(160, 170, 185, 0.5);
 }
 
 body.dawn-mode .word-count {
-    background: var(--dawn-bg);
-    border-color: var(--dawn-border);
     color: var(--dawn-mid-gray);
 }
 
 body.dusk-mode .word-count {
-    background: var(--dusk-bg);
-    border-color: var(--dusk-border);
     color: var(--dusk-mid-gray);
 }
 
 body.diy-mode .word-count {
-    background: var(--diy-bg);
-    border-color: var(--diy-border);
     color: var(--diy-mid-gray);
 }

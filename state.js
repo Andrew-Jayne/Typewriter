@@ -7,6 +7,8 @@ const DEFAULTS = {
     'tw.lineNumbers': 'true',
     'tw.monospace': 'false',
     'tw.wideMode': 'false',
+    'tw.tooltips': 'true',
+    'tw.wordCount': 'true',
     'tw.diy.bg': '#faf9f5',
     'tw.diy.text': '#141413',
     'tw.diy.accent': '#d97757',

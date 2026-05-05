@@ -37,6 +37,8 @@ function toggleSettings() {
         document.getElementById('toggle-line-numbers').checked = getState('tw.lineNumbers') === 'true';
         document.getElementById('toggle-monospace').checked = getState('tw.monospace') === 'true';
         document.getElementById('toggle-wide').checked = getState('tw.wideMode') === 'true';
+        document.getElementById('toggle-tooltips').checked = getState('tw.tooltips') === 'true';
+        document.getElementById('toggle-word-count').checked = getState('tw.wordCount') === 'true';
         for (const field of DIY_FIELDS) {
             syncDiyField(field, getState('tw.diy.' + field));
         }
@@ -55,12 +57,15 @@ function closeSettingsOnOverlay(clickEvent) {
 }
 
 function toggleLineNumbers(checked) {
+    const wrap = document.querySelector('.editor-wrap');
     if (checked === true) {
         setState('tw.lineNumbers', 'true');
         lineNumbers.style.display = 'block';
+        wrap.classList.add('no-wrap');
     } else {
         setState('tw.lineNumbers', 'false');
         lineNumbers.style.display = 'none';
+        wrap.classList.remove('no-wrap');
     }
 }
 
@@ -82,6 +87,27 @@ function toggleWideMode(checked) {
     } else {
         setState('tw.wideMode', 'false');
         container.classList.remove('wide');
+    }
+}
+
+function toggleTooltips(checked) {
+    if (checked === true) {
+        setState('tw.tooltips', 'true');
+        document.body.classList.remove('no-tooltips');
+    } else {
+        setState('tw.tooltips', 'false');
+        document.body.classList.add('no-tooltips');
+    }
+}
+
+function toggleWordCount(checked) {
+    const wordCountEl = document.getElementById('word-count');
+    if (checked === true) {
+        setState('tw.wordCount', 'true');
+        wordCountEl.style.display = 'block';
+    } else {
+        setState('tw.wordCount', 'false');
+        wordCountEl.style.display = 'none';
     }
 }
 
@@ -153,6 +179,8 @@ document.addEventListener('click', (clickEvent) => {
 
     if (getState('tw.lineNumbers') === 'false') {
         lineNumbers.style.display = 'none';
+    } else {
+        document.querySelector('.editor-wrap').classList.add('no-wrap');
     }
 
     if (getState('tw.monospace') === 'true') {
@@ -163,14 +191,25 @@ document.addEventListener('click', (clickEvent) => {
         document.querySelector('.editor-container').classList.add('wide');
     }
 
+    if (getState('tw.tooltips') === 'false') {
+        document.body.classList.add('no-tooltips');
+    }
+
+    if (getState('tw.wordCount') === 'false') {
+        document.getElementById('word-count').style.display = 'none';
+    }
+
     populatePickerIcons();
     applyTheme(getState('tw.theme'));
 
     const mode = getState('tw.mode');
-    if (mode === 'edit') {
-        updateModeIcon('edit');
-    } else {
-        renderMode(mode);
+    switch (mode) {
+        case 'edit':
+            updateModeIcon('edit');
+            break;
+        default:
+            renderMode(mode);
+            break;
     }
 
     updateWordCount();
