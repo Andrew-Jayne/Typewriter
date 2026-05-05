@@ -72,6 +72,16 @@ if __name__ == '__main__':
             html_content = html_content[:js_match.start()] + html_content[js_match.end():]
         js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
 
+    favicon_match = re.search(r'<link\s+rel="icon"\s+type="image/svg\+xml"\s+href="([^"]+)">', html_content)
+    if favicon_match is not None:
+        favicon_path = input_path.parent / favicon_match.group(1)
+        if favicon_path.exists() is True:
+            import base64
+            with open(favicon_path, 'r', encoding='utf-8') as f:
+                data_uri = 'data:image/svg+xml;base64,' + base64.b64encode(f.read().strip().encode('utf-8')).decode('utf-8')
+            html_content = html_content[:favicon_match.start()] + f'<link rel="icon" type="image/svg+xml" href="{data_uri}">' + html_content[favicon_match.end():]
+            print(f'✓ Inlined favicon {favicon_match.group(1)}')
+
     icon_match = re.search(r'\{\{icon:([^}]+)\}\}', html_content)
     while icon_match is not None:
         icon_path = input_path.parent / icon_match.group(1)

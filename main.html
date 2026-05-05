@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta license="GNU Affero General Public License Version 3">
     <title>TypeWriter</title>
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="toolbar.css">
     <link rel="stylesheet" href="editor.css">
@@ -26,24 +28,24 @@
                 <button class="theme-toggle" onclick="toggleThemePicker()" data-tooltip="Select theme"
                     id="theme-toggle">{{icon:icons/daylight.svg}}</button>
                 <div class="theme-picker-menu" id="theme-picker-menu">
-                    <button class="theme-option" onclick="selectTheme('dawn')">
-                        <span class="theme-option-icon" id="icon-dawn"></span>
+                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DAWN })">
+                        <span class="theme-option-icon">{{icon:icons/dawn.svg}}</span>
                         <span>Dawn</span>
                     </button>
-                    <button class="theme-option" onclick="selectTheme('daylight')">
-                        <span class="theme-option-icon" id="icon-daylight"></span>
+                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DAYLIGHT })">
+                        <span class="theme-option-icon">{{icon:icons/daylight.svg}}</span>
                         <span>Daylight</span>
                     </button>
-                    <button class="theme-option" onclick="selectTheme('dusk')">
-                        <span class="theme-option-icon" id="icon-dusk"></span>
+                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DUSK })">
+                        <span class="theme-option-icon">{{icon:icons/dusk.svg}}</span>
                         <span>Dusk</span>
                     </button>
-                    <button class="theme-option" onclick="selectTheme('darkness')">
-                        <span class="theme-option-icon" id="icon-darkness"></span>
+                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DARKNESS })">
+                        <span class="theme-option-icon">{{icon:icons/darkness.svg}}</span>
                         <span>Darkness</span>
                     </button>
-                    <button class="theme-option" onclick="selectTheme('diy')">
-                        <span class="theme-option-icon" id="icon-diy"></span>
+                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DIY })">
+                        <span class="theme-option-icon">{{icon:icons/diy.svg}}</span>
                         <span>DIY</span>
                     </button>
                 </div>
@@ -79,77 +81,83 @@
                     <span>Font size</span>
                     <div class="font-size-setting">
                         <input type="number" id="setting-font-size" min="8" max="72" value="16"
-                            onchange="setFontSize(this.value)">
+                            onchange="setFontSize({ value: this.value })">
                         <span class="font-size-unit">px</span>
                     </div>
                 </div>
                 <label class="toggle-row">
                     <span>Line numbers</span>
-                    <input type="checkbox" id="toggle-line-numbers" onchange="toggleLineNumbers(this.checked)">
+                    <input type="checkbox" id="toggle-line-numbers" onchange="toggleLineNumbers({ checked: this.checked })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Monospace font</span>
-                    <input type="checkbox" id="toggle-monospace" onchange="toggleMonospace(this.checked)">
+                    <input type="checkbox" id="toggle-monospace" onchange="toggleMonospace({ checked: this.checked })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Wide mode</span>
-                    <input type="checkbox" id="toggle-wide" onchange="toggleWideMode(this.checked)">
+                    <input type="checkbox" id="toggle-wide" onchange="toggleWideMode({ checked: this.checked })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Tooltips</span>
-                    <input type="checkbox" id="toggle-tooltips" onchange="toggleTooltips(this.checked)">
+                    <input type="checkbox" id="toggle-tooltips" onchange="toggleTooltips({ checked: this.checked })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Word count</span>
-                    <input type="checkbox" id="toggle-word-count" onchange="toggleWordCount(this.checked)">
+                    <input type="checkbox" id="toggle-word-count" onchange="toggleWordCount({ checked: this.checked })">
                     <span class="toggle-switch"></span>
                 </label>
+                <label class="toggle-row">
+                    <span>Focus mode</span>
+                    <input type="checkbox" id="toggle-focus-mode" onchange="toggleFocusMode({ checked: this.checked })">
+                    <span class="toggle-switch"></span>
+                </label>
+                <div class="settings-hint">Hides the menu. Refresh or Cmd/Ctrl+, to reopen settings.</div>
             </div>
 
             <div class="settings-section">
                 <h3>Custom Colors</h3>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-bg-picker"
-                        oninput="handleDiyPickerInput('bg', this.value)">
+                        oninput="handleDiyPickerInput({ field: 'bg', value: this.value })">
                     <label>Background</label>
                     <input type="text" class="settings-color-input" id="diy-bg-hex" spellcheck="false"
-                        placeholder="#faf9f5" oninput="handleDiyColorInput('bg', this.value)">
+                        placeholder="#faf9f5" oninput="handleDiyColorInput({ field: 'bg', value: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-text-picker"
-                        oninput="handleDiyPickerInput('text', this.value)">
+                        oninput="handleDiyPickerInput({ field: 'text', value: this.value })">
                     <label>Text</label>
                     <input type="text" class="settings-color-input" id="diy-text-hex" spellcheck="false"
-                        placeholder="#141413" oninput="handleDiyColorInput('text', this.value)">
+                        placeholder="#141413" oninput="handleDiyColorInput({ field: 'text', value: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-accent-picker"
-                        oninput="handleDiyPickerInput('accent', this.value)">
+                        oninput="handleDiyPickerInput({ field: 'accent', value: this.value })">
                     <label>Accent</label>
                     <input type="text" class="settings-color-input" id="diy-accent-hex" spellcheck="false"
-                        placeholder="#d97757" oninput="handleDiyColorInput('accent', this.value)">
+                        placeholder="#d97757" oninput="handleDiyColorInput({ field: 'accent', value: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-border-picker"
-                        oninput="handleDiyPickerInput('border', this.value)">
+                        oninput="handleDiyPickerInput({ field: 'border', value: this.value })">
                     <label>Border</label>
                     <input type="text" class="settings-color-input" id="diy-border-hex" spellcheck="false"
-                        placeholder="#e8e6dc" oninput="handleDiyColorInput('border', this.value)">
+                        placeholder="#e8e6dc" oninput="handleDiyColorInput({ field: 'border', value: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-save-picker"
-                        oninput="handleDiyPickerInput('save', this.value)">
+                        oninput="handleDiyPickerInput({ field: 'save', value: this.value })">
                     <label>Save button</label>
                     <input type="text" class="settings-color-input" id="diy-save-hex" spellcheck="false"
-                        placeholder="#d97757" oninput="handleDiyColorInput('save', this.value)">
+                        placeholder="#d97757" oninput="handleDiyColorInput({ field: 'save', value: this.value })">
 
                 </div>
             </div>
@@ -161,10 +169,12 @@
     </div>
 
     <script src="marked.min.js"></script>
+    <script src="enums.js"></script>
     <script src="state.js"></script>
     <script src="themes.js"></script>
     <script src="editor.js"></script>
     <script src="ui.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

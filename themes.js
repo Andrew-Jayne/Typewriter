@@ -1,42 +1,31 @@
-const THEMES = ['dawn', 'daylight', 'dusk', 'darkness', 'diy'];
+const THEMES = [Theme.DAWN, Theme.DAYLIGHT, Theme.DUSK, Theme.DARKNESS, Theme.DIY];
 const THEME_CLASSES = {
-    daylight: null,
-    dawn: 'dawn-mode',
-    dusk: 'dusk-mode',
-    darkness: 'darkness-mode',
-    diy: 'diy-mode'
+    [Theme.DAYLIGHT]: 'daylight-mode',
+    [Theme.DAWN]: 'dawn-mode',
+    [Theme.DUSK]: 'dusk-mode',
+    [Theme.DARKNESS]: 'darkness-mode',
+    [Theme.DIY]: 'diy-mode'
 };
 
 const themeIcons = {
-    daylight: `{{icon:icons/daylight.svg}}`,
-    dawn: `{{icon:icons/dawn.svg}}`,
-    dusk: `{{icon:icons/dusk.svg}}`,
-    darkness: `{{icon:icons/darkness.svg}}`,
-    diy: `{{icon:icons/diy.svg}}`
+    [Theme.DAYLIGHT]: `{{icon:icons/daylight.svg}}`,
+    [Theme.DAWN]: `{{icon:icons/dawn.svg}}`,
+    [Theme.DUSK]: `{{icon:icons/dusk.svg}}`,
+    [Theme.DARKNESS]: `{{icon:icons/darkness.svg}}`,
+    [Theme.DIY]: `{{icon:icons/diy.svg}}`
 };
 
-const themeLabels = {
-    daylight: 'Daylight',
-    dawn: 'Dawn',
-    dusk: 'Dusk',
-    darkness: 'Darkness',
-    diy: 'DIY'
-};
-
-const DIY_FIELDS = ['bg', 'text', 'accent', 'border', 'save'];
-
+/** Applies DIY custom color CSS variables from localStorage. */
 function applyDiyColors() {
     const body = document.body;
-    body.style.setProperty('--diy-bg', getState('tw.diy.bg'));
-    body.style.setProperty('--diy-text', getState('tw.diy.text'));
-    body.style.setProperty('--diy-accent', getState('tw.diy.accent'));
-    body.style.setProperty('--diy-border', getState('tw.diy.border'));
-    body.style.setProperty('--diy-save', getState('tw.diy.save'));
+    for (const field of DIY_FIELDS) {
+        body.style.setProperty('--diy-' + field, getState({ key: 'tw.diy.' + field }));
+    }
 
-    const bg = getState('tw.diy.bg');
+    const bg = getState({ key: 'tw.diy.bg' });
     const brightness = parseInt(bg.slice(1, 3), 16) * 0.299 +
-                       parseInt(bg.slice(3, 5), 16) * 0.587 +
-                       parseInt(bg.slice(5, 7), 16) * 0.114;
+        parseInt(bg.slice(3, 5), 16) * 0.587 +
+        parseInt(bg.slice(5, 7), 16) * 0.114;
 
     let hoverShift = 15;
     if (brightness > 128) {
@@ -55,15 +44,14 @@ function applyDiyColors() {
     }
 }
 
+/**
+ * @param {string} theme - One of Theme enum values
+ */
 function applyTheme(theme) {
-    document.body.classList.remove('dawn-mode', 'dusk-mode', 'darkness-mode', 'diy-mode');
+    document.body.classList.remove('daylight-mode', 'dawn-mode', 'dusk-mode', 'darkness-mode', 'diy-mode');
+    document.body.classList.add(THEME_CLASSES[theme]);
 
-    const cls = THEME_CLASSES[theme];
-    if (cls !== null) {
-        document.body.classList.add(cls);
-    }
-
-    if (theme === 'diy') {
+    if (theme === Theme.DIY) {
         applyDiyColors();
     }
 
@@ -71,9 +59,10 @@ function applyTheme(theme) {
     themeToggle.innerHTML = themeIcons[theme];
     themeToggle.setAttribute('data-tooltip', 'Select theme');
 
-    setState('tw.theme', theme);
+    setState({ key: StateKey.THEME, value: theme });
 }
 
+/** Toggles the theme picker dropdown open/closed. */
 function toggleThemePicker() {
     const themePickerMenu = document.getElementById('theme-picker-menu');
     const isOpen = themePickerMenu.classList.contains('show');
@@ -85,9 +74,10 @@ function toggleThemePicker() {
     }
 }
 
+/** Highlights the currently active theme in the picker menu. */
 function updatePickerActiveState() {
     const themePickerMenu = document.getElementById('theme-picker-menu');
-    const current = getState('tw.theme');
+    const current = getState({ key: StateKey.THEME });
     const options = themePickerMenu.querySelectorAll('.theme-option');
     for (const option of options) {
         option.classList.remove('active');
@@ -98,21 +88,19 @@ function updatePickerActiveState() {
     }
 }
 
-function populatePickerIcons() {
-    for (const theme of THEMES) {
-        const iconEl = document.getElementById('icon-' + theme);
-        if (iconEl !== null) {
-            iconEl.innerHTML = themeIcons[theme];
-        }
-    }
-}
-
-function selectTheme(theme) {
+/**
+ * @param {{ theme: string }} params
+ */
+function selectTheme({ theme }) {
     const themePickerMenu = document.getElementById('theme-picker-menu');
     themePickerMenu.classList.remove('show');
     applyTheme(theme);
 }
 
+/**
+ * @param {string} value - Hex color string to parse
+ * @returns {string|null} Normalized hex string (#rrggbb) or null if invalid
+ */
 function parseColorToHex(value) {
     const hexMatch = value.trim().toLowerCase().match(/^#?([0-9a-f]{6})$/);
     if (hexMatch !== null) {
@@ -121,24 +109,33 @@ function parseColorToHex(value) {
     return null;
 }
 
-function syncDiyField(field, hexValue) {
+/**
+ * @param {{ field: string, hexValue: string }} params
+ */
+function syncDiyField({ field, hexValue }) {
     document.getElementById('diy-' + field + '-hex').value = hexValue;
     document.getElementById('diy-' + field + '-picker').value = hexValue;
     document.body.style.setProperty('--diy-' + field, hexValue);
 }
 
-function handleDiyPickerInput(field, value) {
-    setState('tw.diy.' + field, value);
-    syncDiyField(field, value);
-    applyTheme('diy');
+/**
+ * @param {{ field: string, value: string }} params
+ */
+function handleDiyPickerInput({ field, value }) {
+    setState({ key: 'tw.diy.' + field, value: value });
+    syncDiyField({ field: field, hexValue: value });
+    applyTheme(Theme.DIY);
 }
 
-function handleDiyColorInput(field, value) {
+/**
+ * @param {{ field: string, value: string }} params
+ */
+function handleDiyColorInput({ field, value }) {
     const hex = parseColorToHex(value);
     if (hex !== null) {
-        setState('tw.diy.' + field, hex);
+        setState({ key: 'tw.diy.' + field, value: hex });
         document.getElementById('diy-' + field + '-picker').value = hex;
         document.body.style.setProperty('--diy-' + field, hex);
-        applyTheme('diy');
+        applyTheme(Theme.DIY);
     }
 }
