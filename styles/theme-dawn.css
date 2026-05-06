@@ -1,0 +1,166 @@
+:root {
+    --dawn-bg: #dfd4c5;
+    --dawn-text: #2d2218;
+    --dawn-border: #bfb09d;
+    --dawn-hover: #d0c4b3;
+    --dawn-mid-gray: #8a7f70;
+    --dawn-accent: #d97757;
+}
+
+body.dawn-mode {
+    background-color: var(--dawn-bg);
+    color: var(--dawn-text);
+}
+
+body.dawn-mode button {
+    border-color: var(--dawn-border);
+    color: var(--dawn-text);
+}
+
+body.dawn-mode button:hover {
+    background: var(--dawn-hover);
+    border-color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode button.primary {
+    color: var(--dawn-accent);
+}
+
+body.dawn-mode button.primary:hover {
+    background: var(--dawn-accent);
+    color: #ffffff;
+    border-color: var(--dawn-accent);
+}
+
+body.dawn-mode .word-count {
+    background: var(--dawn-bg);
+    border-color: var(--dawn-border);
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .toolbar {
+    background: var(--dawn-bg);
+    border-color: var(--dawn-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body.dawn-mode [data-tooltip]::after {
+    background: var(--dawn-text);
+    color: var(--dawn-bg);
+}
+
+body.dawn-mode .mode-toggle.flash {
+    animation-name: mode-flash-dawn;
+}
+
+@keyframes mode-flash-dawn {
+    0% { background: transparent; }
+    30% { background: #d97757; color: #ffffff; }
+    100% { background: transparent; }
+}
+
+body.dawn-mode .theme-picker-menu {
+    background: var(--dawn-bg);
+    border-color: var(--dawn-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+body.dawn-mode .theme-option.active {
+    background: var(--dawn-hover);
+}
+
+body.dawn-mode .line-numbers {
+    color: var(--dawn-mid-gray);
+    border-right-color: var(--dawn-border);
+}
+
+body.dawn-mode textarea {
+    color: var(--dawn-text);
+}
+
+body.dawn-mode textarea::placeholder {
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .view-content code {
+    background: var(--dawn-hover);
+}
+
+body.dawn-mode .view-content pre {
+    background: var(--dawn-hover);
+}
+
+body.dawn-mode .view-content blockquote {
+    border-left-color: var(--dawn-accent);
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .settings-modal {
+    background: var(--dawn-bg);
+    color: var(--dawn-text);
+}
+
+body.dawn-mode .settings-row {
+    border-bottom-color: var(--dawn-border);
+}
+
+body.dawn-mode .font-size-setting input[type="number"] {
+    border-color: var(--dawn-border);
+}
+
+body.dawn-mode .toggle-row {
+    border-bottom-color: var(--dawn-border);
+}
+
+body.dawn-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
+    background: var(--dawn-accent);
+}
+
+body.dawn-mode .settings-color-row {
+    border-bottom-color: var(--dawn-border);
+}
+
+body.dawn-mode .settings-swatch {
+    border-color: var(--dawn-border);
+}
+
+body.dawn-mode .settings-color-input {
+    border-color: var(--dawn-border);
+}
+
+body.dawn-mode .settings-color-input:focus {
+    border-color: var(--dawn-accent);
+}
+
+body.dawn-mode .toolbar-trigger {
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .settings-section h3 {
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .settings-error {
+    color: #d44;
+}
+
+body.dawn-mode .settings-hint {
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .font-size-setting input[type="number"]:focus {
+    border-color: var(--dawn-accent);
+}
+
+body.dawn-mode .font-size-unit {
+    color: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .toggle-switch {
+    background: var(--dawn-mid-gray);
+}
+
+body.dawn-mode .view-content a {
+    color: #6a9bcc;
+    border-bottom-color: #6a9bcc;
+}

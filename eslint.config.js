@@ -1,6 +1,6 @@
 export default [
     {
-        files: ['enums.js', 'state.js', 'themes.js', 'editor.js', 'ui.js', 'main.js'],
+        files: ['scripts/*.js'],
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'script',
@@ -26,19 +26,32 @@ export default [
                 THEME_CLASSES: 'readonly',
                 themeIcons: 'readonly',
                 DIY_FIELDS: 'readonly',
+                DIY_STATE_KEY: 'readonly',
+                validateStorage: 'readonly',
+                isValidHexColor: 'readonly',
                 applyDiyColors: 'readonly',
-                applyTheme: 'readonly',
+                validateAndStoreHexColor: 'readonly',
+                validateAndStoreBool: 'readonly',
+                validateAndStoreFontSize: 'readonly',
+                handleShowLineNumbers: 'readonly',
+                handleMonospace: 'readonly',
+                handleWideMode: 'readonly',
+                handleTooltips: 'readonly',
+                handleWordCount: 'readonly',
+                handleThemeChange: 'readonly',
+                handleFontSizeChange: 'readonly',
+                handleModeChange: 'readonly',
+                renderViewMode: 'readonly',
+                renderEditMode: 'readonly',
                 toggleThemePicker: 'readonly',
                 updatePickerActiveState: 'readonly',
                 selectTheme: 'readonly',
-                parseColorToHex: 'readonly',
                 syncDiyField: 'readonly',
                 handleDiyPickerInput: 'readonly',
                 handleDiyColorInput: 'readonly',
                 MODES: 'readonly',
                 updateLineNumbers: 'readonly',
                 updateWordCount: 'readonly',
-                updateModeIcon: 'readonly',
                 flashModeToggle: 'readonly',
                 toggleMode: 'readonly',
                 clearText: 'readonly',
@@ -46,7 +59,8 @@ export default [
                 handleFileSelect: 'readonly',
                 saveFile: 'readonly',
                 toggleSettings: 'readonly',
-                updateFullscreenIcon: 'readonly'
+                toggleBooleanState: 'readonly',
+                syncFullscreenIcon: 'readonly'
             }
         },
         rules: {

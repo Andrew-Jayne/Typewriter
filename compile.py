@@ -49,28 +49,40 @@ if __name__ == '__main__':
     )
 
     css_match = re.search(r'<link\s+rel="stylesheet"\s+href="([^"]+)">', html_content)
+    first_css_pos = css_match.start() if css_match is not None else -1
     while css_match is not None:
-        css_path = input_path.parent / css_match.group(1)
-        if css_path.exists() is True:
-            with open(css_path, 'r', encoding='utf-8') as f:
-                html_content = html_content[:css_match.start()] + f'<style>\n{f.read()}\n</style>' + html_content[css_match.end():]
-            print(f'✓ Inlined {css_match.group(1)}')
-        else:
-            print(f'Warning: CSS file {css_match.group(1)} not found, skipping')
-            html_content = html_content[:css_match.start()] + html_content[css_match.end():]
+        html_content = html_content[:css_match.start()] + html_content[css_match.end():]
         css_match = re.search(r'<link\s+rel="stylesheet"\s+href="([^"]+)">', html_content)
 
+    css_files = sorted(input_path.parent.glob('styles/*.css'))
+    if len(css_files) > 0:
+        css_contents = []
+        for css_path in css_files:
+            with open(css_path, 'r', encoding='utf-8') as f:
+                css_contents.append(f.read())
+            print(f'✓ Bundled {css_path}')
+        css_bundle = '<style>\n' + '\n'.join(css_contents) + '\n</style>'
+        html_content = html_content[:first_css_pos] + css_bundle + html_content[first_css_pos:]
+
     js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
+    first_js_pos = js_match.start() if js_match is not None else -1
     while js_match is not None:
-        js_path = input_path.parent / js_match.group(1)
-        if js_path.exists() is True:
-            with open(js_path, 'r', encoding='utf-8') as f:
-                html_content = html_content[:js_match.start()] + f'<script>\n{f.read()}\n</script>' + html_content[js_match.end():]
-            print(f'✓ Inlined {js_match.group(1)}')
-        else:
-            print(f'Warning: JS file {js_match.group(1)} not found, skipping')
-            html_content = html_content[:js_match.start()] + html_content[js_match.end():]
+        html_content = html_content[:js_match.start()] + html_content[js_match.end():]
         js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
+
+    external_files = sorted(input_path.parent.glob('external/*.js'))
+    script_files = sorted(input_path.parent.glob('scripts/*.js'))
+    main_js = [f for f in script_files if f.name == 'main.js']
+    script_files = [f for f in script_files if f.name != 'main.js'] + main_js
+    js_files = external_files + script_files
+    if len(js_files) > 0:
+        js_contents = []
+        for js_path in js_files:
+            with open(js_path, 'r', encoding='utf-8') as f:
+                js_contents.append(f.read())
+            print(f'✓ Bundled {js_path}')
+        js_bundle = '<script>\n' + '\n'.join(js_contents) + '\n</script>'
+        html_content = html_content[:first_js_pos] + js_bundle + html_content[first_js_pos:]
 
     favicon_match = re.search(r'<link\s+rel="icon"\s+type="image/svg\+xml"\s+href="([^"]+)">', html_content)
     if favicon_match is not None:

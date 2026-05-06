@@ -11,7 +11,7 @@ const Theme = Object.freeze({
     DIY: 'diy'
 });
 
-const DIY_FIELDS = Object.freeze(['bg', 'text', 'accent', 'border', 'save']);
+const DIY_FIELDS = Object.freeze(['bg', 'text', 'accent', 'border']);
 
 const StateKey = Object.freeze({
     THEME: 'tw.theme',
@@ -19,14 +19,20 @@ const StateKey = Object.freeze({
     FILE_NAME: 'tw.fileName',
     MODE: 'tw.mode',
     FONT_SIZE: 'tw.fontSize',
-    LINE_NUMBERS: 'tw.lineNumbers',
-    MONOSPACE: 'tw.monospace',
-    WIDE_MODE: 'tw.wideMode',
-    TOOLTIPS: 'tw.tooltips',
-    WORD_COUNT: 'tw.wordCount',
+    SHOW_LINE_NUMBERS: 'tw.showLineNumbers',
+    USE_MONOSPACE: 'tw.useMonospace',
+    ENABLE_WIDE_MODE: 'tw.enableWideMode',
+    SHOW_TOOLTIPS: 'tw.showTooltips',
+    SHOW_WORD_COUNT: 'tw.showWordCount',
     DIY_BG: 'tw.diy.bg',
     DIY_TEXT: 'tw.diy.text',
     DIY_ACCENT: 'tw.diy.accent',
     DIY_BORDER: 'tw.diy.border',
-    DIY_SAVE: 'tw.diy.save'
+});
+
+const DIY_STATE_KEY = Object.freeze({
+    bg: StateKey.DIY_BG,
+    text: StateKey.DIY_TEXT,
+    accent: StateKey.DIY_ACCENT,
+    border: StateKey.DIY_BORDER
 });

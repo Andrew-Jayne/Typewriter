@@ -1,0 +1,42 @@
+.edit-mode {
+    display: flex;
+    align-items: stretch;
+}
+
+.edit-mode.no-wrap textarea {
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.line-numbers {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    line-height: 1.8;
+    padding-right: 12px;
+    margin-right: 12px;
+    border-right: 1px solid transparent;
+    text-align: right;
+    user-select: none;
+    white-space: pre;
+    flex-shrink: 0;
+    min-width: 32px;
+    overflow: hidden;
+}
+
+textarea {
+    width: 100%;
+    min-height: 100vh;
+    border: none;
+    outline: none;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 16px;
+    line-height: 1.8;
+    resize: none;
+    background: transparent;
+}
+
+textarea.monospace-mode {
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+    tab-size: 4;
+}

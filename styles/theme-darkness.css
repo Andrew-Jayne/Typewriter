@@ -1,0 +1,167 @@
+:root {
+    --darkness-bg: #000000;
+    --darkness-surface: #0a0c10;
+    --darkness-text: #e0e4ea;
+    --darkness-border: rgba(160, 170, 185, 0.2);
+    --darkness-hover: rgba(160, 170, 185, 0.1);
+    --darkness-mid-gray: rgba(160, 170, 185, 0.4);
+    --darkness-accent: #5a9fd4;
+}
+
+body.darkness-mode {
+    background-color: var(--darkness-bg);
+    color: var(--darkness-text);
+}
+
+body.darkness-mode button {
+    border-color: var(--darkness-border);
+    color: var(--darkness-text);
+}
+
+body.darkness-mode button:hover {
+    background: var(--darkness-hover);
+    border-color: var(--darkness-mid-gray);
+}
+
+body.darkness-mode button.primary {
+    color: var(--darkness-accent);
+}
+
+body.darkness-mode button.primary:hover {
+    background: #2a4d6e;
+    color: #ffffff;
+    border-color: #2a4d6e;
+}
+
+body.darkness-mode .word-count {
+    background: var(--darkness-bg);
+    border-color: var(--darkness-border);
+    color: rgba(160, 170, 185, 0.5);
+}
+
+body.darkness-mode .toolbar {
+    background: var(--darkness-surface);
+    border-color: var(--darkness-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.darkness-mode [data-tooltip]::after {
+    background: var(--darkness-text);
+    color: var(--darkness-surface);
+}
+
+body.darkness-mode .mode-toggle.flash {
+    animation-name: mode-flash-darkness;
+}
+
+@keyframes mode-flash-darkness {
+    0% { background: transparent; }
+    30% { background: #2a4d6e; color: #ffffff; }
+    100% { background: transparent; }
+}
+
+body.darkness-mode .theme-picker-menu {
+    background: var(--darkness-surface);
+    border-color: var(--darkness-border);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.darkness-mode .theme-option.active {
+    background: var(--darkness-hover);
+}
+
+body.darkness-mode .line-numbers {
+    color: var(--darkness-mid-gray);
+    border-right-color: var(--darkness-border);
+}
+
+body.darkness-mode textarea {
+    color: var(--darkness-text);
+}
+
+body.darkness-mode textarea::placeholder {
+    color: var(--darkness-mid-gray);
+}
+
+body.darkness-mode .view-content code {
+    background: var(--darkness-hover);
+}
+
+body.darkness-mode .view-content pre {
+    background: var(--darkness-hover);
+}
+
+body.darkness-mode .view-content blockquote {
+    border-left-color: var(--darkness-accent);
+    color: rgba(160, 170, 185, 0.7);
+}
+
+body.darkness-mode .settings-modal {
+    background: var(--darkness-surface);
+    color: var(--darkness-text);
+}
+
+body.darkness-mode .settings-row {
+    border-bottom-color: var(--darkness-border);
+}
+
+body.darkness-mode .font-size-setting input[type="number"] {
+    border-color: var(--darkness-border);
+}
+
+body.darkness-mode .toggle-row {
+    border-bottom-color: var(--darkness-border);
+}
+
+body.darkness-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
+    background: var(--darkness-accent);
+}
+
+body.darkness-mode .settings-color-row {
+    border-bottom-color: var(--darkness-border);
+}
+
+body.darkness-mode .settings-swatch {
+    border-color: var(--darkness-border);
+}
+
+body.darkness-mode .settings-color-input {
+    border-color: var(--darkness-border);
+}
+
+body.darkness-mode .settings-color-input:focus {
+    border-color: var(--darkness-accent);
+}
+
+body.darkness-mode .toolbar-trigger {
+    color: var(--darkness-mid-gray);
+}
+
+body.darkness-mode .settings-section h3 {
+    color: var(--darkness-mid-gray);
+}
+
+body.darkness-mode .settings-error {
+    color: #d44;
+}
+
+body.darkness-mode .settings-hint {
+    color: var(--darkness-mid-gray);
+}
+
+body.darkness-mode .font-size-setting input[type="number"]:focus {
+    border-color: var(--darkness-accent);
+}
+
+body.darkness-mode .font-size-unit {
+    color: var(--darkness-mid-gray);
+}
+
+body.darkness-mode .toggle-switch {
+    background: var(--darkness-mid-gray);
+}
+
+body.darkness-mode .view-content a {
+    color: #6a9bcc;
+    border-bottom-color: #6a9bcc;
+}

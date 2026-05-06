@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.hidden {
+    display: none;
+}
+
+.word-count {
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+}
+
+#typewriter-container {
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+#typewriter-container.wide {
+    max-width: none;
+}

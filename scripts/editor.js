@@ -1,6 +1,11 @@
 /** Updates the line number gutter to match the editor content. */
 function updateLineNumbers() {
-    const lines = document.getElementById('editor').value.split('\n').length;
+    const lineNumEl = document.getElementById('line-numbers');
+    if (lineNumEl === null) {
+        return;
+    }
+    const text = getState({ key: StateKey.EDITOR_TEXT });
+    const lines = text.split('\n').length;
     let nums = '';
     for (let idx = 1; idx <= lines; idx++) {
         if (idx > 1) {
@@ -8,41 +13,20 @@ function updateLineNumbers() {
         }
         nums += String(idx);
     }
-    document.getElementById('line-numbers').textContent = nums;
+    lineNumEl.textContent = nums;
 }
 
 /** Updates the word and character count display. */
 function updateWordCount() {
-    const editorEl = document.getElementById('editor');
-    const text = editorEl.value.trim();
+    const text = getState({ key: StateKey.EDITOR_TEXT });
+    const trimmed = text.trim();
     let word_count = 0;
-    if (text.length > 0) {
-        word_count = text.split(/\s+/).length;
+    if (trimmed.length > 0) {
+        word_count = trimmed.split(/\s+/).length;
     }
-    document.getElementById('word-count').textContent = `${word_count} words · ${editorEl.value.length} characters`;
+    document.getElementById('word-count').textContent = `${word_count} words · ${text.length} characters`;
 }
 
-/**
- * @param {string} mode - One of Mode enum values
- */
-function updateModeIcon(mode) {
-    const editIcon = document.getElementById('icon-edit-mode');
-    const viewIcon = document.getElementById('icon-view-mode');
-    const toggle = document.getElementById('mode-toggle');
-
-    switch (mode) {
-        case Mode.VIEW:
-            editIcon.classList.add('hidden');
-            viewIcon.classList.remove('hidden');
-            toggle.setAttribute('data-tooltip', 'Switch to editor');
-            return;
-        case Mode.EDIT:
-            editIcon.classList.remove('hidden');
-            viewIcon.classList.add('hidden');
-            toggle.setAttribute('data-tooltip', 'Switch to reader');
-            return;
-    }
-}
 
 
 /** Toggles between edit and view mode. */
@@ -68,11 +52,10 @@ function toggleMode() {
 
 /** Clears the editor content after confirmation, resets to edit mode. */
 function clearText() {
-    if (document.getElementById('editor').value.trim() === '') {
-        return
+    if (getState({ key: StateKey.EDITOR_TEXT }).trim() === '') {
+        return;
     }
     if (confirm('Are you sure you want to clear all text?') === true) {
-        document.getElementById('editor').value = '';
         setState({ key: StateKey.EDITOR_TEXT, value: '' });
         setState({ key: StateKey.FILE_NAME, value: 'untitled.txt' });
         setState({ key: StateKey.MODE, value: Mode.EDIT });
@@ -100,10 +83,9 @@ function handleFileSelect(event) {
     const reader = new FileReader();
     reader.onload = (loadEvent) => {
         const normalized = loadEvent.target.result.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-        document.getElementById('editor').value = normalized;
         setState({ key: StateKey.EDITOR_TEXT, value: normalized });
+        setState({ key: StateKey.MODE, value: Mode.EDIT });
         updateWordCount();
-        updateLineNumbers();
     };
     reader.readAsText(file);
     document.getElementById('file-input').value = '';
@@ -116,7 +98,7 @@ function saveFile() {
         return;
     }
     setState({ key: StateKey.FILE_NAME, value: fileName.trim() });
-    const blob = new Blob([document.getElementById('editor').value], { type: 'text/plain' });
+    const blob = new Blob([getState({ key: StateKey.EDITOR_TEXT })], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const downloadLink = document.createElement('a');
     downloadLink.href = url;

@@ -7,10 +7,17 @@
     <meta license="GNU Affero General Public License Version 3">
     <title>TypeWriter</title>
     <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
-    <link rel="stylesheet" href="base.css">
-    <link rel="stylesheet" href="toolbar.css">
-    <link rel="stylesheet" href="editor.css">
-    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/toolbar.css">
+
+    <link rel="stylesheet" href="styles/edit-mode.css">
+    <link rel="stylesheet" href="styles/view-mode.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="styles/theme-daylight.css">
+    <link rel="stylesheet" href="styles/theme-darkness.css">
+    <link rel="stylesheet" href="styles/theme-dawn.css">
+    <link rel="stylesheet" href="styles/theme-dusk.css">
+    <link rel="stylesheet" href="styles/theme-diy.css">
 </head>
 
 <body>
@@ -62,12 +69,7 @@
         <input type="file" id="file-input" accept=".txt" class="hidden" onchange="handleFileSelect(event)">
     </div>
 
-    <div class="editor-container">
-        <div class="editor-wrap">
-            <div class="line-numbers" id="line-numbers"></div>
-            <textarea id="editor" placeholder="Start writing..." spellcheck="true"></textarea>
-        </div>
-    </div>
+    <div id="typewriter-container"></div>
 
     <div class="word-count" id="word-count">0 words</div>
 
@@ -80,39 +82,40 @@
                 <div class="settings-row">
                     <span>Font size</span>
                     <div class="font-size-setting">
-                        <input type="number" id="setting-font-size" min="8" max="72" value="16"
+                        <input type="number" id="setting-font-size" min="8" max="128" value="16"
                             onchange="setFontSize({ value: this.value })">
                         <span class="font-size-unit">px</span>
                     </div>
                 </div>
                 <label class="toggle-row">
                     <span>Line numbers</span>
-                    <input type="checkbox" id="toggle-line-numbers" onchange="toggleLineNumbers({ checked: this.checked })">
+                    <input type="checkbox" id="toggle-line-numbers"
+                        onchange="toggleBooleanState({ key: StateKey.SHOW_LINE_NUMBERS })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Monospace font</span>
-                    <input type="checkbox" id="toggle-monospace" onchange="toggleMonospace({ checked: this.checked })">
+                    <input type="checkbox" id="toggle-monospace" onchange="toggleBooleanState({ key: StateKey.USE_MONOSPACE })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Wide mode</span>
-                    <input type="checkbox" id="toggle-wide" onchange="toggleWideMode({ checked: this.checked })">
+                    <input type="checkbox" id="toggle-wide" onchange="toggleBooleanState({ key: StateKey.ENABLE_WIDE_MODE })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Tooltips</span>
-                    <input type="checkbox" id="toggle-tooltips" onchange="toggleTooltips({ checked: this.checked })">
+                    <input type="checkbox" id="toggle-tooltips" onchange="toggleBooleanState({ key: StateKey.SHOW_TOOLTIPS })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Word count</span>
-                    <input type="checkbox" id="toggle-word-count" onchange="toggleWordCount({ checked: this.checked })">
+                    <input type="checkbox" id="toggle-word-count" onchange="toggleBooleanState({ key: StateKey.SHOW_WORD_COUNT })">
                     <span class="toggle-switch"></span>
                 </label>
                 <label class="toggle-row">
                     <span>Focus mode</span>
-                    <input type="checkbox" id="toggle-focus-mode" onchange="toggleFocusMode({ checked: this.checked })">
+                    <input type="checkbox" id="toggle-focus-mode" onchange="toggleFocusMode()">
                     <span class="toggle-switch"></span>
                 </label>
                 <div class="settings-hint">Hides the menu. Refresh or Cmd/Ctrl+, to reopen settings.</div>
@@ -120,44 +123,37 @@
 
             <div class="settings-section">
                 <h3>Custom Colors</h3>
+                <div class="settings-error" id="diy-color-error"></div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-bg-picker"
-                        oninput="handleDiyPickerInput({ field: 'bg', value: this.value })">
+                        oninput="handleDiyPickerInput({ field: 'bg', hexColor: this.value })">
                     <label>Background</label>
                     <input type="text" class="settings-color-input" id="diy-bg-hex" spellcheck="false"
-                        placeholder="#faf9f5" oninput="handleDiyColorInput({ field: 'bg', value: this.value })">
+                        placeholder="#faf9f5" onchange="handleDiyColorInput({ field: 'bg', rawInput: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-text-picker"
-                        oninput="handleDiyPickerInput({ field: 'text', value: this.value })">
+                        oninput="handleDiyPickerInput({ field: 'text', hexColor: this.value })">
                     <label>Text</label>
                     <input type="text" class="settings-color-input" id="diy-text-hex" spellcheck="false"
-                        placeholder="#141413" oninput="handleDiyColorInput({ field: 'text', value: this.value })">
+                        placeholder="#141413" onchange="handleDiyColorInput({ field: 'text', rawInput: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-accent-picker"
-                        oninput="handleDiyPickerInput({ field: 'accent', value: this.value })">
+                        oninput="handleDiyPickerInput({ field: 'accent', hexColor: this.value })">
                     <label>Accent</label>
                     <input type="text" class="settings-color-input" id="diy-accent-hex" spellcheck="false"
-                        placeholder="#d97757" oninput="handleDiyColorInput({ field: 'accent', value: this.value })">
+                        placeholder="#d97757" onchange="handleDiyColorInput({ field: 'accent', rawInput: this.value })">
 
                 </div>
                 <div class="settings-color-row">
                     <input type="color" class="settings-swatch" id="diy-border-picker"
-                        oninput="handleDiyPickerInput({ field: 'border', value: this.value })">
+                        oninput="handleDiyPickerInput({ field: 'border', hexColor: this.value })">
                     <label>Border</label>
                     <input type="text" class="settings-color-input" id="diy-border-hex" spellcheck="false"
-                        placeholder="#e8e6dc" oninput="handleDiyColorInput({ field: 'border', value: this.value })">
-
-                </div>
-                <div class="settings-color-row">
-                    <input type="color" class="settings-swatch" id="diy-save-picker"
-                        oninput="handleDiyPickerInput({ field: 'save', value: this.value })">
-                    <label>Save button</label>
-                    <input type="text" class="settings-color-input" id="diy-save-hex" spellcheck="false"
-                        placeholder="#d97757" oninput="handleDiyColorInput({ field: 'save', value: this.value })">
+                        placeholder="#e8e6dc" onchange="handleDiyColorInput({ field: 'border', rawInput: this.value })">
 
                 </div>
             </div>
@@ -168,13 +164,14 @@
         </div>
     </div>
 
-    <script src="marked.min.js"></script>
-    <script src="enums.js"></script>
-    <script src="state.js"></script>
-    <script src="themes.js"></script>
-    <script src="editor.js"></script>
-    <script src="ui.js"></script>
-    <script src="main.js"></script>
+    <script src="external/marked.min.js"></script>
+    <script src="scripts/enums.js"></script>
+    <script src="scripts/state_functions.js"></script>
+    <script src="scripts/state.js"></script>
+    <script src="scripts/themes.js"></script>
+    <script src="scripts/editor.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/main.js"></script>
 </body>
 
 </html>
