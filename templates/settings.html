@@ -1,0 +1,86 @@
+<div class="settings-overlay" id="settings-modal" onclick="closeSettingsOnOverlay(event)">
+    <div class="settings-modal">
+        <h2>Settings</h2>
+
+        <div class="settings-section">
+            <h3>Editor</h3>
+            <div class="settings-row">
+                <span>Font size</span>
+                <div class="font-size-setting">
+                    <input type="number" id="setting-font-size" min="8" max="128" value="16"
+                        onchange="setFontSize({ value: this.value })">
+                    <span class="font-size-unit">px</span>
+                </div>
+            </div>
+            <label class="toggle-row">
+                <span>Line numbers</span>
+                <input type="checkbox" id="toggle-line-numbers"
+                    onchange="toggleBooleanState({ key: StateKey.SHOW_LINE_NUMBERS })">
+                <span class="toggle-switch"></span>
+            </label>
+            <label class="toggle-row">
+                <span>Monospace font</span>
+                <input type="checkbox" id="toggle-monospace" onchange="toggleBooleanState({ key: StateKey.USE_MONOSPACE })">
+                <span class="toggle-switch"></span>
+            </label>
+            <label class="toggle-row">
+                <span>Wide mode</span>
+                <input type="checkbox" id="toggle-wide" onchange="toggleBooleanState({ key: StateKey.ENABLE_WIDE_MODE })">
+                <span class="toggle-switch"></span>
+            </label>
+            <label class="toggle-row">
+                <span>Tooltips</span>
+                <input type="checkbox" id="toggle-tooltips" onchange="toggleBooleanState({ key: StateKey.SHOW_TOOLTIPS })">
+                <span class="toggle-switch"></span>
+            </label>
+            <label class="toggle-row">
+                <span>Word count</span>
+                <input type="checkbox" id="toggle-word-count" onchange="toggleBooleanState({ key: StateKey.SHOW_WORD_COUNT })">
+                <span class="toggle-switch"></span>
+            </label>
+            <label class="toggle-row">
+                <span>Focus mode</span>
+                <input type="checkbox" id="toggle-focus-mode" onchange="toggleFocusMode()">
+                <span class="toggle-switch"></span>
+            </label>
+            <div class="settings-hint">Hides the menu. Refresh or Cmd/Ctrl+, to reopen settings.</div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Custom Colors</h3>
+            <div class="settings-error" id="diy-color-error"></div>
+            <div class="settings-color-row">
+                <input type="color" class="settings-swatch" id="diy-bg-picker"
+                    oninput="handleDiyPickerInput({ field: 'bg', hexColor: this.value })">
+                <label>Background</label>
+                <input type="text" class="settings-color-input" id="diy-bg-hex" spellcheck="false"
+                    placeholder="#faf9f5" onchange="handleDiyColorInput({ field: 'bg', rawInput: this.value })">
+            </div>
+            <div class="settings-color-row">
+                <input type="color" class="settings-swatch" id="diy-text-picker"
+                    oninput="handleDiyPickerInput({ field: 'text', hexColor: this.value })">
+                <label>Text</label>
+                <input type="text" class="settings-color-input" id="diy-text-hex" spellcheck="false"
+                    placeholder="#141413" onchange="handleDiyColorInput({ field: 'text', rawInput: this.value })">
+            </div>
+            <div class="settings-color-row">
+                <input type="color" class="settings-swatch" id="diy-accent-picker"
+                    oninput="handleDiyPickerInput({ field: 'accent', hexColor: this.value })">
+                <label>Accent</label>
+                <input type="text" class="settings-color-input" id="diy-accent-hex" spellcheck="false"
+                    placeholder="#d97757" onchange="handleDiyColorInput({ field: 'accent', rawInput: this.value })">
+            </div>
+            <div class="settings-color-row">
+                <input type="color" class="settings-swatch" id="diy-border-picker"
+                    oninput="handleDiyPickerInput({ field: 'border', hexColor: this.value })">
+                <label>Border</label>
+                <input type="text" class="settings-color-input" id="diy-border-hex" spellcheck="false"
+                    placeholder="#e8e6dc" onchange="handleDiyColorInput({ field: 'border', rawInput: this.value })">
+            </div>
+        </div>
+
+        <div class="settings-modal-buttons">
+            <button onclick="closeSettings()">Close</button>
+        </div>
+    </div>
+</div>

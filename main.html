@@ -3,175 +3,31 @@
 
 <head>
     <meta charset="UTF-8">
+    {{version}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta license="GNU Affero General Public License Version 3">
     <title>TypeWriter</title>
-    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
-    <link rel="stylesheet" href="styles/base.css">
-    <link rel="stylesheet" href="styles/toolbar.css">
-
-    <link rel="stylesheet" href="styles/edit-mode.css">
-    <link rel="stylesheet" href="styles/view-mode.css">
-    <link rel="stylesheet" href="styles/settings.css">
-    <link rel="stylesheet" href="styles/theme-daylight.css">
-    <link rel="stylesheet" href="styles/theme-darkness.css">
-    <link rel="stylesheet" href="styles/theme-dawn.css">
-    <link rel="stylesheet" href="styles/theme-dusk.css">
-    <link rel="stylesheet" href="styles/theme-diy.css">
+    <link rel="icon" type="image/svg+xml" href="{{favicon}}">
+    <style>
+    {{styles}}
+    </style>
 </head>
 
 <body>
-    <div class="toolbar collapsed" id="toolbar">
-        <div class="toolbar-trigger" onclick="toggleToolbar()">{{icon:icons/hamburger.svg}}</div>
-        <div class="toolbar-items">
-            <button class="icon-btn" onclick="openFile()" data-tooltip="Open file">{{icon:icons/open-file.svg}}</button>
-            <button class="icon-btn" onclick="clearText()" data-tooltip="Clear">{{icon:icons/clear.svg}}</button>
-            <button class="icon-btn" onclick="saveFile()" data-tooltip="Save">{{icon:icons/save.svg}}</button>
-            <button class="mode-toggle" onclick="toggleMode()" data-tooltip="Switch to reader" id="mode-toggle">
-                <span id="icon-edit-mode">{{icon:icons/edit-mode.svg}}</span>
-                <span id="icon-view-mode" class="hidden">{{icon:icons/view-mode.svg}}</span>
-            </button>
-            <div class="theme-picker" id="theme-picker">
-                <button class="theme-toggle" onclick="toggleThemePicker()" data-tooltip="Select theme"
-                    id="theme-toggle">{{icon:icons/daylight.svg}}</button>
-                <div class="theme-picker-menu" id="theme-picker-menu">
-                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DAWN })">
-                        <span class="theme-option-icon">{{icon:icons/dawn.svg}}</span>
-                        <span>Dawn</span>
-                    </button>
-                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DAYLIGHT })">
-                        <span class="theme-option-icon">{{icon:icons/daylight.svg}}</span>
-                        <span>Daylight</span>
-                    </button>
-                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DUSK })">
-                        <span class="theme-option-icon">{{icon:icons/dusk.svg}}</span>
-                        <span>Dusk</span>
-                    </button>
-                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DARKNESS })">
-                        <span class="theme-option-icon">{{icon:icons/darkness.svg}}</span>
-                        <span>Darkness</span>
-                    </button>
-                    <button class="theme-option" onclick="selectTheme({ theme: Theme.DIY })">
-                        <span class="theme-option-icon">{{icon:icons/diy.svg}}</span>
-                        <span>DIY</span>
-                    </button>
-                </div>
-            </div>
-            <button class="settings-toggle" onclick="toggleSettings()"
-                data-tooltip="Settings">{{icon:icons/settings.svg}}</button>
-            <button class="icon-btn" onclick="toggleFullscreen()" data-tooltip="Fullscreen">
-                <span id="icon-fullscreen-enter">{{icon:icons/fullscreen-enter.svg}}</span>
-                <span id="icon-fullscreen-exit" class="hidden">{{icon:icons/fullscreen-exit.svg}}</span>
-            </button>
-            <button class="icon-btn" onclick="toggleToolbar()"
-                data-tooltip="Close menu">{{icon:icons/close-menu.svg}}</button>
-        </div>
-        <input type="file" id="file-input" accept=".txt" class="hidden" onchange="handleFileSelect(event)">
-    </div>
+    {{template:templates/toolbar.html}}
 
     <div id="typewriter-container"></div>
 
     <div class="word-count" id="word-count">0 words</div>
 
-    <div class="settings-overlay" id="settings-modal" onclick="closeSettingsOnOverlay(event)">
-        <div class="settings-modal">
-            <h2>Settings</h2>
+    {{template:templates/settings.html}}
 
-            <div class="settings-section">
-                <h3>Editor</h3>
-                <div class="settings-row">
-                    <span>Font size</span>
-                    <div class="font-size-setting">
-                        <input type="number" id="setting-font-size" min="8" max="128" value="16"
-                            onchange="setFontSize({ value: this.value })">
-                        <span class="font-size-unit">px</span>
-                    </div>
-                </div>
-                <label class="toggle-row">
-                    <span>Line numbers</span>
-                    <input type="checkbox" id="toggle-line-numbers"
-                        onchange="toggleBooleanState({ key: StateKey.SHOW_LINE_NUMBERS })">
-                    <span class="toggle-switch"></span>
-                </label>
-                <label class="toggle-row">
-                    <span>Monospace font</span>
-                    <input type="checkbox" id="toggle-monospace" onchange="toggleBooleanState({ key: StateKey.USE_MONOSPACE })">
-                    <span class="toggle-switch"></span>
-                </label>
-                <label class="toggle-row">
-                    <span>Wide mode</span>
-                    <input type="checkbox" id="toggle-wide" onchange="toggleBooleanState({ key: StateKey.ENABLE_WIDE_MODE })">
-                    <span class="toggle-switch"></span>
-                </label>
-                <label class="toggle-row">
-                    <span>Tooltips</span>
-                    <input type="checkbox" id="toggle-tooltips" onchange="toggleBooleanState({ key: StateKey.SHOW_TOOLTIPS })">
-                    <span class="toggle-switch"></span>
-                </label>
-                <label class="toggle-row">
-                    <span>Word count</span>
-                    <input type="checkbox" id="toggle-word-count" onchange="toggleBooleanState({ key: StateKey.SHOW_WORD_COUNT })">
-                    <span class="toggle-switch"></span>
-                </label>
-                <label class="toggle-row">
-                    <span>Focus mode</span>
-                    <input type="checkbox" id="toggle-focus-mode" onchange="toggleFocusMode()">
-                    <span class="toggle-switch"></span>
-                </label>
-                <div class="settings-hint">Hides the menu. Refresh or Cmd/Ctrl+, to reopen settings.</div>
-            </div>
-
-            <div class="settings-section">
-                <h3>Custom Colors</h3>
-                <div class="settings-error" id="diy-color-error"></div>
-                <div class="settings-color-row">
-                    <input type="color" class="settings-swatch" id="diy-bg-picker"
-                        oninput="handleDiyPickerInput({ field: 'bg', hexColor: this.value })">
-                    <label>Background</label>
-                    <input type="text" class="settings-color-input" id="diy-bg-hex" spellcheck="false"
-                        placeholder="#faf9f5" onchange="handleDiyColorInput({ field: 'bg', rawInput: this.value })">
-
-                </div>
-                <div class="settings-color-row">
-                    <input type="color" class="settings-swatch" id="diy-text-picker"
-                        oninput="handleDiyPickerInput({ field: 'text', hexColor: this.value })">
-                    <label>Text</label>
-                    <input type="text" class="settings-color-input" id="diy-text-hex" spellcheck="false"
-                        placeholder="#141413" onchange="handleDiyColorInput({ field: 'text', rawInput: this.value })">
-
-                </div>
-                <div class="settings-color-row">
-                    <input type="color" class="settings-swatch" id="diy-accent-picker"
-                        oninput="handleDiyPickerInput({ field: 'accent', hexColor: this.value })">
-                    <label>Accent</label>
-                    <input type="text" class="settings-color-input" id="diy-accent-hex" spellcheck="false"
-                        placeholder="#d97757" onchange="handleDiyColorInput({ field: 'accent', rawInput: this.value })">
-
-                </div>
-                <div class="settings-color-row">
-                    <input type="color" class="settings-swatch" id="diy-border-picker"
-                        oninput="handleDiyPickerInput({ field: 'border', hexColor: this.value })">
-                    <label>Border</label>
-                    <input type="text" class="settings-color-input" id="diy-border-hex" spellcheck="false"
-                        placeholder="#e8e6dc" onchange="handleDiyColorInput({ field: 'border', rawInput: this.value })">
-
-                </div>
-            </div>
-
-            <div class="settings-modal-buttons">
-                <button onclick="closeSettings()">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="external/marked.min.js"></script>
-    <script src="scripts/enums.js"></script>
-    <script src="scripts/state_functions.js"></script>
-    <script src="scripts/state.js"></script>
-    <script src="scripts/themes.js"></script>
-    <script src="scripts/editor.js"></script>
-    <script src="scripts/ui.js"></script>
-    <script src="scripts/main.js"></script>
+    <script>
+    {{external}}
+    </script>
+    <script>
+    {{scripts}}
+    </script>
 </body>
 
 </html>

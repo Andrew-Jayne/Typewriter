@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 """
-Compile separate HTML, CSS, and JS files into a single HTML file.
+Compile the main.html template into a single self-contained HTML file.
 Usage: python compile.py [input_html] [output_html] [build_dir]
 Default: python compile.py main.html typewriter.html build
 """
 
-import sys
-import re
+import base64
 import subprocess
+import sys
 from pathlib import Path
 
-
-if __name__ == '__main__':
-    input_file = 'main.html'
-    output_file = 'typewriter.html'
-    build_dir = 'build'
+if __name__ == "__main__":
+    input_file = "main.html"
+    output_file = "typewriter.html"
+    build_dir = "build"
 
     if len(sys.argv) > 1:
         input_file = sys.argv[1]
@@ -27,87 +26,90 @@ if __name__ == '__main__':
     build_path = Path(build_dir)
 
     if input_path.exists() is False:
-        print(f'Error: {input_file} not found')
+        print(f"Error: {input_file} not found")
         sys.exit(1)
 
     build_path.mkdir(exist_ok=True)
 
     try:
-        commit_sha = subprocess.check_output(
-            ['git', 'rev-parse', 'HEAD'],
-            stderr=subprocess.DEVNULL
-        ).decode().strip()
+        commit_sha = (
+            subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], stderr=subprocess.DEVNULL
+            )
+            .decode()
+            .strip()
+        )
     except (subprocess.CalledProcessError, FileNotFoundError):
-        commit_sha = 'unknown'
+        commit_sha = "unknown"
 
-    with open(input_path, 'r', encoding='utf-8') as f:
+    with open(input_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
     html_content = html_content.replace(
-        '<meta charset="UTF-8">',
-        f'<meta charset="UTF-8">\n    <meta name="version" content="{commit_sha}">'
+        "{{version}}", f'<meta name="version" content="{commit_sha}">'
     )
+    print(f"✓ Version {commit_sha[:8]}")
 
-    css_match = re.search(r'<link\s+rel="stylesheet"\s+href="([^"]+)">', html_content)
-    first_css_pos = css_match.start() if css_match is not None else -1
-    while css_match is not None:
-        html_content = html_content[:css_match.start()] + html_content[css_match.end():]
-        css_match = re.search(r'<link\s+rel="stylesheet"\s+href="([^"]+)">', html_content)
+    favicon_path = input_path.parent / "icons" / "favicon.svg"
+    if favicon_path.exists() is True:
+        with open(favicon_path, "r", encoding="utf-8") as f:
+            html_content = html_content.replace(
+                "{{favicon}}",
+                "data:image/svg+xml;base64,"
+                + base64.b64encode(f.read().strip().encode("utf-8")).decode("utf-8"),
+            )
+        print("✓ Inlined favicon")
 
-    css_files = sorted(input_path.parent.glob('styles/*.css'))
+    css_files = sorted(input_path.parent.glob("styles/*.css"))
     if len(css_files) > 0:
-        css_contents = []
+        css_contents: list[str] = []
         for css_path in css_files:
-            with open(css_path, 'r', encoding='utf-8') as f:
+            with open(css_path, "r", encoding="utf-8") as f:
                 css_contents.append(f.read())
-            print(f'✓ Bundled {css_path}')
-        css_bundle = '<style>\n' + '\n'.join(css_contents) + '\n</style>'
-        html_content = html_content[:first_css_pos] + css_bundle + html_content[first_css_pos:]
+            print(f"✓ Bundled {css_path}")
+        html_content = html_content.replace("{{styles}}", "\n".join(css_contents))
 
-    js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
-    first_js_pos = js_match.start() if js_match is not None else -1
-    while js_match is not None:
-        html_content = html_content[:js_match.start()] + html_content[js_match.end():]
-        js_match = re.search(r'<script\s+src="([^"]+)"></script>', html_content)
+    external_files = sorted(input_path.parent.glob("external/*.js"))
+    if len(external_files) > 0:
+        external_contents: list[str] = []
+        for ext_path in external_files:
+            with open(ext_path, "r", encoding="utf-8") as f:
+                external_contents.append(f.read())
+            print(f"✓ Bundled {ext_path}")
+        html_content = html_content.replace("{{external}}", "\n".join(external_contents))
 
-    external_files = sorted(input_path.parent.glob('external/*.js'))
-    script_files = sorted(input_path.parent.glob('scripts/*.js'))
-    main_js = [f for f in script_files if f.name == 'main.js']
-    script_files = [f for f in script_files if f.name != 'main.js'] + main_js
-    js_files = external_files + script_files
-    if len(js_files) > 0:
-        js_contents = []
-        for js_path in js_files:
-            with open(js_path, 'r', encoding='utf-8') as f:
-                js_contents.append(f.read())
-            print(f'✓ Bundled {js_path}')
-        js_bundle = '<script>\n' + '\n'.join(js_contents) + '\n</script>'
-        html_content = html_content[:first_js_pos] + js_bundle + html_content[first_js_pos:]
-
-    favicon_match = re.search(r'<link\s+rel="icon"\s+type="image/svg\+xml"\s+href="([^"]+)">', html_content)
-    if favicon_match is not None:
-        favicon_path = input_path.parent / favicon_match.group(1)
-        if favicon_path.exists() is True:
-            import base64
-            with open(favicon_path, 'r', encoding='utf-8') as f:
-                data_uri = 'data:image/svg+xml;base64,' + base64.b64encode(f.read().strip().encode('utf-8')).decode('utf-8')
-            html_content = html_content[:favicon_match.start()] + f'<link rel="icon" type="image/svg+xml" href="{data_uri}">' + html_content[favicon_match.end():]
-            print(f'✓ Inlined favicon {favicon_match.group(1)}')
-
-    icon_match = re.search(r'\{\{icon:([^}]+)\}\}', html_content)
-    while icon_match is not None:
-        icon_path = input_path.parent / icon_match.group(1)
-        if icon_path.exists() is True:
-            with open(icon_path, 'r', encoding='utf-8') as f:
-                svg_content = f.read().strip()
-            html_content = html_content[:icon_match.start()] + svg_content + html_content[icon_match.end():]
-            print(f'✓ Inlined icon {icon_match.group(1)}')
+    ordered_scripts: list[Path] = []
+    main_entry = None
+    for script in sorted(input_path.parent.glob("scripts/*.js")):
+        if script.name == "main.js":
+            main_entry = script
         else:
-            print(f'Warning: Icon {icon_match.group(1)} not found, skipping')
-            html_content = html_content[:icon_match.start()] + html_content[icon_match.end():]
-        icon_match = re.search(r'\{\{icon:([^}]+)\}\}', html_content)
+            ordered_scripts.append(script)
+    if main_entry is not None:
+        ordered_scripts.append(main_entry)
+    if len(ordered_scripts) > 0:
+        script_contents: list[str] = []
+        for js_path in ordered_scripts:
+            with open(js_path, "r", encoding="utf-8") as f:
+                script_contents.append(f.read())
+            print(f"✓ Bundled {js_path}")
+        html_content = html_content.replace("{{scripts}}", "\n".join(script_contents))
 
-    with open(build_path / output_file, 'w', encoding='utf-8') as f:
-        f.write(html_content)
+    for template_path in sorted(input_path.parent.glob("templates/*.html")):
+        marker = "{{template:" + str(template_path) + "}}"
+        if marker in html_content:
+            with open(template_path, "r", encoding="utf-8") as f:
+                html_content = html_content.replace(marker, f.read().strip())
+            print(f"✓ Inlined template {template_path}")
 
-    print(f'✓ Successfully compiled to {build_path / output_file}')
+    for icon_path in sorted(input_path.parent.glob("icons/*.svg")):
+        marker = "{{icon:" + str(icon_path) + "}}"
+        if marker in html_content:
+            with open(icon_path, "r", encoding="utf-8") as f:
+                html_content = html_content.replace(marker, f.read().strip())
+            print(f"✓ Inlined icon {icon_path}")
+
+    with open(build_path / output_file, "w", encoding="utf-8") as f:
+        _ = f.write(html_content)
+
+    print(f"✓ Successfully compiled to {build_path / output_file}")
