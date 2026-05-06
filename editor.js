@@ -65,37 +65,6 @@ function toggleMode() {
     }
 }
 
-/** Renders the UI based on the current mode in state. */
-function updateRenderMode() {
-    const mode = getState({ key: StateKey.MODE });
-    const container = document.querySelector('.editor-container');
-
-    switch (mode) {
-        case Mode.VIEW: {
-            document.getElementById('editor').style.display = 'none';
-            document.getElementById('line-numbers').style.display = 'none';
-            const viewDiv = document.createElement('div');
-            viewDiv.id = 'view-mode';
-            viewDiv.className = 'view-content';
-            viewDiv.style.fontSize = getState({ key: StateKey.FONT_SIZE }) + 'px';
-            viewDiv.innerHTML = marked.parse(document.getElementById('editor').value, { breaks: true, gfm: true });
-            container.appendChild(viewDiv);
-            updateModeIcon(mode);
-            return;
-        }
-        case Mode.EDIT: {
-            document.getElementById('view-mode').remove();
-            document.getElementById('editor').style.display = 'block';
-            if (getState({ key: StateKey.LINE_NUMBERS }) === true) {
-                document.getElementById('line-numbers').style.display = 'block';
-            } else {
-                document.getElementById('line-numbers').style.display = 'none';
-            }
-            updateModeIcon(mode);
-            return;
-        }
-    }
-}
 
 /** Clears the editor content after confirmation, resets to edit mode. */
 function clearText() {

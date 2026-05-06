@@ -40,64 +40,110 @@ function getState({ key }) {
  * @param {{ key: string, value: string|boolean|null }} params
  */
 function setState({ key, value }) {
-    localStorage.setItem(key, String(value));
-
     switch (key) {
+        case StateKey.EDITOR_TEXT:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.FILE_NAME:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.THEME:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.DIY_BG:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.DIY_TEXT:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.DIY_ACCENT:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.DIY_BORDER:
+            localStorage.setItem(key, String(value));
+            return;
+
+        case StateKey.DIY_SAVE:
+            localStorage.setItem(key, String(value));
+            return;
+
         case StateKey.LINE_NUMBERS: {
             const wrap = document.querySelector('.editor-wrap');
             switch (value) {
                 case true:
+                    localStorage.setItem(key, 'true');
                     document.getElementById('line-numbers').style.display = 'block';
                     wrap.classList.add('no-wrap');
                     return;
                 case false:
+                    localStorage.setItem(key, 'false');
                     document.getElementById('line-numbers').style.display = 'none';
                     wrap.classList.remove('no-wrap');
                     return;
+                default:
+                    throw new Error(key + ' requires a boolean, got: ' + value);
             }
-            return;
         }
         case StateKey.MONOSPACE:
             switch (value) {
                 case true:
+                    localStorage.setItem(key, 'true');
                     document.getElementById('editor').classList.add('monospace-mode');
                     return;
                 case false:
+                    localStorage.setItem(key, 'false');
                     document.getElementById('editor').classList.remove('monospace-mode');
                     return;
+                default:
+                    throw new Error(key + ' requires a boolean, got: ' + value);
             }
-            return;
         case StateKey.WIDE_MODE:
             switch (value) {
                 case true:
+                    localStorage.setItem(key, 'true');
                     document.querySelector('.editor-container').classList.add('wide');
                     return;
                 case false:
+                    localStorage.setItem(key, 'false');
                     document.querySelector('.editor-container').classList.remove('wide');
                     return;
+                default:
+                    throw new Error(key + ' requires a boolean, got: ' + value);
             }
-            return;
         case StateKey.TOOLTIPS:
             switch (value) {
                 case true:
+                    localStorage.setItem(key, 'true');
                     document.body.classList.remove('no-tooltips');
                     return;
                 case false:
+                    localStorage.setItem(key, 'false');
                     document.body.classList.add('no-tooltips');
                     return;
+                default:
+                    throw new Error(key + ' requires a boolean, got: ' + value);
             }
-            return;
         case StateKey.WORD_COUNT:
             switch (value) {
                 case true:
+                    localStorage.setItem(key, 'true');
                     document.getElementById('word-count').style.display = 'block';
                     return;
                 case false:
+                    localStorage.setItem(key, 'false');
                     document.getElementById('word-count').style.display = 'none';
                     return;
+                default:
+                    throw new Error(key + ' requires a boolean, got: ' + value);
             }
-            return;
         case StateKey.FONT_SIZE:
+            localStorage.setItem(key, String(value));
             switch (getState({ key: StateKey.MODE })) {
                 case Mode.EDIT:
                     document.getElementById('editor').style.fontSize = value + 'px';
@@ -108,8 +154,37 @@ function setState({ key, value }) {
                     return;
             }
             return;
-        case StateKey.MODE:
-            updateRenderMode();
+        case StateKey.MODE: {
+            localStorage.setItem(key, String(value));
+            const container = document.querySelector('.editor-container');
+            switch (value) {
+                case Mode.VIEW: {
+                    document.getElementById('editor').style.display = 'none';
+                    document.getElementById('line-numbers').style.display = 'none';
+                    const viewDiv = document.createElement('div');
+                    viewDiv.id = 'view-mode';
+                    viewDiv.className = 'view-content';
+                    viewDiv.style.fontSize = getState({ key: StateKey.FONT_SIZE }) + 'px';
+                    viewDiv.innerHTML = marked.parse(document.getElementById('editor').value, { breaks: true, gfm: true });
+                    container.appendChild(viewDiv);
+                    updateModeIcon(value);
+                    return;
+                }
+                case Mode.EDIT: {
+                    document.getElementById('view-mode').remove();
+                    document.getElementById('editor').style.display = 'block';
+                    if (getState({ key: StateKey.LINE_NUMBERS }) === true) {
+                        document.getElementById('line-numbers').style.display = 'block';
+                    } else {
+                        document.getElementById('line-numbers').style.display = 'none';
+                    }
+                    updateModeIcon(value);
+                    return;
+                }
+            }
             return;
+        }
+        default:
+            throw new Error('Invalid state key: ' + key);
     }
 }

@@ -41,7 +41,6 @@ export default [
                 updateModeIcon: 'readonly',
                 flashModeToggle: 'readonly',
                 toggleMode: 'readonly',
-                updateRenderMode: 'readonly',
                 clearText: 'readonly',
                 openFile: 'readonly',
                 handleFileSelect: 'readonly',

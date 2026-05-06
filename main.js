@@ -98,7 +98,7 @@ function main() {
             updateModeIcon(Mode.EDIT);
             break;
         case Mode.VIEW:
-            updateRenderMode();
+            setState({ key: StateKey.MODE, value: Mode.VIEW });
             break;
     }
     updateWordCount();
