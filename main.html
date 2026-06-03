@@ -1,33 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        {{version}}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta license="GNU Affero General Public License Version 3" />
+        <title>TypeWriter</title>
+        <link rel="icon" type="image/svg+xml" href="{{favicon}}" />
+        <style>
+            {{styles}}
+        </style>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    {{version}}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta license="GNU Affero General Public License Version 3">
-    <title>TypeWriter</title>
-    <link rel="icon" type="image/svg+xml" href="{{favicon}}">
-    <style>
-    {{styles}}
-    </style>
-</head>
+    <body>
+        {{template:templates/toolbar.html}}
 
-<body>
-    {{template:templates/toolbar.html}}
+        <div id="typewriter-container"></div>
 
-    <div id="typewriter-container"></div>
+        <div class="word-count" id="word-count">0 words</div>
 
-    <div class="word-count" id="word-count">0 words</div>
+        {{template:templates/settings.html}}
 
-    {{template:templates/settings.html}}
-
-    <script>
-    {{external}}
-    </script>
-    <script>
-    {{scripts}}
-    </script>
-</body>
-
+        <script>
+            {
+                {
+                    external;
+                }
+            }
+        </script>
+        <script>
+            {
+                {
+                    scripts;
+                }
+            }
+        </script>
+    </body>
 </html>

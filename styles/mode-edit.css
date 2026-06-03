@@ -9,7 +9,7 @@
 }
 
 .line-numbers {
-    font-family: 'Courier New', monospace;
+    font-family: "Courier New", monospace;
     font-size: 16px;
     line-height: 1.8;
     padding-right: 12px;
@@ -28,7 +28,7 @@ textarea {
     min-height: 100vh;
     border: none;
     outline: none;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 16px;
     line-height: 1.8;
     resize: none;
@@ -36,7 +36,7 @@ textarea {
 }
 
 textarea.monospace-mode {
-    font-family: 'Courier New', monospace;
+    font-family: "Courier New", monospace;
     line-height: 1.6;
     tab-size: 4;
 }

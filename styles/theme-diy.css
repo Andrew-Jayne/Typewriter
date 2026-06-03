@@ -54,9 +54,16 @@ body.diy-mode .mode-toggle.flash {
 }
 
 @keyframes mode-flash-diy {
-    0% { background: transparent; }
-    30% { background: var(--diy-accent); color: #ffffff; }
-    100% { background: transparent; }
+    0% {
+        background: transparent;
+    }
+    30% {
+        background: var(--diy-accent);
+        color: #ffffff;
+    }
+    100% {
+        background: transparent;
+    }
 }
 
 body.diy-mode .theme-picker-menu {

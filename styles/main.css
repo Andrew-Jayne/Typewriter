@@ -5,12 +5,15 @@
 }
 
 body {
-    font-family: Georgia, 'Times New Roman', Times, serif;
-    transition: background-color 0.3s, color 0.3s;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
 }
 
 button {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     padding: 8px 16px;
     border: 1px solid transparent;
     background: transparent;
@@ -28,7 +31,8 @@ button {
     position: fixed;
     bottom: 20px;
     right: 40px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 13px;
     padding: 8px 12px;
     border-radius: 6px;

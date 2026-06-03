@@ -1,7 +1,7 @@
 const STATE_DEFAULTS = {
     [StateKey.THEME]: Theme.DAYLIGHT,
-    [StateKey.EDITOR_TEXT]: '',
-    [StateKey.FILE_NAME]: 'untitled.txt',
+    [StateKey.EDITOR_TEXT]: "",
+    [StateKey.FILE_NAME]: "untitled.txt",
     [StateKey.MODE]: Mode.EDIT,
     [StateKey.FONT_SIZE]: 16,
     [StateKey.SHOW_LINE_NUMBERS]: false,
@@ -9,10 +9,10 @@ const STATE_DEFAULTS = {
     [StateKey.ENABLE_WIDE_MODE]: false,
     [StateKey.SHOW_TOOLTIPS]: true,
     [StateKey.SHOW_WORD_COUNT]: true,
-    [StateKey.DIY_BG]: '#faf9f5',
-    [StateKey.DIY_TEXT]: '#141413',
-    [StateKey.DIY_ACCENT]: '#d97757',
-    [StateKey.DIY_BORDER]: '#e8e6dc',
+    [StateKey.DIY_BG]: "#faf9f5",
+    [StateKey.DIY_TEXT]: "#141413",
+    [StateKey.DIY_ACCENT]: "#d97757",
+    [StateKey.DIY_BORDER]: "#e8e6dc",
 };
 
 /**
@@ -24,11 +24,11 @@ function getState({ key }) {
     switch (stored) {
         case null:
             return STATE_DEFAULTS[key];
-        case 'true':
+        case "true":
             return true;
-        case 'false':
+        case "false":
             return false;
-        case 'null':
+        case "null":
             return null;
         default:
             switch (key) {
@@ -90,6 +90,6 @@ function setState({ key, value }) {
             handleModeChange(value);
             return;
         default:
-            throw new Error('Invalid state key: ' + key);
+            throw new Error("Invalid state key: " + key);
     }
 }

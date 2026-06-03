@@ -55,9 +55,16 @@ body.darkness-mode .mode-toggle.flash {
 }
 
 @keyframes mode-flash-darkness {
-    0% { background: transparent; }
-    30% { background: #2a4d6e; color: #ffffff; }
-    100% { background: transparent; }
+    0% {
+        background: transparent;
+    }
+    30% {
+        background: #2a4d6e;
+        color: #ffffff;
+    }
+    100% {
+        background: transparent;
+    }
 }
 
 body.darkness-mode .theme-picker-menu {

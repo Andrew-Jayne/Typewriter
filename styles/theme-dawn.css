@@ -54,9 +54,16 @@ body.dawn-mode .mode-toggle.flash {
 }
 
 @keyframes mode-flash-dawn {
-    0% { background: transparent; }
-    30% { background: #d97757; color: #ffffff; }
-    100% { background: transparent; }
+    0% {
+        background: transparent;
+    }
+    30% {
+        background: #d97757;
+        color: #ffffff;
+    }
+    100% {
+        background: transparent;
+    }
 }
 
 body.dawn-mode .theme-picker-menu {

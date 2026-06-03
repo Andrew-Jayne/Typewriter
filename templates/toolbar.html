@@ -1,47 +1,117 @@
 <div class="toolbar collapsed" id="toolbar">
-    <div class="toolbar-trigger" onclick="toggleToolbar()">{{icon:icons/hamburger.svg}}</div>
+    <div class="toolbar-trigger" onclick="toggleToolbar()">
+        {{icon:icons/hamburger.svg}}
+    </div>
     <div class="toolbar-items">
-        <button class="icon-btn" onclick="openFile()" data-tooltip="Open file">{{icon:icons/open-file.svg}}</button>
-        <button class="icon-btn" onclick="clearText()" data-tooltip="Clear">{{icon:icons/clear.svg}}</button>
-        <button class="icon-btn" onclick="saveFile()" data-tooltip="Save">{{icon:icons/save.svg}}</button>
-        <button class="mode-toggle" onclick="toggleMode()" data-tooltip="Switch to reader" id="mode-toggle">
+        <button class="icon-btn" onclick="openFile()" data-tooltip="Open file">
+            {{icon:icons/open-file.svg}}
+        </button>
+        <button class="icon-btn" onclick="clearText()" data-tooltip="Clear">
+            {{icon:icons/clear.svg}}
+        </button>
+        <button class="icon-btn" onclick="saveFile()" data-tooltip="Save">
+            {{icon:icons/save.svg}}
+        </button>
+        <button
+            class="mode-toggle"
+            onclick="toggleMode()"
+            data-tooltip="Switch to reader"
+            id="mode-toggle"
+        >
             <span id="icon-edit-mode">{{icon:icons/edit-mode.svg}}</span>
-            <span id="icon-view-mode" class="hidden">{{icon:icons/view-mode.svg}}</span>
+            <span id="icon-view-mode" class="hidden"
+                >{{icon:icons/view-mode.svg}}</span
+            >
         </button>
         <div class="theme-picker" id="theme-picker">
-            <button class="theme-toggle" onclick="toggleThemePicker()" data-tooltip="Select theme"
-                id="theme-toggle">{{icon:icons/daylight.svg}}</button>
+            <button
+                class="theme-toggle"
+                onclick="toggleThemePicker()"
+                data-tooltip="Select theme"
+                id="theme-toggle"
+            >
+                {{icon:icons/daylight.svg}}
+            </button>
             <div class="theme-picker-menu" id="theme-picker-menu">
-                <button class="theme-option" onclick="selectTheme({ theme: Theme.DAWN })">
-                    <span class="theme-option-icon">{{icon:icons/dawn.svg}}</span>
+                <button
+                    class="theme-option"
+                    onclick="selectTheme({ theme: Theme.DAWN })"
+                >
+                    <span class="theme-option-icon"
+                        >{{icon:icons/dawn.svg}}</span
+                    >
                     <span>Dawn</span>
                 </button>
-                <button class="theme-option" onclick="selectTheme({ theme: Theme.DAYLIGHT })">
-                    <span class="theme-option-icon">{{icon:icons/daylight.svg}}</span>
+                <button
+                    class="theme-option"
+                    onclick="selectTheme({ theme: Theme.DAYLIGHT })"
+                >
+                    <span class="theme-option-icon"
+                        >{{icon:icons/daylight.svg}}</span
+                    >
                     <span>Daylight</span>
                 </button>
-                <button class="theme-option" onclick="selectTheme({ theme: Theme.DUSK })">
-                    <span class="theme-option-icon">{{icon:icons/dusk.svg}}</span>
+                <button
+                    class="theme-option"
+                    onclick="selectTheme({ theme: Theme.DUSK })"
+                >
+                    <span class="theme-option-icon"
+                        >{{icon:icons/dusk.svg}}</span
+                    >
                     <span>Dusk</span>
                 </button>
-                <button class="theme-option" onclick="selectTheme({ theme: Theme.DARKNESS })">
-                    <span class="theme-option-icon">{{icon:icons/darkness.svg}}</span>
+                <button
+                    class="theme-option"
+                    onclick="selectTheme({ theme: Theme.DARKNESS })"
+                >
+                    <span class="theme-option-icon"
+                        >{{icon:icons/darkness.svg}}</span
+                    >
                     <span>Darkness</span>
                 </button>
-                <button class="theme-option" onclick="selectTheme({ theme: Theme.DIY })">
-                    <span class="theme-option-icon">{{icon:icons/diy.svg}}</span>
+                <button
+                    class="theme-option"
+                    onclick="selectTheme({ theme: Theme.DIY })"
+                >
+                    <span class="theme-option-icon"
+                        >{{icon:icons/diy.svg}}</span
+                    >
                     <span>DIY</span>
                 </button>
             </div>
         </div>
-        <button class="settings-toggle" onclick="toggleSettings()"
-            data-tooltip="Settings">{{icon:icons/settings.svg}}</button>
-        <button class="icon-btn" onclick="toggleFullscreen()" data-tooltip="Fullscreen">
-            <span id="icon-fullscreen-enter">{{icon:icons/fullscreen-enter.svg}}</span>
-            <span id="icon-fullscreen-exit" class="hidden">{{icon:icons/fullscreen-exit.svg}}</span>
+        <button
+            class="settings-toggle"
+            onclick="toggleSettings()"
+            data-tooltip="Settings"
+        >
+            {{icon:icons/settings.svg}}
         </button>
-        <button class="icon-btn" onclick="toggleToolbar()"
-            data-tooltip="Close menu">{{icon:icons/close-menu.svg}}</button>
+        <button
+            class="icon-btn"
+            onclick="toggleFullscreen()"
+            data-tooltip="Fullscreen"
+        >
+            <span id="icon-fullscreen-enter"
+                >{{icon:icons/fullscreen-enter.svg}}</span
+            >
+            <span id="icon-fullscreen-exit" class="hidden"
+                >{{icon:icons/fullscreen-exit.svg}}</span
+            >
+        </button>
+        <button
+            class="icon-btn"
+            onclick="toggleToolbar()"
+            data-tooltip="Close menu"
+        >
+            {{icon:icons/close-menu.svg}}
+        </button>
     </div>
-    <input type="file" id="file-input" accept=".txt" class="hidden" onchange="handleFileSelect(event)">
+    <input
+        type="file"
+        id="file-input"
+        accept=".txt"
+        class="hidden"
+        onchange="handleFileSelect(event)"
+    />
 </div>

@@ -54,9 +54,16 @@ body.dusk-mode .mode-toggle.flash {
 }
 
 @keyframes mode-flash-dusk {
-    0% { background: transparent; }
-    30% { background: #b5623f; color: #ffffff; }
-    100% { background: transparent; }
+    0% {
+        background: transparent;
+    }
+    30% {
+        background: #b5623f;
+        color: #ffffff;
+    }
+    100% {
+        background: transparent;
+    }
 }
 
 body.dusk-mode .theme-picker-menu {
