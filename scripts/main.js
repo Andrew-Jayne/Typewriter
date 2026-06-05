@@ -23,11 +23,10 @@ function main() {
                 .getElementById("typewriter-container")
                 .querySelector("textarea");
             const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
             textarea.value =
                 textarea.value.substring(0, start) +
                 "\t" +
-                textarea.value.substring(end);
+                textarea.value.substring(textarea.selectionEnd);
             textarea.selectionStart = start + 1;
             textarea.selectionEnd = start + 1;
             setState({ key: StateKey.EDITOR_TEXT, value: textarea.value });
@@ -52,8 +51,7 @@ function main() {
     });
 
     document.addEventListener("click", (clickEvent) => {
-        const picker = document.getElementById("theme-picker");
-        if (picker.contains(clickEvent.target) === false) {
+        if (document.getElementById("theme-picker").contains(clickEvent.target) === false) {
             document
                 .getElementById("theme-picker-menu")
                 .classList.remove("show");

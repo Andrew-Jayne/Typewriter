@@ -1,13 +1,13 @@
 /** Updates the line number gutter to match the editor content. */
 function updateLineNumbers() {
+    const TEXT = getState({ key: StateKey.EDITOR_TEXT });
     const lineNumEl = document.getElementById("line-numbers");
     if (lineNumEl === null) {
         return;
     }
-    const text = getState({ key: StateKey.EDITOR_TEXT });
-    const lines = text.split("\n").length;
+
     let nums = "";
-    for (let idx = 1; idx <= lines; idx++) {
+    for (let idx = 1; idx <= TEXT.split("\n").length; idx++) {
         if (idx > 1) {
             nums += "\n";
         }
@@ -31,12 +31,11 @@ function updateWordCount() {
 /** Toggles between edit and view mode. */
 function toggleMode() {
     const flashModeToggle = () => {
-        const modeToggle = document.getElementById("mode-toggle");
-        modeToggle.classList.add("flash");
-        setTimeout(() => modeToggle.classList.remove("flash"), 400);
+        const MODE_TOGGLE = document.getElementById("mode-toggle");
+        MODE_TOGGLE.classList.add("flash");
+        setTimeout(() => MODE_TOGGLE.classList.remove("flash"), 400);
     };
-    const current = getState({ key: StateKey.MODE });
-    switch (current) {
+    switch (getState({ key: StateKey.MODE })) {
         case Mode.EDIT:
             setState({ key: StateKey.MODE, value: Mode.VIEW });
             flashModeToggle();
@@ -80,10 +79,10 @@ function handleFileSelect(event) {
 
     const reader = new FileReader();
     reader.onload = (loadEvent) => {
-        const normalized = loadEvent.target.result
+        const NORMALIZED = loadEvent.target.result
             .replace(/\r\n/g, "\n")
             .replace(/\r/g, "\n");
-        setState({ key: StateKey.EDITOR_TEXT, value: normalized });
+        setState({ key: StateKey.EDITOR_TEXT, value: NORMALIZED });
         setState({ key: StateKey.MODE, value: Mode.EDIT });
         updateWordCount();
     };
@@ -98,10 +97,10 @@ function saveFile() {
         return;
     }
     setState({ key: StateKey.FILE_NAME, value: fileName.trim() });
-    const blob = new Blob([getState({ key: StateKey.EDITOR_TEXT })], {
+    const BLOB = new Blob([getState({ key: StateKey.EDITOR_TEXT })], {
         type: "text/plain",
     });
-    const url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(BLOB);
     const downloadLink = document.createElement("a");
     downloadLink.href = url;
     downloadLink.download = fileName.trim();

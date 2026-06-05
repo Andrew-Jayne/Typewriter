@@ -71,6 +71,18 @@ function validateAndStoreFontSize({ key, value }) {
 
 /** Applies DIY custom color CSS variables from localStorage. */
 function applyDiyColors() {
+    const RED = Math.min(
+        255,
+        Math.max(0, parseInt(bg.slice(1, 3), 16) + hoverShift),
+    );
+    const GREEN = Math.min(
+        255,
+        Math.max(0, parseInt(bg.slice(3, 5), 16) + hoverShift),
+    );
+    const BLUE = Math.min(
+        255,
+        Math.max(0, parseInt(bg.slice(5, 7), 16) + hoverShift),
+    );
     const body = document.body;
     for (const field of DIY_FIELDS) {
         body.style.setProperty(
@@ -90,19 +102,8 @@ function applyDiyColors() {
         hoverShift = -15;
     }
 
-    const red = Math.min(
-        255,
-        Math.max(0, parseInt(bg.slice(1, 3), 16) + hoverShift),
-    );
-    const green = Math.min(
-        255,
-        Math.max(0, parseInt(bg.slice(3, 5), 16) + hoverShift),
-    );
-    const blue = Math.min(
-        255,
-        Math.max(0, parseInt(bg.slice(5, 7), 16) + hoverShift),
-    );
-    body.style.setProperty("--diy-hover", `rgb(${red},${green},${blue})`);
+
+    body.style.setProperty("--diy-hover", `rgb(${RED},${GREEN},${BLUE})`);
 
     switch (brightness > 128) {
         case true:
@@ -253,15 +254,13 @@ function handleModeChange(mode) {
 /** Builds and renders the view mode UI. */
 function renderViewMode() {
     const container = document.getElementById("typewriter-container");
-    const editorText = getState({ key: StateKey.EDITOR_TEXT });
-    const fontSize = getState({ key: StateKey.FONT_SIZE });
 
     container.innerHTML = "";
     const viewDiv = document.createElement("div");
     viewDiv.id = "view-mode";
     viewDiv.className = "view-content";
-    viewDiv.style.fontSize = fontSize + "px";
-    viewDiv.innerHTML = marked.parse(editorText, { breaks: true, gfm: true });
+    viewDiv.style.fontSize = getState({ key: StateKey.FONT_SIZE }) + "px";
+    viewDiv.innerHTML = marked.parse(getState({ key: StateKey.EDITOR_TEXT }), { breaks: true, gfm: true });
     container.appendChild(viewDiv);
     document.getElementById("icon-edit-mode").classList.add("hidden");
     document.getElementById("icon-view-mode").classList.remove("hidden");
@@ -273,7 +272,6 @@ function renderViewMode() {
 /** Builds and renders the edit mode UI. */
 function renderEditMode() {
     const container = document.getElementById("typewriter-container");
-    const editorText = getState({ key: StateKey.EDITOR_TEXT });
     const fontSize = getState({ key: StateKey.FONT_SIZE });
 
     container.innerHTML = "";
@@ -288,7 +286,7 @@ function renderEditMode() {
     textarea.id = "editor";
     textarea.placeholder = "Start writing...";
     textarea.spellcheck = true;
-    textarea.value = editorText;
+    textarea.value = getState({ key: StateKey.EDITOR_TEXT });
     textarea.style.fontSize = fontSize + "px";
     lineNums.style.fontSize = fontSize + "px";
 
@@ -296,8 +294,7 @@ function renderEditMode() {
         textarea.classList.add("monospace-mode");
     }
 
-    const showLineNumbers = getState({ key: StateKey.SHOW_LINE_NUMBERS });
-    if (showLineNumbers === true) {
+    if (getState({ key: StateKey.SHOW_LINE_NUMBERS }) === true) {
         wrap.classList.add("no-wrap");
     } else {
         lineNums.style.display = "none";
@@ -348,8 +345,7 @@ function handleDiyPickerInput({ field, hexColor }) {
  */
 function handleDiyColorInput({ field, rawInput }) {
     const errorEl = document.getElementById("diy-color-error");
-    const trimmed = rawInput.trim().toLowerCase();
-    const hexMatch = trimmed.match(/^#?([0-9a-f]{6})$/);
+    const hexMatch = rawInput.trim().toLowerCase().match(/^#?([0-9a-f]{6})$/);
     if (hexMatch === null) {
         errorEl.textContent = "Invalid hex color: " + rawInput;
         return;
