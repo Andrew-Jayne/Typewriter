@@ -118,6 +118,10 @@ body.diy-mode .toggle-row {
   border-bottom-color: var(--diy-border);
 }
 
+body.diy-mode .toggle-switch {
+  background: var(--diy-mid-gray);
+}
+
 body.diy-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
   background: var(--diy-accent);
 }
@@ -160,10 +164,6 @@ body.diy-mode .font-size-setting input[type="number"]:focus {
 
 body.diy-mode .font-size-unit {
   color: var(--diy-mid-gray);
-}
-
-body.diy-mode .toggle-switch {
-  background: var(--diy-mid-gray);
 }
 
 body.diy-mode .view-content a {

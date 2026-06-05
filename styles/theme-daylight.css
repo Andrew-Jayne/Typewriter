@@ -118,6 +118,10 @@ body.daylight-mode .toggle-row {
   border-bottom-color: var(--daylight-border);
 }
 
+body.daylight-mode .toggle-switch {
+  background: var(--daylight-mid-gray);
+}
+
 body.daylight-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
   background: var(--daylight-accent);
 }
@@ -160,10 +164,6 @@ body.daylight-mode .font-size-setting input[type="number"]:focus {
 
 body.daylight-mode .font-size-unit {
   color: var(--daylight-mid-gray);
-}
-
-body.daylight-mode .toggle-switch {
-  background: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .view-content a {

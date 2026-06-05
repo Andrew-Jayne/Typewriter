@@ -119,6 +119,10 @@ body.dusk-mode .toggle-row {
   border-bottom-color: var(--dusk-border);
 }
 
+body.dusk-mode .toggle-switch {
+  background: var(--dusk-mid-gray);
+}
+
 body.dusk-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
   background: var(--dusk-accent);
 }
@@ -161,10 +165,6 @@ body.dusk-mode .font-size-setting input[type="number"]:focus {
 
 body.dusk-mode .font-size-unit {
   color: var(--dusk-mid-gray);
-}
-
-body.dusk-mode .toggle-switch {
-  background: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .view-content a {

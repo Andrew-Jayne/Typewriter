@@ -35,18 +35,18 @@
   border-radius: 20px;
 }
 
+.toolbar-items {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
 .toolbar.collapsed .toolbar-trigger {
   display: flex;
 }
 
 .toolbar.collapsed .toolbar-items {
   display: none;
-}
-
-.toolbar-items {
-  display: flex;
-  gap: 6px;
-  align-items: center;
 }
 
 .icon-btn,

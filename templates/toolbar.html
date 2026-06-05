@@ -3,16 +3,17 @@
         {{icon:icons/hamburger.svg}}
     </div>
     <div class="toolbar-items">
-        <button class="icon-btn" onclick="openFile()" data-tooltip="Open file">
+        <button type="button" class="icon-btn" onclick="openFile()" data-tooltip="Open file">
             {{icon:icons/open-file.svg}}
         </button>
-        <button class="icon-btn" onclick="clearText()" data-tooltip="Clear">
+        <button type="button" class="icon-btn" onclick="clearText()" data-tooltip="Clear">
             {{icon:icons/clear.svg}}
         </button>
-        <button class="icon-btn" onclick="saveFile()" data-tooltip="Save">
+        <button type="button" class="icon-btn" onclick="saveFile()" data-tooltip="Save">
             {{icon:icons/save.svg}}
         </button>
         <button
+            type="button"
             class="mode-toggle"
             onclick="toggleMode()"
             data-tooltip="Switch to reader"
@@ -25,6 +26,7 @@
         </button>
         <div class="theme-picker" id="theme-picker">
             <button
+                type="button"
                 class="theme-toggle"
                 onclick="toggleThemePicker()"
                 data-tooltip="Select theme"
@@ -34,6 +36,7 @@
             </button>
             <div class="theme-picker-menu" id="theme-picker-menu">
                 <button
+                    type="button"
                     class="theme-option"
                     onclick="selectTheme({ theme: Theme.DAWN })"
                 >
@@ -43,6 +46,7 @@
                     <span>Dawn</span>
                 </button>
                 <button
+                    type="button"
                     class="theme-option"
                     onclick="selectTheme({ theme: Theme.DAYLIGHT })"
                 >
@@ -52,6 +56,7 @@
                     <span>Daylight</span>
                 </button>
                 <button
+                    type="button"
                     class="theme-option"
                     onclick="selectTheme({ theme: Theme.DUSK })"
                 >
@@ -61,6 +66,7 @@
                     <span>Dusk</span>
                 </button>
                 <button
+                    type="button"
                     class="theme-option"
                     onclick="selectTheme({ theme: Theme.DARKNESS })"
                 >
@@ -70,6 +76,7 @@
                     <span>Darkness</span>
                 </button>
                 <button
+                    type="button"
                     class="theme-option"
                     onclick="selectTheme({ theme: Theme.DIY })"
                 >
@@ -81,6 +88,7 @@
             </div>
         </div>
         <button
+            type="button"
             class="settings-toggle"
             onclick="toggleSettings()"
             data-tooltip="Settings"
@@ -88,6 +96,7 @@
             {{icon:icons/settings.svg}}
         </button>
         <button
+            type="button"
             class="icon-btn"
             onclick="toggleFullscreen()"
             data-tooltip="Fullscreen"
@@ -100,6 +109,7 @@
             >
         </button>
         <button
+            type="button"
             class="icon-btn"
             onclick="toggleToolbar()"
             data-tooltip="Close menu"

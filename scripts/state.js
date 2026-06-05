@@ -90,6 +90,6 @@ function setState({ key, value }) {
       handleModeChange(value);
       return;
     default:
-      throw new Error("Invalid state key: " + key);
+      throw new Error(`Invalid state key: ${key}`);
   }
 }

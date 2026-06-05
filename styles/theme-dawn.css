@@ -119,6 +119,10 @@ body.dawn-mode .toggle-row {
   border-bottom-color: var(--dawn-border);
 }
 
+body.dawn-mode .toggle-switch {
+  background: var(--dawn-mid-gray);
+}
+
 body.dawn-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
   background: var(--dawn-accent);
 }
@@ -161,10 +165,6 @@ body.dawn-mode .font-size-setting input[type="number"]:focus {
 
 body.dawn-mode .font-size-unit {
   color: var(--dawn-mid-gray);
-}
-
-body.dawn-mode .toggle-switch {
-  background: var(--dawn-mid-gray);
 }
 
 body.dawn-mode .view-content a {

@@ -8,14 +8,14 @@ function validateStorage() {
       storedKey.startsWith("tw.") === true &&
       validKeys.has(storedKey) === false
     ) {
-      console.warn("Removing orphaned state key: " + storedKey);
+      console.warn(`Removing orphaned state key: ${storedKey}`);
       localStorage.removeItem(storedKey);
     }
   }
 
   for (const key of validKeys) {
     if (localStorage.getItem(key) === null) {
-      console.info("Using default for: " + key);
+      console.info(`Using default for: ${key}`);
     }
   }
 }
@@ -34,7 +34,7 @@ function isValidHexColor(hexColor) {
 function validateAndStoreHexColor({ key, value }) {
   if (isValidHexColor(value) === false) {
     throw new Error(
-      key + " requires a valid hex color (#rrggbb), got: " + value,
+      `${key} requires a valid hex color (#rrggbb), got: ${value}`,
     );
   }
   localStorage.setItem(key, value);
@@ -52,7 +52,7 @@ function validateAndStoreBool({ key, value }) {
       localStorage.setItem(key, "false");
       return;
     default:
-      throw new Error(key + " requires a boolean, got: " + value);
+      throw new Error(`${key} requires a boolean, got: ${value}`);
   }
 }
 
@@ -63,7 +63,7 @@ function validateAndStoreFontSize({ key, value }) {
   const size = parseInt(value, 10);
   if (Number.isInteger(size) === false || size < 8 || size > 128) {
     throw new Error(
-      key + " requires an integer between 8 and 128, got: " + value,
+      `${key} requires an integer between 8 and 128, got: ${value}`,
     );
   }
   localStorage.setItem(key, String(size));
@@ -71,22 +71,10 @@ function validateAndStoreFontSize({ key, value }) {
 
 /** Applies DIY custom color CSS variables from localStorage. */
 function applyDiyColors() {
-  const RED = Math.min(
-    255,
-    Math.max(0, parseInt(bg.slice(1, 3), 16) + hoverShift),
-  );
-  const GREEN = Math.min(
-    255,
-    Math.max(0, parseInt(bg.slice(3, 5), 16) + hoverShift),
-  );
-  const BLUE = Math.min(
-    255,
-    Math.max(0, parseInt(bg.slice(5, 7), 16) + hoverShift),
-  );
   const body = document.body;
   for (const field of DIY_FIELDS) {
     body.style.setProperty(
-      "--diy-" + field,
+      `--diy-${field}`,
       getState({ key: DIY_STATE_KEY[field] }),
     );
   }
@@ -101,6 +89,19 @@ function applyDiyColors() {
   if (brightness > 128) {
     hoverShift = -15;
   }
+
+  const RED = Math.min(
+    255,
+    Math.max(0, parseInt(bg.slice(1, 3), 16) + hoverShift),
+  );
+  const GREEN = Math.min(
+    255,
+    Math.max(0, parseInt(bg.slice(3, 5), 16) + hoverShift),
+  );
+  const BLUE = Math.min(
+    255,
+    Math.max(0, parseInt(bg.slice(5, 7), 16) + hoverShift),
+  );
 
   body.style.setProperty("--diy-hover", `rgb(${RED},${GREEN},${BLUE})`);
 
@@ -218,7 +219,7 @@ function handleWordCount(visible) {
  * @param {number|string} size - Font size in px
  */
 function handleFontSizeChange(size) {
-  const px = parseInt(size, 10) + "px";
+  const px = `${parseInt(size, 10)}px`;
   switch (getState({ key: StateKey.MODE })) {
     case Mode.EDIT:
       document.getElementById("editor").style.fontSize = px;
@@ -252,7 +253,7 @@ function renderViewMode() {
   const viewDiv = document.createElement("div");
   viewDiv.id = "view-mode";
   viewDiv.className = "view-content";
-  viewDiv.style.fontSize = getState({ key: StateKey.FONT_SIZE }) + "px";
+  viewDiv.style.fontSize = `${getState({ key: StateKey.FONT_SIZE })}px`;
   viewDiv.innerHTML = marked.parse(getState({ key: StateKey.EDITOR_TEXT }), {
     breaks: true,
     gfm: true,
@@ -283,8 +284,8 @@ function renderEditMode() {
   textarea.placeholder = "Start writing...";
   textarea.spellcheck = true;
   textarea.value = getState({ key: StateKey.EDITOR_TEXT });
-  textarea.style.fontSize = fontSize + "px";
-  lineNums.style.fontSize = fontSize + "px";
+  textarea.style.fontSize = `${fontSize}px`;
+  lineNums.style.fontSize = `${fontSize}px`;
 
   if (getState({ key: StateKey.USE_MONOSPACE }) === true) {
     textarea.classList.add("monospace-mode");
@@ -322,9 +323,9 @@ function renderEditMode() {
  * @param {{ field: string, hexColor: string }} params
  */
 function syncDiyField({ field, hexColor }) {
-  document.getElementById("diy-" + field + "-hex").value = hexColor;
-  document.getElementById("diy-" + field + "-picker").value = hexColor;
-  document.body.style.setProperty("--diy-" + field, hexColor);
+  document.getElementById(`diy-${field}-hex`).value = hexColor;
+  document.getElementById(`diy-${field}-picker`).value = hexColor;
+  document.body.style.setProperty(`--diy-${field}`, hexColor);
 }
 
 /**
@@ -346,11 +347,11 @@ function handleDiyColorInput({ field, rawInput }) {
     .toLowerCase()
     .match(/^#?([0-9a-f]{6})$/);
   if (hexMatch === null) {
-    errorEl.textContent = "Invalid hex color: " + rawInput;
+    errorEl.textContent = `Invalid hex color: ${rawInput}`;
     return;
   }
   errorEl.textContent = "";
-  const hexColor = "#" + hexMatch[1];
+  const hexColor = `#${hexMatch[1]}`;
   setState({ key: DIY_STATE_KEY[field], value: hexColor });
   syncDiyField({ field: field, hexColor: hexColor });
   setState({ key: StateKey.THEME, value: Theme.DIY });

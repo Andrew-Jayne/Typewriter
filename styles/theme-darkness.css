@@ -120,6 +120,10 @@ body.darkness-mode .toggle-row {
   border-bottom-color: var(--darkness-border);
 }
 
+body.darkness-mode .toggle-switch {
+  background: var(--darkness-mid-gray);
+}
+
 body.darkness-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
   background: var(--darkness-accent);
 }
@@ -162,10 +166,6 @@ body.darkness-mode .font-size-setting input[type="number"]:focus {
 
 body.darkness-mode .font-size-unit {
   color: var(--darkness-mid-gray);
-}
-
-body.darkness-mode .toggle-switch {
-  background: var(--darkness-mid-gray);
 }
 
 body.darkness-mode .view-content a {
