@@ -1,172 +1,172 @@
 :root {
-    --daylight-bg: #f5f7fa;
-    --daylight-text: #1a1c20;
-    --daylight-border: #dce0e8;
-    --daylight-hover: #dce0e8;
-    --daylight-mid-gray: #a0a6b0;
-    --daylight-accent: #5a9fd4;
+  --daylight-bg: #f5f7fa;
+  --daylight-text: #1a1c20;
+  --daylight-border: #dce0e8;
+  --daylight-hover: #dce0e8;
+  --daylight-mid-gray: #a0a6b0;
+  --daylight-accent: #5a9fd4;
 }
 
 body.daylight-mode {
-    background-color: var(--daylight-bg);
-    color: var(--daylight-text);
+  background-color: var(--daylight-bg);
+  color: var(--daylight-text);
 }
 
 body.daylight-mode button {
-    border-color: var(--daylight-border);
-    color: var(--daylight-text);
+  border-color: var(--daylight-border);
+  color: var(--daylight-text);
 }
 
 body.daylight-mode button:hover {
-    background: var(--daylight-hover);
-    border-color: var(--daylight-mid-gray);
+  background: var(--daylight-hover);
+  border-color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode button.primary {
-    color: var(--daylight-accent);
+  color: var(--daylight-accent);
 }
 
 body.daylight-mode button.primary:hover {
-    background: var(--daylight-accent);
-    color: #ffffff;
-    border-color: var(--daylight-accent);
+  background: var(--daylight-accent);
+  color: #ffffff;
+  border-color: var(--daylight-accent);
 }
 
 body.daylight-mode .word-count {
-    color: var(--daylight-mid-gray);
-    background: var(--daylight-bg);
-    border-color: var(--daylight-border);
+  color: var(--daylight-mid-gray);
+  background: var(--daylight-bg);
+  border-color: var(--daylight-border);
 }
 
 body.daylight-mode .toolbar {
-    background: var(--daylight-bg);
-    border-color: var(--daylight-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--daylight-bg);
+  border-color: var(--daylight-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 body.daylight-mode [data-tooltip]::after {
-    background: var(--daylight-text);
-    color: var(--daylight-bg);
+  background: var(--daylight-text);
+  color: var(--daylight-bg);
 }
 
 body.daylight-mode .mode-toggle.flash {
-    animation-name: mode-flash-daylight;
+  animation-name: mode-flash-daylight;
 }
 
 @keyframes mode-flash-daylight {
-    0% {
-        background: transparent;
-    }
-    30% {
-        background: #5a9fd4;
-        color: #ffffff;
-    }
-    100% {
-        background: transparent;
-    }
+  0% {
+    background: transparent;
+  }
+  30% {
+    background: #5a9fd4;
+    color: #ffffff;
+  }
+  100% {
+    background: transparent;
+  }
 }
 
 body.daylight-mode .theme-picker-menu {
-    background: var(--daylight-bg);
-    border-color: var(--daylight-border);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: var(--daylight-bg);
+  border-color: var(--daylight-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 body.daylight-mode .theme-option.active {
-    background: var(--daylight-hover);
+  background: var(--daylight-hover);
 }
 
 body.daylight-mode .line-numbers {
-    color: var(--daylight-mid-gray);
-    border-right-color: var(--daylight-border);
+  color: var(--daylight-mid-gray);
+  border-right-color: var(--daylight-border);
 }
 
 body.daylight-mode textarea {
-    color: var(--daylight-text);
+  color: var(--daylight-text);
 }
 
 body.daylight-mode textarea::placeholder {
-    color: var(--daylight-mid-gray);
+  color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .view-content code {
-    background: var(--daylight-hover);
+  background: var(--daylight-hover);
 }
 
 body.daylight-mode .view-content pre {
-    background: var(--daylight-hover);
+  background: var(--daylight-hover);
 }
 
 body.daylight-mode .view-content blockquote {
-    border-left-color: #d97757;
-    color: var(--daylight-mid-gray);
+  border-left-color: #d97757;
+  color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .settings-modal {
-    background: var(--daylight-bg);
+  background: var(--daylight-bg);
 }
 
 body.daylight-mode .settings-row {
-    border-bottom-color: var(--daylight-border);
+  border-bottom-color: var(--daylight-border);
 }
 
 body.daylight-mode .font-size-setting input[type="number"] {
-    border-color: var(--daylight-border);
+  border-color: var(--daylight-border);
 }
 
 body.daylight-mode .toggle-row {
-    border-bottom-color: var(--daylight-border);
+  border-bottom-color: var(--daylight-border);
 }
 
 body.daylight-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
-    background: var(--daylight-accent);
+  background: var(--daylight-accent);
 }
 
 body.daylight-mode .settings-color-row {
-    border-bottom-color: var(--daylight-border);
+  border-bottom-color: var(--daylight-border);
 }
 
 body.daylight-mode .settings-swatch {
-    border-color: var(--daylight-border);
+  border-color: var(--daylight-border);
 }
 
 body.daylight-mode .settings-color-input {
-    border-color: var(--daylight-border);
+  border-color: var(--daylight-border);
 }
 
 body.daylight-mode .settings-color-input:focus {
-    border-color: var(--daylight-accent);
+  border-color: var(--daylight-accent);
 }
 
 body.daylight-mode .toolbar-trigger {
-    color: var(--daylight-mid-gray);
+  color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .settings-section h3 {
-    color: var(--daylight-mid-gray);
+  color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .settings-error {
-    color: #d44;
+  color: #d44;
 }
 
 body.daylight-mode .settings-hint {
-    color: var(--daylight-mid-gray);
+  color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .font-size-setting input[type="number"]:focus {
-    border-color: var(--daylight-accent);
+  border-color: var(--daylight-accent);
 }
 
 body.daylight-mode .font-size-unit {
-    color: var(--daylight-mid-gray);
+  color: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .toggle-switch {
-    background: var(--daylight-mid-gray);
+  background: var(--daylight-mid-gray);
 }
 
 body.daylight-mode .view-content a {
-    color: #6a9bcc;
-    border-bottom-color: #6a9bcc;
+  color: #6a9bcc;
+  border-bottom-color: #6a9bcc;
 }

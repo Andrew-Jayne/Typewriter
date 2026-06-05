@@ -1,173 +1,173 @@
 :root {
-    --dusk-bg: #2b2826;
-    --dusk-text: #d4c9bb;
-    --dusk-border: #4a4540;
-    --dusk-hover: #3a3632;
-    --dusk-mid-gray: #8a7f70;
-    --dusk-accent: #b5623f;
+  --dusk-bg: #2b2826;
+  --dusk-text: #d4c9bb;
+  --dusk-border: #4a4540;
+  --dusk-hover: #3a3632;
+  --dusk-mid-gray: #8a7f70;
+  --dusk-accent: #b5623f;
 }
 
 body.dusk-mode {
-    background-color: var(--dusk-bg);
-    color: var(--dusk-text);
+  background-color: var(--dusk-bg);
+  color: var(--dusk-text);
 }
 
 body.dusk-mode button {
-    border-color: var(--dusk-border);
-    color: var(--dusk-text);
+  border-color: var(--dusk-border);
+  color: var(--dusk-text);
 }
 
 body.dusk-mode button:hover {
-    background: var(--dusk-hover);
-    border-color: var(--dusk-mid-gray);
+  background: var(--dusk-hover);
+  border-color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode button.primary {
-    color: var(--dusk-accent);
+  color: var(--dusk-accent);
 }
 
 body.dusk-mode button.primary:hover {
-    background: var(--dusk-accent);
-    color: #ffffff;
-    border-color: var(--dusk-accent);
+  background: var(--dusk-accent);
+  color: #ffffff;
+  border-color: var(--dusk-accent);
 }
 
 body.dusk-mode .word-count {
-    background: var(--dusk-bg);
-    border-color: var(--dusk-border);
-    color: var(--dusk-mid-gray);
+  background: var(--dusk-bg);
+  border-color: var(--dusk-border);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .toolbar {
-    background: var(--dusk-bg);
-    border-color: var(--dusk-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: var(--dusk-bg);
+  border-color: var(--dusk-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 body.dusk-mode [data-tooltip]::after {
-    background: var(--dusk-text);
-    color: var(--dusk-bg);
+  background: var(--dusk-text);
+  color: var(--dusk-bg);
 }
 
 body.dusk-mode .mode-toggle.flash {
-    animation-name: mode-flash-dusk;
+  animation-name: mode-flash-dusk;
 }
 
 @keyframes mode-flash-dusk {
-    0% {
-        background: transparent;
-    }
-    30% {
-        background: #b5623f;
-        color: #ffffff;
-    }
-    100% {
-        background: transparent;
-    }
+  0% {
+    background: transparent;
+  }
+  30% {
+    background: #b5623f;
+    color: #ffffff;
+  }
+  100% {
+    background: transparent;
+  }
 }
 
 body.dusk-mode .theme-picker-menu {
-    background: var(--dusk-bg);
-    border-color: var(--dusk-border);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background: var(--dusk-bg);
+  border-color: var(--dusk-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 body.dusk-mode .theme-option.active {
-    background: var(--dusk-hover);
+  background: var(--dusk-hover);
 }
 
 body.dusk-mode .line-numbers {
-    color: var(--dusk-mid-gray);
-    border-right-color: var(--dusk-border);
+  color: var(--dusk-mid-gray);
+  border-right-color: var(--dusk-border);
 }
 
 body.dusk-mode textarea {
-    color: var(--dusk-text);
+  color: var(--dusk-text);
 }
 
 body.dusk-mode textarea::placeholder {
-    color: var(--dusk-mid-gray);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .view-content code {
-    background: var(--dusk-hover);
+  background: var(--dusk-hover);
 }
 
 body.dusk-mode .view-content pre {
-    background: var(--dusk-hover);
+  background: var(--dusk-hover);
 }
 
 body.dusk-mode .view-content blockquote {
-    border-left-color: var(--dusk-accent);
-    color: var(--dusk-mid-gray);
+  border-left-color: var(--dusk-accent);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .settings-modal {
-    background: var(--dusk-bg);
-    color: var(--dusk-text);
+  background: var(--dusk-bg);
+  color: var(--dusk-text);
 }
 
 body.dusk-mode .settings-row {
-    border-bottom-color: var(--dusk-border);
+  border-bottom-color: var(--dusk-border);
 }
 
 body.dusk-mode .font-size-setting input[type="number"] {
-    border-color: var(--dusk-border);
+  border-color: var(--dusk-border);
 }
 
 body.dusk-mode .toggle-row {
-    border-bottom-color: var(--dusk-border);
+  border-bottom-color: var(--dusk-border);
 }
 
 body.dusk-mode .toggle-row input[type="checkbox"]:checked + .toggle-switch {
-    background: var(--dusk-accent);
+  background: var(--dusk-accent);
 }
 
 body.dusk-mode .settings-color-row {
-    border-bottom-color: var(--dusk-border);
+  border-bottom-color: var(--dusk-border);
 }
 
 body.dusk-mode .settings-swatch {
-    border-color: var(--dusk-border);
+  border-color: var(--dusk-border);
 }
 
 body.dusk-mode .settings-color-input {
-    border-color: var(--dusk-border);
+  border-color: var(--dusk-border);
 }
 
 body.dusk-mode .settings-color-input:focus {
-    border-color: var(--dusk-accent);
+  border-color: var(--dusk-accent);
 }
 
 body.dusk-mode .toolbar-trigger {
-    color: var(--dusk-mid-gray);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .settings-section h3 {
-    color: var(--dusk-mid-gray);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .settings-error {
-    color: #d44;
+  color: #d44;
 }
 
 body.dusk-mode .settings-hint {
-    color: var(--dusk-mid-gray);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .font-size-setting input[type="number"]:focus {
-    border-color: var(--dusk-accent);
+  border-color: var(--dusk-accent);
 }
 
 body.dusk-mode .font-size-unit {
-    color: var(--dusk-mid-gray);
+  color: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .toggle-switch {
-    background: var(--dusk-mid-gray);
+  background: var(--dusk-mid-gray);
 }
 
 body.dusk-mode .view-content a {
-    color: #6a9bcc;
-    border-bottom-color: #6a9bcc;
+  color: #6a9bcc;
+  border-bottom-color: #6a9bcc;
 }
