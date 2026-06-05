@@ -1,21 +1,20 @@
 <div class="toolbar collapsed" id="toolbar">
-    <div class="toolbar-trigger" onclick="toggleToolbar()">
+    <div class="toolbar-trigger" id="toolbar-open">
         {{icon:icons/hamburger.svg}}
     </div>
     <div class="toolbar-items">
-        <button type="button" class="icon-btn" onclick="openFile()" data-tooltip="Open file">
+        <button type="button" class="icon-btn" id="btn-open" data-tooltip="Open file">
             {{icon:icons/open-file.svg}}
         </button>
-        <button type="button" class="icon-btn" onclick="clearText()" data-tooltip="Clear">
+        <button type="button" class="icon-btn" id="btn-clear" data-tooltip="Clear">
             {{icon:icons/clear.svg}}
         </button>
-        <button type="button" class="icon-btn" onclick="saveFile()" data-tooltip="Save">
+        <button type="button" class="icon-btn" id="btn-save" data-tooltip="Save">
             {{icon:icons/save.svg}}
         </button>
         <button
             type="button"
             class="mode-toggle"
-            onclick="toggleMode()"
             data-tooltip="Switch to reader"
             id="mode-toggle"
         >
@@ -28,7 +27,6 @@
             <button
                 type="button"
                 class="theme-toggle"
-                onclick="toggleThemePicker()"
                 data-tooltip="Select theme"
                 id="theme-toggle"
             >
@@ -38,7 +36,7 @@
                 <button
                     type="button"
                     class="theme-option"
-                    onclick="selectTheme({ theme: Theme.DAWN })"
+                    data-theme="dawn"
                 >
                     <span class="theme-option-icon"
                         >{{icon:icons/dawn.svg}}</span
@@ -48,7 +46,7 @@
                 <button
                     type="button"
                     class="theme-option"
-                    onclick="selectTheme({ theme: Theme.DAYLIGHT })"
+                    data-theme="daylight"
                 >
                     <span class="theme-option-icon"
                         >{{icon:icons/daylight.svg}}</span
@@ -58,7 +56,7 @@
                 <button
                     type="button"
                     class="theme-option"
-                    onclick="selectTheme({ theme: Theme.DUSK })"
+                    data-theme="dusk"
                 >
                     <span class="theme-option-icon"
                         >{{icon:icons/dusk.svg}}</span
@@ -68,7 +66,7 @@
                 <button
                     type="button"
                     class="theme-option"
-                    onclick="selectTheme({ theme: Theme.DARKNESS })"
+                    data-theme="darkness"
                 >
                     <span class="theme-option-icon"
                         >{{icon:icons/darkness.svg}}</span
@@ -78,7 +76,7 @@
                 <button
                     type="button"
                     class="theme-option"
-                    onclick="selectTheme({ theme: Theme.DIY })"
+                    data-theme="diy"
                 >
                     <span class="theme-option-icon"
                         >{{icon:icons/diy.svg}}</span
@@ -90,7 +88,7 @@
         <button
             type="button"
             class="settings-toggle"
-            onclick="toggleSettings()"
+            id="btn-settings"
             data-tooltip="Settings"
         >
             {{icon:icons/settings.svg}}
@@ -98,7 +96,7 @@
         <button
             type="button"
             class="icon-btn"
-            onclick="toggleFullscreen()"
+            id="btn-fullscreen"
             data-tooltip="Fullscreen"
         >
             <span id="icon-fullscreen-enter"
@@ -111,7 +109,7 @@
         <button
             type="button"
             class="icon-btn"
-            onclick="toggleToolbar()"
+            id="toolbar-close"
             data-tooltip="Close menu"
         >
             {{icon:icons/close-menu.svg}}
@@ -122,6 +120,5 @@
         id="file-input"
         accept=".txt"
         class="hidden"
-        onchange="handleFileSelect(event)"
     />
 </div>

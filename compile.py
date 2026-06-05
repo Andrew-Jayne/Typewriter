@@ -6,6 +6,7 @@ Default: python compile.py main.html typewriter.html build
 """
 
 import base64
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -69,15 +70,6 @@ if __name__ == "__main__":
             print(f"✓ Bundled {css_path}")
         html_content = html_content.replace("{{styles}}", "\n".join(css_contents))
 
-    external_files = sorted(input_path.parent.glob("external/*.js"))
-    if len(external_files) > 0:
-        external_contents: list[str] = []
-        for ext_path in external_files:
-            with open(ext_path, "r", encoding="utf-8") as f:
-                external_contents.append(f.read())
-            print(f"✓ Bundled {ext_path}")
-        html_content = html_content.replace("{{external}}", "\n".join(external_contents))
-
     ordered_scripts: list[Path] = []
     main_entry = None
     for script in sorted(input_path.parent.glob("scripts/*.js")):
@@ -87,13 +79,39 @@ if __name__ == "__main__":
             ordered_scripts.append(script)
     if main_entry is not None:
         ordered_scripts.append(main_entry)
-    if len(ordered_scripts) > 0:
-        script_contents: list[str] = []
-        for js_path in ordered_scripts:
-            with open(js_path, "r", encoding="utf-8") as f:
-                script_contents.append(f.read())
-            print(f"✓ Bundled {js_path}")
-        html_content = html_content.replace("{{scripts}}", "\n".join(script_contents))
+    script_contents: list[str] = []
+    for js_path in ordered_scripts:
+        with open(js_path, "r", encoding="utf-8") as f:
+            script_contents.append(f.read())
+        print(f"✓ Bundled {js_path}")
+    scripts_blob = "\n".join(script_contents)
+
+    external_files = sorted(input_path.parent.glob("external/*.js"))
+    if len(external_files) > 0:
+        external_contents: list[str] = []
+        for ext_path in external_files:
+            with open(ext_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            def _resolve_exports(match):
+                aliases = []
+                for spec in match.group(1).split(","):
+                    spec = spec.strip()
+                    if " as " in spec:
+                        internal, external = spec.split(" as ", 1)
+                        external = external.strip()
+                        if external in scripts_blob:
+                            aliases.append(f"var {external} = {internal.strip()};")
+                return "\n".join(aliases)
+
+            content = re.sub(r"export\s*\{([^}]+)\}\s*;?", _resolve_exports, content)
+            content = re.sub(r"//# sourceMappingURL=\S+", "", content)
+            external_contents.append(content)
+            print(f"✓ Bundled {ext_path}")
+        html_content = html_content.replace("{{external}}", "\n".join(external_contents))
+
+    if len(script_contents) > 0:
+        html_content = html_content.replace("{{scripts}}", scripts_blob)
 
     for template_path in sorted(input_path.parent.glob("templates/*.html")):
         marker = "{{template:" + str(template_path) + "}}"

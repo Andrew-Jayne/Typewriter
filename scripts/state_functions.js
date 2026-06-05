@@ -1,25 +1,3 @@
-/** Audits localStorage: removes orphaned keys, logs missing keys that will use defaults. */
-function validateStorage() {
-  const validKeys = new Set(Object.values(StateKey));
-
-  for (let idx = 0; idx < localStorage.length; idx++) {
-    const storedKey = localStorage.key(idx);
-    if (
-      storedKey.startsWith("tw.") === true &&
-      validKeys.has(storedKey) === false
-    ) {
-      console.warn(`Removing orphaned state key: ${storedKey}`);
-      localStorage.removeItem(storedKey);
-    }
-  }
-
-  for (const key of validKeys) {
-    if (localStorage.getItem(key) === null) {
-      console.info(`Using default for: ${key}`);
-    }
-  }
-}
-
 /**
  * @param {string} hexColor
  * @returns {boolean}
@@ -28,58 +6,16 @@ function isValidHexColor(hexColor) {
   return /^#[0-9a-fA-F]{6}$/.test(hexColor);
 }
 
-/**
- * @param {{ key: string, value: string }} params
- */
-function validateAndStoreHexColor({ key, value }) {
-  if (isValidHexColor(value) === false) {
-    throw new Error(
-      `${key} requires a valid hex color (#rrggbb), got: ${value}`,
-    );
-  }
-  localStorage.setItem(key, value);
-}
-
-/**
- * @param {{ key: string, value: boolean }} params
- */
-function validateAndStoreBool({ key, value }) {
-  switch (value) {
-    case true:
-      localStorage.setItem(key, "true");
-      return;
-    case false:
-      localStorage.setItem(key, "false");
-      return;
-    default:
-      throw new Error(`${key} requires a boolean, got: ${value}`);
-  }
-}
-
-/**
- * @param {{ key: string, value: string|number }} params
- */
-function validateAndStoreFontSize({ key, value }) {
-  const size = parseInt(value, 10);
-  if (Number.isInteger(size) === false || size < 8 || size > 128) {
-    throw new Error(
-      `${key} requires an integer between 8 and 128, got: ${value}`,
-    );
-  }
-  localStorage.setItem(key, String(size));
-}
-
-/** Applies DIY custom color CSS variables from localStorage. */
 function applyDiyColors() {
   const body = document.body;
   for (const field of DIY_FIELDS) {
     body.style.setProperty(
       `--diy-${field}`,
-      getState({ key: DIY_STATE_KEY[field] }),
+      state.get(DIY_STATE_KEY[field]),
     );
   }
 
-  const bg = getState({ key: StateKey.DIY_BG });
+  const bg = state.get(StateKey.DIY_BG);
   const brightness =
     parseInt(bg.slice(1, 3), 16) * 0.299 +
     parseInt(bg.slice(3, 5), 16) * 0.587 +
@@ -115,10 +51,8 @@ function applyDiyColors() {
   }
 }
 
-/**
- * @param {string} theme - One of Theme enum values
- */
-function handleThemeChange(theme) {
+function handleThemeChange() {
+  const theme = state.get(StateKey.THEME);
   document.body.classList.remove(
     "daylight-mode",
     "dawn-mode",
@@ -136,13 +70,11 @@ function handleThemeChange(theme) {
     .setAttribute("data-tooltip", "Select theme");
 }
 
-/**
- * @param {boolean} visible
- */
-function handleShowLineNumbers(visible) {
-  if (getState({ key: StateKey.MODE }) === Mode.VIEW) {
+function handleShowLineNumbers() {
+  if (state.get(StateKey.MODE) === Mode.VIEW) {
     return;
   }
+  const visible = state.get(StateKey.SHOW_LINE_NUMBERS);
   const wrap = document.querySelector(".edit-mode");
   switch (visible) {
     case true:
@@ -156,13 +88,11 @@ function handleShowLineNumbers(visible) {
   }
 }
 
-/**
- * @param {boolean} enabled
- */
-function handleMonospace(enabled) {
-  if (getState({ key: StateKey.MODE }) === Mode.VIEW) {
+function handleMonospace() {
+  if (state.get(StateKey.MODE) === Mode.VIEW) {
     return;
   }
+  const enabled = state.get(StateKey.USE_MONOSPACE);
   switch (enabled) {
     case true:
       document.getElementById("editor").classList.add("monospace-mode");
@@ -173,10 +103,8 @@ function handleMonospace(enabled) {
   }
 }
 
-/**
- * @param {boolean} enabled
- */
-function handleWideMode(enabled) {
+function handleWideMode() {
+  const enabled = state.get(StateKey.ENABLE_WIDE_MODE);
   switch (enabled) {
     case true:
       document.getElementById("typewriter-container").classList.add("wide");
@@ -187,10 +115,8 @@ function handleWideMode(enabled) {
   }
 }
 
-/**
- * @param {boolean} visible
- */
-function handleTooltips(visible) {
+function handleTooltips() {
+  const visible = state.get(StateKey.SHOW_TOOLTIPS);
   switch (visible) {
     case true:
       document.body.classList.remove("no-tooltips");
@@ -201,10 +127,8 @@ function handleTooltips(visible) {
   }
 }
 
-/**
- * @param {boolean} visible
- */
-function handleWordCount(visible) {
+function handleWordCount() {
+  const visible = state.get(StateKey.SHOW_WORD_COUNT);
   switch (visible) {
     case true:
       document.getElementById("word-count").style.display = "block";
@@ -215,12 +139,10 @@ function handleWordCount(visible) {
   }
 }
 
-/**
- * @param {number|string} size - Font size in px
- */
-function handleFontSizeChange(size) {
-  const px = `${parseInt(size, 10)}px`;
-  switch (getState({ key: StateKey.MODE })) {
+function handleFontSizeChange() {
+  const size = state.get(StateKey.FONT_SIZE);
+  const px = `${size}px`;
+  switch (state.get(StateKey.MODE)) {
     case Mode.EDIT:
       document.getElementById("editor").style.fontSize = px;
       document.getElementById("line-numbers").style.fontSize = px;
@@ -231,11 +153,8 @@ function handleFontSizeChange(size) {
   }
 }
 
-/**
- * @param {string} mode - One of Mode enum values
- */
-function handleModeChange(mode) {
-  switch (mode) {
+function handleModeChange() {
+  switch (state.get(StateKey.MODE)) {
     case Mode.VIEW:
       renderViewMode();
       return;
@@ -245,7 +164,6 @@ function handleModeChange(mode) {
   }
 }
 
-/** Builds and renders the view mode UI. */
 function renderViewMode() {
   const container = document.getElementById("typewriter-container");
 
@@ -253,8 +171,8 @@ function renderViewMode() {
   const viewDiv = document.createElement("div");
   viewDiv.id = "view-mode";
   viewDiv.className = "view-content";
-  viewDiv.style.fontSize = `${getState({ key: StateKey.FONT_SIZE })}px`;
-  viewDiv.innerHTML = marked.parse(getState({ key: StateKey.EDITOR_TEXT }), {
+  viewDiv.style.fontSize = `${state.get(StateKey.FONT_SIZE)}px`;
+  viewDiv.innerHTML = marked.parse(state.get(StateKey.EDITOR_TEXT), {
     breaks: true,
     gfm: true,
   });
@@ -266,10 +184,9 @@ function renderViewMode() {
     .setAttribute("data-tooltip", "Switch to editor");
 }
 
-/** Builds and renders the edit mode UI. */
 function renderEditMode() {
   const container = document.getElementById("typewriter-container");
-  const fontSize = getState({ key: StateKey.FONT_SIZE });
+  const fontSize = state.get(StateKey.FONT_SIZE);
 
   container.innerHTML = "";
   const wrap = document.createElement("div");
@@ -283,15 +200,15 @@ function renderEditMode() {
   textarea.id = "editor";
   textarea.placeholder = "Start writing...";
   textarea.spellcheck = true;
-  textarea.value = getState({ key: StateKey.EDITOR_TEXT });
+  textarea.value = state.get(StateKey.EDITOR_TEXT);
   textarea.style.fontSize = `${fontSize}px`;
   lineNums.style.fontSize = `${fontSize}px`;
 
-  if (getState({ key: StateKey.USE_MONOSPACE }) === true) {
+  if (state.get(StateKey.USE_MONOSPACE) === true) {
     textarea.classList.add("monospace-mode");
   }
 
-  if (getState({ key: StateKey.SHOW_LINE_NUMBERS }) === true) {
+  if (state.get(StateKey.SHOW_LINE_NUMBERS) === true) {
     wrap.classList.add("no-wrap");
   } else {
     lineNums.style.display = "none";
@@ -302,7 +219,7 @@ function renderEditMode() {
   container.appendChild(wrap);
 
   textarea.addEventListener("input", () => {
-    setState({ key: StateKey.EDITOR_TEXT, value: textarea.value });
+    state.set(StateKey.EDITOR_TEXT, textarea.value);
     updateWordCount();
     updateLineNumbers();
   });
@@ -329,16 +246,16 @@ function syncDiyField({ field, hexColor }) {
 }
 
 /**
- * @param {{ field: string, hexColor: string }} params - From native color picker
+ * @param {{ field: string, hexColor: string }} params
  */
 function handleDiyPickerInput({ field, hexColor }) {
-  setState({ key: DIY_STATE_KEY[field], value: hexColor });
+  state.set(DIY_STATE_KEY[field], hexColor);
   syncDiyField({ field: field, hexColor: hexColor });
-  setState({ key: StateKey.THEME, value: Theme.DIY });
+  state.set(StateKey.THEME, Theme.DIY);
 }
 
 /**
- * @param {{ field: string, rawInput: string }} params - From hex text input (onchange)
+ * @param {{ field: string, rawInput: string }} params
  */
 function handleDiyColorInput({ field, rawInput }) {
   const errorEl = document.getElementById("diy-color-error");
@@ -352,7 +269,7 @@ function handleDiyColorInput({ field, rawInput }) {
   }
   errorEl.textContent = "";
   const hexColor = `#${hexMatch[1]}`;
-  setState({ key: DIY_STATE_KEY[field], value: hexColor });
+  state.set(DIY_STATE_KEY[field], hexColor);
   syncDiyField({ field: field, hexColor: hexColor });
-  setState({ key: StateKey.THEME, value: Theme.DIY });
+  state.set(StateKey.THEME, Theme.DIY);
 }

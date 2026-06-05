@@ -8,20 +8,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 python compile.py
 ```
 
-This inlines `main.css` and `main.js` into `main.html` and outputs a single self-contained file at `build/typewriter.html`. The build also injects the current git commit SHA as a `<meta name="version">` tag. No dependencies beyond Python 3.
+This inlines styles, external libraries, and scripts into `main.html` and outputs a single self-contained file at `build/typewriter.html`. The build also injects the current git commit SHA as a `<meta name="version">` tag and transforms ES module `export` statements into local bindings for inline script compatibility. No dependencies beyond Python 3.
 
 ## Development
 
-Open `main.html` directly in a browser for development — it references the CSS and JS as separate files. The `build/` output is the distributable artifact.
+Run `python compile.py` and open `build/typewriter.html` in a browser. The `main.html` file is a build template — it uses `{{placeholder}}` markers that compile.py resolves.
 
 ## Architecture
 
-TypeWriter is a single-page vanilla HTML/CSS/JS text editor. There is no framework, bundler, or package manager. It is designed to run from `file://` with no server.
+TypeWriter is a single-page vanilla HTML/CSS/JS text editor. There is no framework, bundler, or package manager. It is designed to run from `file://` with no server. All scripts are compiled into a single `<script type="module">` block.
 
-- **main.html** — HTML shell with the editor layout (header, textarea, controls, toast, DIY theme modal)
-- **main.css** — All styling including five theme variants via CSS custom properties and body class toggles
-- **main.js** — All editor logic: localStorage-first state management, theme cycling, font size control, file open/save, word count, markdown-to-HTML view mode, DIY theme configuration, keyboard shortcuts (Cmd/Ctrl+S save, Cmd/Ctrl+D theme, Cmd/Ctrl+R view toggle)
-- **compile.py** — Build script that regex-matches `<link>` and `<script>` tags to inline external files, injects git SHA
+- **main.html** — HTML template with `{{placeholder}}` markers for styles, scripts, templates, and icons
+- **styles/** — CSS files including five theme variants via CSS custom properties and body class toggles
+- **scripts/** — All editor logic split across modules: enums, state tree, state handlers, editor operations, UI controls, themes, and main entry point
+- **external/** — Third-party libraries (Aspen state tree, marked.js markdown parser)
+- **compile.py** — Build script that inlines all assets, transforms ES module exports, and injects git SHA
 
 ### Themes
 
@@ -35,6 +36,10 @@ Five themes applied via body classes; Daylight is the default (no class):
 
 ### State Management
 
-All state lives in localStorage under `tw.*` keys. The app reads state on load and renders from it. On any change, state is written to localStorage first, then the UI updates. There are no in-memory state variables — `getState(key)` and `setState(key, value)` are the sole interface.
+State is managed by [Aspen](https://github.com/Andrew-Jayne/Aspen) (`external/aspen.min.js`), a typed localStorage state tree. The tree is defined in `scripts/state.js` as a single `StateTree` instance with namespace `tw.`. Each key declares its type, default, persistence, allowed values, and `onUpdate` callbacks that fire on every `state.set()` and during `state.bootstrap()`.
 
-Keys: `tw.theme`, `tw.fontSize`, `tw.editorText`, `tw.fileName`, `tw.viewMode`, `tw.diy.bg`, `tw.diy.text`, `tw.diy.accent`, `tw.diy.border`
+- `state.get(StateKey.X)` / `state.set(StateKey.X, value)` — read/write state
+- `state.bootstrap()` — fires all `onUpdate` callbacks to sync UI on load
+- `state.validateStorage()` — cleans orphaned keys, migrates aliases
+
+Keys are defined in `scripts/enums.js` via the `StateKey` enum. localStorage keys are prefixed `tw.` automatically by Aspen (e.g., `StateKey.THEME` = `"theme"` → localStorage key `"tw.theme"`).

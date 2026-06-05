@@ -14,20 +14,20 @@ const Theme = Object.freeze({
 const DIY_FIELDS = Object.freeze(["bg", "text", "accent", "border"]);
 
 const StateKey = Object.freeze({
-  THEME: "tw.theme",
-  EDITOR_TEXT: "tw.editorText",
-  FILE_NAME: "tw.fileName",
-  MODE: "tw.mode",
-  FONT_SIZE: "tw.fontSize",
-  SHOW_LINE_NUMBERS: "tw.showLineNumbers",
-  USE_MONOSPACE: "tw.useMonospace",
-  ENABLE_WIDE_MODE: "tw.enableWideMode",
-  SHOW_TOOLTIPS: "tw.showTooltips",
-  SHOW_WORD_COUNT: "tw.showWordCount",
-  DIY_BG: "tw.diy.bg",
-  DIY_TEXT: "tw.diy.text",
-  DIY_ACCENT: "tw.diy.accent",
-  DIY_BORDER: "tw.diy.border",
+  THEME: "theme",
+  EDITOR_TEXT: "editorText",
+  FILE_NAME: "fileName",
+  MODE: "mode",
+  FONT_SIZE: "fontSize",
+  SHOW_LINE_NUMBERS: "showLineNumbers",
+  USE_MONOSPACE: "useMonospace",
+  ENABLE_WIDE_MODE: "enableWideMode",
+  SHOW_TOOLTIPS: "showTooltips",
+  SHOW_WORD_COUNT: "showWordCount",
+  DIY_BG: "diy.bg",
+  DIY_TEXT: "diy.text",
+  DIY_ACCENT: "diy.accent",
+  DIY_BORDER: "diy.border",
 });
 
 const DIY_STATE_KEY = Object.freeze({

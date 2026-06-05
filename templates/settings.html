@@ -1,7 +1,6 @@
 <div
     class="settings-overlay"
     id="settings-modal"
-    onclick="closeSettingsOnOverlay(event)"
 >
     <div class="settings-modal">
         <h2>Settings</h2>
@@ -17,7 +16,6 @@
                         min="8"
                         max="128"
                         value="16"
-                        onchange="setFontSize({ value: this.value })"
                     />
                     <span class="font-size-unit">px</span>
                 </div>
@@ -27,9 +25,7 @@
                 <input
                     type="checkbox"
                     id="toggle-line-numbers"
-                    onchange="
-                        toggleBooleanState({ key: StateKey.SHOW_LINE_NUMBERS })
-                    "
+                    data-state-key="showLineNumbers"
                 />
                 <span class="toggle-switch"></span>
             </label>
@@ -38,9 +34,7 @@
                 <input
                     type="checkbox"
                     id="toggle-monospace"
-                    onchange="
-                        toggleBooleanState({ key: StateKey.USE_MONOSPACE })
-                    "
+                    data-state-key="useMonospace"
                 />
                 <span class="toggle-switch"></span>
             </label>
@@ -49,9 +43,7 @@
                 <input
                     type="checkbox"
                     id="toggle-wide"
-                    onchange="
-                        toggleBooleanState({ key: StateKey.ENABLE_WIDE_MODE })
-                    "
+                    data-state-key="enableWideMode"
                 />
                 <span class="toggle-switch"></span>
             </label>
@@ -60,9 +52,7 @@
                 <input
                     type="checkbox"
                     id="toggle-tooltips"
-                    onchange="
-                        toggleBooleanState({ key: StateKey.SHOW_TOOLTIPS })
-                    "
+                    data-state-key="showTooltips"
                 />
                 <span class="toggle-switch"></span>
             </label>
@@ -71,9 +61,7 @@
                 <input
                     type="checkbox"
                     id="toggle-word-count"
-                    onchange="
-                        toggleBooleanState({ key: StateKey.SHOW_WORD_COUNT })
-                    "
+                    data-state-key="showWordCount"
                 />
                 <span class="toggle-switch"></span>
             </label>
@@ -82,7 +70,6 @@
                 <input
                     type="checkbox"
                     id="toggle-focus-mode"
-                    onchange="toggleFocusMode()"
                 />
                 <span class="toggle-switch"></span>
             </label>
@@ -99,12 +86,7 @@
                     type="color"
                     class="settings-swatch"
                     id="diy-bg-picker"
-                    oninput="
-                        handleDiyPickerInput({
-                            field: 'bg',
-                            hexColor: this.value,
-                        })
-                    "
+                    data-field="bg"
                 />
                 <label>Background</label>
                 <input
@@ -113,12 +95,7 @@
                     id="diy-bg-hex"
                     spellcheck="false"
                     placeholder="#faf9f5"
-                    onchange="
-                        handleDiyColorInput({
-                            field: 'bg',
-                            rawInput: this.value,
-                        })
-                    "
+                    data-field="bg"
                 />
             </div>
             <div class="settings-color-row">
@@ -126,12 +103,7 @@
                     type="color"
                     class="settings-swatch"
                     id="diy-text-picker"
-                    oninput="
-                        handleDiyPickerInput({
-                            field: 'text',
-                            hexColor: this.value,
-                        })
-                    "
+                    data-field="text"
                 />
                 <label>Text</label>
                 <input
@@ -140,12 +112,7 @@
                     id="diy-text-hex"
                     spellcheck="false"
                     placeholder="#141413"
-                    onchange="
-                        handleDiyColorInput({
-                            field: 'text',
-                            rawInput: this.value,
-                        })
-                    "
+                    data-field="text"
                 />
             </div>
             <div class="settings-color-row">
@@ -153,12 +120,7 @@
                     type="color"
                     class="settings-swatch"
                     id="diy-accent-picker"
-                    oninput="
-                        handleDiyPickerInput({
-                            field: 'accent',
-                            hexColor: this.value,
-                        })
-                    "
+                    data-field="accent"
                 />
                 <label>Accent</label>
                 <input
@@ -167,12 +129,7 @@
                     id="diy-accent-hex"
                     spellcheck="false"
                     placeholder="#d97757"
-                    onchange="
-                        handleDiyColorInput({
-                            field: 'accent',
-                            rawInput: this.value,
-                        })
-                    "
+                    data-field="accent"
                 />
             </div>
             <div class="settings-color-row">
@@ -180,12 +137,7 @@
                     type="color"
                     class="settings-swatch"
                     id="diy-border-picker"
-                    oninput="
-                        handleDiyPickerInput({
-                            field: 'border',
-                            hexColor: this.value,
-                        })
-                    "
+                    data-field="border"
                 />
                 <label>Border</label>
                 <input
@@ -194,18 +146,13 @@
                     id="diy-border-hex"
                     spellcheck="false"
                     placeholder="#e8e6dc"
-                    onchange="
-                        handleDiyColorInput({
-                            field: 'border',
-                            rawInput: this.value,
-                        })
-                    "
+                    data-field="border"
                 />
             </div>
         </div>
 
         <div class="settings-modal-buttons">
-            <button type="button" onclick="closeSettings()">Close</button>
+            <button type="button" id="btn-close-settings">Close</button>
         </div>
     </div>
 </div>
