@@ -2,3 +2,4 @@ build/
 external/
 icons/
 LICENSE
+*.md

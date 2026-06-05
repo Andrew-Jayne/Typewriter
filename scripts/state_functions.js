@@ -102,7 +102,6 @@ function applyDiyColors() {
         hoverShift = -15;
     }
 
-
     body.style.setProperty("--diy-hover", `rgb(${RED},${GREEN},${BLUE})`);
 
     switch (brightness > 128) {
@@ -260,7 +259,10 @@ function renderViewMode() {
     viewDiv.id = "view-mode";
     viewDiv.className = "view-content";
     viewDiv.style.fontSize = getState({ key: StateKey.FONT_SIZE }) + "px";
-    viewDiv.innerHTML = marked.parse(getState({ key: StateKey.EDITOR_TEXT }), { breaks: true, gfm: true });
+    viewDiv.innerHTML = marked.parse(getState({ key: StateKey.EDITOR_TEXT }), {
+        breaks: true,
+        gfm: true,
+    });
     container.appendChild(viewDiv);
     document.getElementById("icon-edit-mode").classList.add("hidden");
     document.getElementById("icon-view-mode").classList.remove("hidden");
@@ -345,7 +347,10 @@ function handleDiyPickerInput({ field, hexColor }) {
  */
 function handleDiyColorInput({ field, rawInput }) {
     const errorEl = document.getElementById("diy-color-error");
-    const hexMatch = rawInput.trim().toLowerCase().match(/^#?([0-9a-f]{6})$/);
+    const hexMatch = rawInput
+        .trim()
+        .toLowerCase()
+        .match(/^#?([0-9a-f]{6})$/);
     if (hexMatch === null) {
         errorEl.textContent = "Invalid hex color: " + rawInput;
         return;

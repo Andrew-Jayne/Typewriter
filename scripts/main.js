@@ -51,7 +51,11 @@ function main() {
     });
 
     document.addEventListener("click", (clickEvent) => {
-        if (document.getElementById("theme-picker").contains(clickEvent.target) === false) {
+        if (
+            document
+                .getElementById("theme-picker")
+                .contains(clickEvent.target) === false
+        ) {
             document
                 .getElementById("theme-picker-menu")
                 .classList.remove("show");

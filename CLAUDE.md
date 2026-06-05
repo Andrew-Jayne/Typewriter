@@ -26,6 +26,7 @@ TypeWriter is a single-page vanilla HTML/CSS/JS text editor. There is no framewo
 ### Themes
 
 Five themes applied via body classes; Daylight is the default (no class):
+
 - **Daylight** — white/bright light theme (no body class)
 - **Dawn** — warm light theme (`dawn-mode`)
 - **Dusk** — warm dark mode (`dusk-mode`)
