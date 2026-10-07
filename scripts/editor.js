@@ -26,12 +26,16 @@ function updateWordCount() {
     `${word_count} words · ${text.length} characters`;
 }
 
+function clearModeToggleFlash() {
+  document.getElementById("mode-toggle").classList.remove("flash");
+}
+
+function flashModeToggle() {
+  document.getElementById("mode-toggle").classList.add("flash");
+  setTimeout(clearModeToggleFlash, 400);
+}
+
 function toggleMode() {
-  const flashModeToggle = () => {
-    const MODE_TOGGLE = document.getElementById("mode-toggle");
-    MODE_TOGGLE.classList.add("flash");
-    setTimeout(() => MODE_TOGGLE.classList.remove("flash"), 400);
-  };
   switch (state.get(StateKey.MODE)) {
     case Mode.EDIT:
       state.set(StateKey.MODE, Mode.VIEW);
@@ -62,6 +66,18 @@ function openFile() {
 }
 
 /**
+ * @param {ProgressEvent<FileReader>} loadEvent
+ */
+function handleFileLoad(loadEvent) {
+  const NORMALIZED = loadEvent.target.result
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n");
+  state.set(StateKey.EDITOR_TEXT, NORMALIZED);
+  state.set(StateKey.MODE, Mode.EDIT);
+  updateWordCount();
+}
+
+/**
  * @param {Event} event
  */
 function handleFileSelect(event) {
@@ -73,14 +89,7 @@ function handleFileSelect(event) {
   state.set(StateKey.FILE_NAME, file.name);
 
   const reader = new FileReader();
-  reader.onload = (loadEvent) => {
-    const NORMALIZED = loadEvent.target.result
-      .replace(/\r\n/g, "\n")
-      .replace(/\r/g, "\n");
-    state.set(StateKey.EDITOR_TEXT, NORMALIZED);
-    state.set(StateKey.MODE, Mode.EDIT);
-    updateWordCount();
-  };
+  reader.onload = handleFileLoad;
   reader.readAsText(file);
   document.getElementById("file-input").value = "";
 }

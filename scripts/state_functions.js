@@ -74,9 +74,8 @@ function handleShowLineNumbers() {
   if (state.get(StateKey.MODE) === Mode.VIEW) {
     return;
   }
-  const visible = state.get(StateKey.SHOW_LINE_NUMBERS);
   const wrap = document.querySelector(".edit-mode");
-  switch (visible) {
+  switch (state.get(StateKey.SHOW_LINE_NUMBERS)) {
     case true:
       document.getElementById("line-numbers").style.display = "block";
       wrap.classList.add("no-wrap");
@@ -92,8 +91,7 @@ function handleMonospace() {
   if (state.get(StateKey.MODE) === Mode.VIEW) {
     return;
   }
-  const enabled = state.get(StateKey.USE_MONOSPACE);
-  switch (enabled) {
+  switch (state.get(StateKey.USE_MONOSPACE)) {
     case true:
       document.getElementById("editor").classList.add("monospace-mode");
       return;
@@ -104,8 +102,7 @@ function handleMonospace() {
 }
 
 function handleWideMode() {
-  const enabled = state.get(StateKey.ENABLE_WIDE_MODE);
-  switch (enabled) {
+  switch (state.get(StateKey.ENABLE_WIDE_MODE)) {
     case true:
       document.getElementById("typewriter-container").classList.add("wide");
       return;
@@ -116,8 +113,7 @@ function handleWideMode() {
 }
 
 function handleTooltips() {
-  const visible = state.get(StateKey.SHOW_TOOLTIPS);
-  switch (visible) {
+  switch (state.get(StateKey.SHOW_TOOLTIPS)) {
     case true:
       document.body.classList.remove("no-tooltips");
       return;
@@ -128,8 +124,7 @@ function handleTooltips() {
 }
 
 function handleWordCount() {
-  const visible = state.get(StateKey.SHOW_WORD_COUNT);
-  switch (visible) {
+  switch (state.get(StateKey.SHOW_WORD_COUNT)) {
     case true:
       document.getElementById("word-count").style.display = "block";
       return;
@@ -140,8 +135,7 @@ function handleWordCount() {
 }
 
 function handleFontSizeChange() {
-  const size = state.get(StateKey.FONT_SIZE);
-  const px = `${size}px`;
+  const px = `${state.get(StateKey.FONT_SIZE)}px`;
   switch (state.get(StateKey.MODE)) {
     case Mode.EDIT:
       document.getElementById("editor").style.fontSize = px;
@@ -184,6 +178,23 @@ function renderViewMode() {
     .setAttribute("data-tooltip", "Switch to editor");
 }
 
+/**
+ * @param {Event} inputEvent
+ */
+function handleEditorInput(inputEvent) {
+  state.set(StateKey.EDITOR_TEXT, inputEvent.currentTarget.value);
+  updateWordCount();
+  updateLineNumbers();
+}
+
+/**
+ * @param {Event} scrollEvent
+ */
+function handleEditorScroll(scrollEvent) {
+  document.getElementById("line-numbers").scrollTop =
+    scrollEvent.currentTarget.scrollTop;
+}
+
 function renderEditMode() {
   const container = document.getElementById("typewriter-container");
   const fontSize = state.get(StateKey.FONT_SIZE);
@@ -218,15 +229,8 @@ function renderEditMode() {
   wrap.appendChild(textarea);
   container.appendChild(wrap);
 
-  textarea.addEventListener("input", () => {
-    state.set(StateKey.EDITOR_TEXT, textarea.value);
-    updateWordCount();
-    updateLineNumbers();
-  });
-
-  textarea.addEventListener("scroll", () => {
-    lineNums.scrollTop = textarea.scrollTop;
-  });
+  textarea.addEventListener("input", handleEditorInput);
+  textarea.addEventListener("scroll", handleEditorScroll);
 
   document.getElementById("icon-edit-mode").classList.remove("hidden");
   document.getElementById("icon-view-mode").classList.add("hidden");
