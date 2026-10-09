@@ -115,3 +115,5 @@ function selectTheme({ theme }) {
   document.getElementById("theme-picker-menu").classList.remove("show");
   state.set(StateKey.THEME, theme);
 }
+
+export { syncFullscreenIcon };

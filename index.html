@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="version" content="{commit_sha}">
+    <link rel="icon" type="image/svg+xml" href="/src/icons/favicon.svg" />
+    <meta license="GNU Affero General Public License Version 3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TypeWriter</title>
+    <link rel="stylesheet" href="styles/index.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+        {{template:templates/toolbar.html}}
+
+        <div id="typewriter-container"></div>
+
+        <div class="word-count" id="word-count">0 words</div>
+
+        {{template:templates/settings.html}}
+
+        <script type="module">
+        </script>
+  </body>
+</html>

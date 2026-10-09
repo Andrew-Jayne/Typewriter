@@ -1,0 +1,20 @@
+{
+  "name": "typewriter",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "explicitjs src/"
+  },
+  "dependencies": {
+    "aspen": "https://github.com/Andrew-Jayne/Aspen/releases/download/v1beta4/aspen-1.0.0.tgz",
+    "marked": "latest"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0",
+    "explicitjs": "https://github.com/Andrew-Jayne/ExplicitJS/releases/download/v1beta5/explicitjs-1beta5.tgz"
+  }
+}

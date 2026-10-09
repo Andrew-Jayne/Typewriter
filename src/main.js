@@ -1,3 +1,8 @@
+import "@/styles/index.css";
+
+import { state } from "@/state.js";
+import { syncFullscreenIcon } from "@/ui.js";
+
 /**
  * @param {KeyboardEvent} keyEvent
  */
@@ -44,7 +49,8 @@ function handleKeydown(keyEvent) {
  */
 function handleDocumentClick(clickEvent) {
   if (
-    document.getElementById("theme-picker").contains(clickEvent.target) === false
+    document.getElementById("theme-picker").contains(clickEvent.target) ===
+    false
   ) {
     document.getElementById("theme-picker-menu").classList.remove("show");
   }
@@ -110,16 +116,28 @@ function main() {
 
   document.addEventListener("click", handleDocumentClick);
 
-  document.getElementById("toolbar-open").addEventListener("click", toggleToolbar);
-  document.getElementById("toolbar-close").addEventListener("click", toggleToolbar);
+  document
+    .getElementById("toolbar-open")
+    .addEventListener("click", toggleToolbar);
+  document
+    .getElementById("toolbar-close")
+    .addEventListener("click", toggleToolbar);
   document.getElementById("btn-open").addEventListener("click", openFile);
   document.getElementById("btn-clear").addEventListener("click", clearText);
   document.getElementById("btn-save").addEventListener("click", saveFile);
   document.getElementById("mode-toggle").addEventListener("click", toggleMode);
-  document.getElementById("theme-toggle").addEventListener("click", toggleThemePicker);
-  document.getElementById("btn-settings").addEventListener("click", toggleSettings);
-  document.getElementById("btn-fullscreen").addEventListener("click", toggleFullscreen);
-  document.getElementById("file-input").addEventListener("change", handleFileSelect);
+  document
+    .getElementById("theme-toggle")
+    .addEventListener("click", toggleThemePicker);
+  document
+    .getElementById("btn-settings")
+    .addEventListener("click", toggleSettings);
+  document
+    .getElementById("btn-fullscreen")
+    .addEventListener("click", toggleFullscreen);
+  document
+    .getElementById("file-input")
+    .addEventListener("change", handleFileSelect);
 
   for (const option of document.querySelectorAll(".theme-option[data-theme]")) {
     option.addEventListener("click", handleThemeOptionClick);
@@ -128,21 +146,29 @@ function main() {
   document
     .getElementById("settings-modal")
     .addEventListener("click", handleSettingsModalClick);
-  document.getElementById("btn-close-settings").addEventListener("click", closeSettings);
+  document
+    .getElementById("btn-close-settings")
+    .addEventListener("click", closeSettings);
   document
     .getElementById("setting-font-size")
     .addEventListener("change", handleFontSizeInput);
-  document.getElementById("toggle-focus-mode").addEventListener("change", toggleFocusMode);
+  document
+    .getElementById("toggle-focus-mode")
+    .addEventListener("change", toggleFocusMode);
 
   for (const toggle of document.querySelectorAll("[data-state-key]")) {
     toggle.addEventListener("change", handleStateToggleChange);
   }
 
-  for (const picker of document.querySelectorAll(".settings-swatch[data-field]")) {
+  for (const picker of document.querySelectorAll(
+    ".settings-swatch[data-field]",
+  )) {
     picker.addEventListener("input", handleDiyPickerChange);
   }
 
-  for (const input of document.querySelectorAll(".settings-color-input[data-field]")) {
+  for (const input of document.querySelectorAll(
+    ".settings-color-input[data-field]",
+  )) {
     input.addEventListener("change", handleDiyHexChange);
   }
 

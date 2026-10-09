@@ -1,3 +1,16 @@
+import { StateTree } from "aspen";
+import { StateKey, Theme, Mode } from "@/enums.js";
+import {
+  handleWideMode,
+  handleTooltips,
+  handleWordCount,
+  handleThemeChange,
+  handleModeChange,
+  handleFontSizeChange,
+  handleShowLineNumbers,
+  handleMonospace,
+} from "@/state_functions.js";
+
 const state = new StateTree("tw.", {
   [StateKey.EDITOR_TEXT]: {
     type: "string",
@@ -51,7 +64,13 @@ const state = new StateTree("tw.", {
     type: "string",
     default: Theme.DAYLIGHT,
     persistent: true,
-    allowed: [Theme.DAWN, Theme.DAYLIGHT, Theme.DUSK, Theme.DARKNESS, Theme.DIY],
+    allowed: [
+      Theme.DAWN,
+      Theme.DAYLIGHT,
+      Theme.DUSK,
+      Theme.DARKNESS,
+      Theme.DIY,
+    ],
     onUpdate: [handleThemeChange],
   },
   [StateKey.MODE]: {
@@ -80,3 +99,5 @@ const state = new StateTree("tw.", {
     onUpdate: [handleMonospace],
   },
 });
+
+export { state };

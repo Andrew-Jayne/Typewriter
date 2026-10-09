@@ -9,10 +9,7 @@ function isValidHexColor(hexColor) {
 function applyDiyColors() {
   const body = document.body;
   for (const field of DIY_FIELDS) {
-    body.style.setProperty(
-      `--diy-${field}`,
-      state.get(DIY_STATE_KEY[field]),
-    );
+    body.style.setProperty(`--diy-${field}`, state.get(DIY_STATE_KEY[field]));
   }
 
   const bg = state.get(StateKey.DIY_BG);
@@ -277,3 +274,14 @@ function handleDiyColorInput({ field, rawInput }) {
   syncDiyField({ field: field, hexColor: hexColor });
   state.set(StateKey.THEME, Theme.DIY);
 }
+
+export {
+  handleWideMode,
+  handleTooltips,
+  handleWordCount,
+  handleThemeChange,
+  handleModeChange,
+  handleFontSizeChange,
+  handleShowLineNumbers,
+  handleMonospace,
+};
