@@ -3,7 +3,6 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
   justify-content: center;
   align-items: center;
 }
@@ -17,7 +16,7 @@
   padding: 32px;
   width: 420px;
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
@@ -156,6 +155,9 @@
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .settings-swatch {
@@ -195,6 +197,7 @@
   background: transparent;
   color: inherit;
   outline: none;
+  margin-left: auto;
 }
 
 .settings-modal-buttons {

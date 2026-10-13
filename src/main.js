@@ -1,24 +1,26 @@
-import { state } from "@/state.js";
 import {
-  syncFullscreenIcon,
-  toggleToolbar,
-  toggleThemePicker,
-  toggleSettings,
-  toggleFullscreen,
-  closeSettings,
-  toggleFocusMode,
-  selectTheme,
-} from "@/ui.js";
-import {
-  openFile,
   clearText,
+  handleFileSelect,
+  openFile,
   saveFile,
   toggleMode,
-  handleFileSelect,
   updateWordCount,
 } from "@/editor.js";
+import { Mode, StateKey } from "@/enums.js";
+import { buildIcons } from "@/icons.js";
+import { state } from "@/state.js";
 import { handleDiyPickerInput } from "@/state_functions.js";
-import { Mode } from "@/enums.js";
+import {
+  closeSettings,
+  selectTheme,
+  syncFullscreenIcon,
+  toggleFocusMode,
+  toggleFullscreen,
+  toggleSettings,
+  toggleThemePicker,
+  toggleToolbar,
+} from "@/ui.js";
+
 /**
  * @param {KeyboardEvent} keyEvent
  */
@@ -124,6 +126,7 @@ function handleDiyHexChange(changeEvent) {
 }
 
 function main() {
+  buildIcons();
   state.validateStorage();
 
   document.addEventListener("fullscreenchange", syncFullscreenIcon);

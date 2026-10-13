@@ -1,5 +1,5 @@
-import { state } from "@/state.js";
 import { StateKey } from "@/enums.js";
+import { state } from "@/state.js";
 import { syncDiyField } from "@/state_functions.js";
 import { THEMES } from "@/themes.js";
 
@@ -7,7 +7,7 @@ function toggleToolbar() {
   document.getElementById("toolbar").classList.toggle("collapsed");
 }
 
-let focusModeActive = false;
+let focusModeActive = false; // move to aspen non-persistent
 
 function toggleFocusMode() {
   focusModeActive = focusModeActive === false;
@@ -74,6 +74,7 @@ function syncSettingsControls() {
   syncDiyField({ field: "border", hexColor: state.get(StateKey.DIY_BORDER) });
 }
 
+//this should move to the aspen state, either as a non persistent key or a perisitent one
 function toggleSettings() {
   const modal = document.getElementById("settings-modal");
   switch (modal.classList.contains("show")) {
@@ -122,12 +123,12 @@ function selectTheme({ theme }) {
 }
 
 export {
-  syncFullscreenIcon,
-  toggleToolbar,
-  toggleThemePicker,
-  toggleSettings,
-  toggleFullscreen,
   closeSettings,
-  toggleFocusMode,
   selectTheme,
+  syncFullscreenIcon,
+  toggleFocusMode,
+  toggleFullscreen,
+  toggleSettings,
+  toggleThemePicker,
+  toggleToolbar,
 };

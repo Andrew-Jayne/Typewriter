@@ -1,14 +1,14 @@
 import { StateTree } from "aspen";
-import { StateKey, Theme, Mode } from "@/enums.js";
+import { Mode, StateKey, Theme } from "@/enums.js";
 import {
-  handleWideMode,
-  handleTooltips,
-  handleWordCount,
-  handleThemeChange,
-  handleModeChange,
   handleFontSizeChange,
-  handleShowLineNumbers,
+  handleModeChange,
   handleMonospace,
+  handleShowLineNumbers,
+  handleThemeChange,
+  handleTooltips,
+  handleWideMode,
+  handleWordCount,
 } from "@/state_functions.js";
 
 const state = new StateTree("tw.", {

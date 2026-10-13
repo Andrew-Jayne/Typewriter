@@ -1,3 +1,7 @@
+:root {
+  --editor-line-height: 1.8;
+}
+
 .edit-mode {
   display: flex;
   align-items: stretch;
@@ -6,8 +10,9 @@
 .line-numbers {
   font-family: "Courier New", monospace;
   font-size: 16px;
-  line-height: 1.8;
+  line-height: var(--editor-line-height);
   padding-right: 12px;
+  padding-left: 4px;
   margin-right: 12px;
   border-right: 1px solid transparent;
   text-align: right;
@@ -25,7 +30,7 @@ textarea {
   outline: none;
   font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 16px;
-  line-height: 1.8;
+  line-height: var(--editor-line-height);
   resize: none;
   background: transparent;
 }
@@ -37,6 +42,6 @@ textarea {
 
 textarea.monospace-mode {
   font-family: "Courier New", monospace;
-  line-height: 1.6;
+  line-height: var(--editor-line-height);
   tab-size: 4;
 }

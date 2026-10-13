@@ -1,4 +1,9 @@
 import { Theme } from "@/enums.js";
+import darkness from "./icons/darkness.svg?raw";
+import dawn from "./icons/dawn.svg?raw";
+import daylight from "./icons/daylight.svg?raw";
+import diy from "./icons/diy.svg?raw";
+import dusk from "./icons/dusk.svg?raw";
 
 const THEMES = [
   Theme.DAWN,
@@ -16,11 +21,11 @@ const THEME_CLASSES = {
 };
 
 const themeIcons = {
-  [Theme.DAYLIGHT]: `<img src="/src/icons/daylight.svg" alt="">`,
-  [Theme.DAWN]: `<img src="/src/icons/dawn.svg" alt="">`,
-  [Theme.DUSK]: `<img src="/src/icons/dusk.svg" alt="">`,
-  [Theme.DARKNESS]: `<img src="/src/icons/darkness.svg" alt="">`,
-  [Theme.DIY]: `<img src="/src/icons/diy.svg" alt="">`,
+  [Theme.DAYLIGHT]: daylight,
+  [Theme.DAWN]: dawn,
+  [Theme.DUSK]: dusk,
+  [Theme.DARKNESS]: darkness,
+  [Theme.DIY]: diy,
 };
 
-export { THEME_CLASSES, themeIcons, THEMES };
+export { THEME_CLASSES, THEMES, themeIcons };

@@ -1,8 +1,9 @@
 import { parse } from "marked";
+import { updateLineNumbers, updateWordCount } from "@/editor.js";
+import { DIY_FIELDS, DIY_STATE_KEY, Mode, StateKey, Theme } from "@/enums.js";
 import { state } from "@/state.js";
-import { StateKey, Theme, Mode, DIY_STATE_KEY, DIY_FIELDS } from "@/enums.js";
 import { THEME_CLASSES, themeIcons } from "@/themes.js";
-import { updateLineNumbers } from "@/editor.js";
+
 /**
  * @param {string} hexColor
  * @returns {boolean}
@@ -55,21 +56,13 @@ function applyDiyColors() {
 
 function handleThemeChange() {
   const theme = state.get(StateKey.THEME);
-  document.body.classList.remove(
-    "daylight-mode",
-    "dawn-mode",
-    "dusk-mode",
-    "darkness-mode",
-    "diy-mode",
-  );
+  document.getElementById("theme-toggle").innerHTML = themeIcons[theme];
+  document.body.classList.remove(...Object.values(THEME_CLASSES));
   document.body.classList.add(THEME_CLASSES[theme]);
+
   if (theme === Theme.DIY) {
     applyDiyColors();
   }
-  document.getElementById("theme-toggle").innerHTML = themeIcons[theme];
-  document
-    .getElementById("theme-toggle")
-    .setAttribute("data-tooltip", "Select theme");
 }
 
 function handleShowLineNumbers() {
@@ -281,14 +274,14 @@ function handleDiyColorInput({ field, rawInput }) {
 }
 
 export {
-  handleWideMode,
-  handleTooltips,
-  handleWordCount,
-  handleThemeChange,
-  handleModeChange,
-  handleFontSizeChange,
-  handleShowLineNumbers,
-  handleMonospace,
-  syncDiyField,
   handleDiyPickerInput,
+  handleFontSizeChange,
+  handleModeChange,
+  handleMonospace,
+  handleShowLineNumbers,
+  handleThemeChange,
+  handleTooltips,
+  handleWideMode,
+  handleWordCount,
+  syncDiyField,
 };

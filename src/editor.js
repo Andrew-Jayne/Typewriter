@@ -1,6 +1,5 @@
-import { Mode } from "@/enums.js";
+import { Mode, StateKey } from "@/enums.js";
 import { state } from "@/state.js";
-import { StateKey } from "@/enums.js";
 
 function updateLineNumbers() {
   const TEXT = state.get(StateKey.EDITOR_TEXT);
@@ -118,11 +117,11 @@ function saveFile() {
 }
 
 export {
-  openFile,
   clearText,
+  handleFileSelect,
+  openFile,
   saveFile,
   toggleMode,
-  handleFileSelect,
   updateLineNumbers,
   updateWordCount,
 };

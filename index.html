@@ -7,7 +7,7 @@
         <meta license="GNU Affero General Public License Version 3" />
         <title>TypeWriter</title>
         <link rel="icon" type="image/svg+xml" href="/src/icons/favicon.svg" />
-        <link rel="stylesheet" href="/src/styles/main.csss">
+        <link rel="stylesheet" href="/src/styles/main.css">
         <link rel="stylesheet" href="/src/styles/mode-edit.css">
         <link rel="stylesheet" href="/src/styles/mode-view.css">
         <link rel="stylesheet" href="/src/styles/panel-settings.css">
@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="/src/styles/theme-daylight.css">
         <link rel="stylesheet" href="/src/styles/theme-diy.css">
         <link rel="stylesheet" href="/src/styles/theme-dusk.css">
-
         <script type="module" src="/src/main.js"></script>
     </head>
 
@@ -25,17 +24,17 @@
         <!-- ToolBar -->
         <div class="toolbar collapsed" id="toolbar">
             <div class="toolbar-trigger" id="toolbar-open">
-                <img src="/src/icons/hamburger.svg" alt="">
+                <span data-icon="hamburger"></span>
             </div>
             <div class="toolbar-items">
                 <button type="button" class="icon-btn" id="btn-open" data-tooltip="Open file">
-                    <img src="/src/icons/open-file.svg" alt="">
+                    <span data-icon="open-file"></span>
                 </button>
                 <button type="button" class="icon-btn" id="btn-clear" data-tooltip="Clear">
-                    <img src="/src/icons/clear.svg" alt="">
+                    <span data-icon="clear"></span>
                 </button>
                 <button type="button" class="icon-btn" id="btn-save" data-tooltip="Save">
-                    <img src="/src/icons/save.svg" alt="">
+                    <span data-icon="save"></span>
                 </button>
                 <button
                     type="button"
@@ -43,9 +42,9 @@
                     data-tooltip="Switch to reader"
                     id="mode-toggle"
                 >
-                    <span id="icon-edit-mode"><img src="/src/icons/edit-mode.svg" alt=""></span>
+                    <span id="icon-edit-mode"><span data-icon="edit-mode"></span></span>
                     <span id="icon-view-mode" class="hidden"
-                        ><img src="/src/icons/view-mode.svg" alt=""></span
+                        ><span data-icon="view-mode"></span></span
                     >
                 </button>
                 <div class="theme-picker" id="theme-picker">
@@ -55,7 +54,7 @@
                         data-tooltip="Select theme"
                         id="theme-toggle"
                     >
-                        <img src="/src/icons/daylight.svg" alt="">
+                        <span data-icon="daylight"></span>
                     </button>
                     <div class="theme-picker-menu" id="theme-picker-menu">
                         <button
@@ -64,7 +63,7 @@
                             data-theme="dawn"
                         >
                             <span class="theme-option-icon"
-                                ><img src="/src/icons/dawn.svg" alt=""></span
+                                ><span data-icon="dawn"></span></span
                             >
                             <span>Dawn</span>
                         </button>
@@ -74,7 +73,7 @@
                             data-theme="daylight"
                         >
                             <span class="theme-option-icon"
-                                ><img src="/src/icons/daylight.svg" alt=""></span
+                                ><span data-icon="daylight"></span></span
                             >
                             <span>Daylight</span>
                         </button>
@@ -84,7 +83,7 @@
                             data-theme="dusk"
                         >
                             <span class="theme-option-icon"
-                                ><img src="/src/icons/dusk.svg" alt=""></span
+                                ><span data-icon="dusk"></span></span
                             >
                             <span>Dusk</span>
                         </button>
@@ -94,7 +93,7 @@
                             data-theme="darkness"
                         >
                             <span class="theme-option-icon"
-                                ><img src="/src/icons/darkness.svg" alt=""></span
+                                ><span data-icon="darkness"></span></span
                             >
                             <span>Darkness</span>
                         </button>
@@ -104,7 +103,7 @@
                             data-theme="diy"
                         >
                             <span class="theme-option-icon"
-                                ><img src="/src/icons/diy.svg" alt=""></span
+                                ><span data-icon="diy"></span></span
                             >
                             <span>DIY</span>
                         </button>
@@ -116,7 +115,7 @@
                     id="btn-settings"
                     data-tooltip="Settings"
                 >
-                    <img src="/src/icons/settings.svg" alt="">
+                    <span data-icon="settings"></span>
                 </button>
                 <button
                     type="button"
@@ -125,10 +124,10 @@
                     data-tooltip="Fullscreen"
                 >
                     <span id="icon-fullscreen-enter"
-                        ><img src="/src/icons/fullscreen-enter.svg" alt=""></span
+                        ><span data-icon="fullscreen-enter"></span></span
                     >
                     <span id="icon-fullscreen-exit" class="hidden"
-                        ><img src="/src/icons/fullscreen-exit.svg" alt=""></span
+                        ><span data-icon="fullscreen-exit"></span></span
                     >
                 </button>
                 <button
@@ -137,7 +136,7 @@
                     id="toolbar-close"
                     data-tooltip="Close menu"
                 >
-                    <img src="/src/icons/close-menu.svg" alt="">
+                    <span data-icon="close-menu"></span>
                 </button>
             </div>
             <input
@@ -249,15 +248,15 @@
                             id="diy-bg-picker"
                             data-field="bg"
                         />
-                        <label>Background</label>
-                        <input
+                        <label>Background<input
                             type="text"
                             class="settings-color-input"
                             id="diy-bg-hex"
                             spellcheck="false"
                             placeholder="#faf9f5"
                             data-field="bg"
-                        />
+                        /></label>
+                        
                     </div>
                     <div class="settings-color-row">
                         <input
@@ -266,15 +265,15 @@
                             id="diy-text-picker"
                             data-field="text"
                         />
-                        <label>Text</label>
-                        <input
+                        <label>Text<input
                             type="text"
                             class="settings-color-input"
                             id="diy-text-hex"
                             spellcheck="false"
                             placeholder="#141413"
                             data-field="text"
-                        />
+                        /></label>
+                        
                     </div>
                     <div class="settings-color-row">
                         <input
@@ -283,15 +282,15 @@
                             id="diy-accent-picker"
                             data-field="accent"
                         />
-                        <label>Accent</label>
-                        <input
+                        <label>Accent<input
                             type="text"
                             class="settings-color-input"
                             id="diy-accent-hex"
                             spellcheck="false"
                             placeholder="#d97757"
                             data-field="accent"
-                        />
+                        /></label>
+                        
                     </div>
                     <div class="settings-color-row">
                         <input
@@ -300,15 +299,15 @@
                             id="diy-border-picker"
                             data-field="border"
                         />
-                        <label>Border</label>
-                        <input
+                        <label>Border<input
                             type="text"
                             class="settings-color-input"
                             id="diy-border-hex"
                             spellcheck="false"
                             placeholder="#e8e6dc"
                             data-field="border"
-                        />
+                        /></label>
+                        
                     </div>
                 </div>
 

@@ -14,7 +14,8 @@
     "marked": "latest"
   },
   "devDependencies": {
+    "explicitjs": "https://github.com/Andrew-Jayne/ExplicitJS/releases/download/v1beta5/explicitjs-1beta5.tgz",
     "vite": "^8.3.0",
-    "explicitjs": "https://github.com/Andrew-Jayne/ExplicitJS/releases/download/v1beta5/explicitjs-1beta5.tgz"
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }
