@@ -1,3 +1,8 @@
+import { state } from "@/state.js";
+import { StateKey } from "@/enums.js";
+import { syncDiyField } from "@/state_functions.js";
+import { THEMES } from "@/themes.js";
+
 function toggleToolbar() {
   document.getElementById("toolbar").classList.toggle("collapsed");
 }
@@ -116,4 +121,13 @@ function selectTheme({ theme }) {
   state.set(StateKey.THEME, theme);
 }
 
-export { syncFullscreenIcon };
+export {
+  syncFullscreenIcon,
+  toggleToolbar,
+  toggleThemePicker,
+  toggleSettings,
+  toggleFullscreen,
+  closeSettings,
+  toggleFocusMode,
+  selectTheme,
+};

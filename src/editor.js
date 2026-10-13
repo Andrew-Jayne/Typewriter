@@ -1,3 +1,7 @@
+import { Mode } from "@/enums.js";
+import { state } from "@/state.js";
+import { StateKey } from "@/enums.js";
+
 function updateLineNumbers() {
   const TEXT = state.get(StateKey.EDITOR_TEXT);
   const lineNumEl = document.getElementById("line-numbers");
@@ -112,3 +116,13 @@ function saveFile() {
   document.body.removeChild(downloadLink);
   URL.revokeObjectURL(url);
 }
+
+export {
+  openFile,
+  clearText,
+  saveFile,
+  toggleMode,
+  handleFileSelect,
+  updateLineNumbers,
+  updateWordCount,
+};

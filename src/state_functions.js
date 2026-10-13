@@ -1,3 +1,8 @@
+import { parse } from "marked";
+import { state } from "@/state.js";
+import { StateKey, Theme, Mode, DIY_STATE_KEY, DIY_FIELDS } from "@/enums.js";
+import { THEME_CLASSES, themeIcons } from "@/themes.js";
+import { updateLineNumbers } from "@/editor.js";
 /**
  * @param {string} hexColor
  * @returns {boolean}
@@ -163,7 +168,7 @@ function renderViewMode() {
   viewDiv.id = "view-mode";
   viewDiv.className = "view-content";
   viewDiv.style.fontSize = `${state.get(StateKey.FONT_SIZE)}px`;
-  viewDiv.innerHTML = marked.parse(state.get(StateKey.EDITOR_TEXT), {
+  viewDiv.innerHTML = parse(state.get(StateKey.EDITOR_TEXT), {
     breaks: true,
     gfm: true,
   });
@@ -284,4 +289,6 @@ export {
   handleFontSizeChange,
   handleShowLineNumbers,
   handleMonospace,
+  syncDiyField,
+  handleDiyPickerInput,
 };

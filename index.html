@@ -1,26 +1,325 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="version" content="{commit_sha}">
-    <link rel="icon" type="image/svg+xml" href="/src/icons/favicon.svg" />
-    <meta license="GNU Affero General Public License Version 3" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TypeWriter</title>
-    <link rel="stylesheet" href="styles/index.css" />
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-        {{template:templates/toolbar.html}}
+    <head>
+        <meta charset="UTF-8" />
+        <!-- {{version}} -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta license="GNU Affero General Public License Version 3" />
+        <title>TypeWriter</title>
+        <link rel="icon" type="image/svg+xml" href="/src/icons/favicon.svg" />
+        <link rel="stylesheet" href="/src/styles/main.csss">
+        <link rel="stylesheet" href="/src/styles/mode-edit.css">
+        <link rel="stylesheet" href="/src/styles/mode-view.css">
+        <link rel="stylesheet" href="/src/styles/panel-settings.css">
+        <link rel="stylesheet" href="/src/styles/panel-toolbar.css">
+        <link rel="stylesheet" href="/src/styles/theme-darkness.css">
+        <link rel="stylesheet" href="/src/styles/theme-dawn.css">
+        <link rel="stylesheet" href="/src/styles/theme-daylight.css">
+        <link rel="stylesheet" href="/src/styles/theme-diy.css">
+        <link rel="stylesheet" href="/src/styles/theme-dusk.css">
 
+        <script type="module" src="/src/main.js"></script>
+    </head>
+
+    <body>
+        <!-- ToolBar -->
+        <div class="toolbar collapsed" id="toolbar">
+            <div class="toolbar-trigger" id="toolbar-open">
+                <img src="/src/icons/hamburger.svg" alt="">
+            </div>
+            <div class="toolbar-items">
+                <button type="button" class="icon-btn" id="btn-open" data-tooltip="Open file">
+                    <img src="/src/icons/open-file.svg" alt="">
+                </button>
+                <button type="button" class="icon-btn" id="btn-clear" data-tooltip="Clear">
+                    <img src="/src/icons/clear.svg" alt="">
+                </button>
+                <button type="button" class="icon-btn" id="btn-save" data-tooltip="Save">
+                    <img src="/src/icons/save.svg" alt="">
+                </button>
+                <button
+                    type="button"
+                    class="mode-toggle"
+                    data-tooltip="Switch to reader"
+                    id="mode-toggle"
+                >
+                    <span id="icon-edit-mode"><img src="/src/icons/edit-mode.svg" alt=""></span>
+                    <span id="icon-view-mode" class="hidden"
+                        ><img src="/src/icons/view-mode.svg" alt=""></span
+                    >
+                </button>
+                <div class="theme-picker" id="theme-picker">
+                    <button
+                        type="button"
+                        class="theme-toggle"
+                        data-tooltip="Select theme"
+                        id="theme-toggle"
+                    >
+                        <img src="/src/icons/daylight.svg" alt="">
+                    </button>
+                    <div class="theme-picker-menu" id="theme-picker-menu">
+                        <button
+                            type="button"
+                            class="theme-option"
+                            data-theme="dawn"
+                        >
+                            <span class="theme-option-icon"
+                                ><img src="/src/icons/dawn.svg" alt=""></span
+                            >
+                            <span>Dawn</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="theme-option"
+                            data-theme="daylight"
+                        >
+                            <span class="theme-option-icon"
+                                ><img src="/src/icons/daylight.svg" alt=""></span
+                            >
+                            <span>Daylight</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="theme-option"
+                            data-theme="dusk"
+                        >
+                            <span class="theme-option-icon"
+                                ><img src="/src/icons/dusk.svg" alt=""></span
+                            >
+                            <span>Dusk</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="theme-option"
+                            data-theme="darkness"
+                        >
+                            <span class="theme-option-icon"
+                                ><img src="/src/icons/darkness.svg" alt=""></span
+                            >
+                            <span>Darkness</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="theme-option"
+                            data-theme="diy"
+                        >
+                            <span class="theme-option-icon"
+                                ><img src="/src/icons/diy.svg" alt=""></span
+                            >
+                            <span>DIY</span>
+                        </button>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    class="settings-toggle"
+                    id="btn-settings"
+                    data-tooltip="Settings"
+                >
+                    <img src="/src/icons/settings.svg" alt="">
+                </button>
+                <button
+                    type="button"
+                    class="icon-btn"
+                    id="btn-fullscreen"
+                    data-tooltip="Fullscreen"
+                >
+                    <span id="icon-fullscreen-enter"
+                        ><img src="/src/icons/fullscreen-enter.svg" alt=""></span
+                    >
+                    <span id="icon-fullscreen-exit" class="hidden"
+                        ><img src="/src/icons/fullscreen-exit.svg" alt=""></span
+                    >
+                </button>
+                <button
+                    type="button"
+                    class="icon-btn"
+                    id="toolbar-close"
+                    data-tooltip="Close menu"
+                >
+                    <img src="/src/icons/close-menu.svg" alt="">
+                </button>
+            </div>
+            <input
+                type="file"
+                id="file-input"
+                accept=".txt"
+                class="hidden"
+            />
+        </div>
+        <!-- ToolBar -->
+
+        <!-- Main Container -->
         <div id="typewriter-container"></div>
+        <!-- Main Container -->
 
+        <!--- Word Cound-->
         <div class="word-count" id="word-count">0 words</div>
+        <!--- Word Cound-->
 
-        {{template:templates/settings.html}}
+
+        <!-- Settings -->
+        <div
+            class="settings-overlay"
+            id="settings-modal"
+        >
+            <div class="settings-modal">
+                <h2>Settings</h2>
+
+                <div class="settings-section">
+                    <h3>Editor</h3>
+                    <div class="settings-row">
+                        <span>Font size</span>
+                        <div class="font-size-setting">
+                            <input
+                                type="number"
+                                id="setting-font-size"
+                                min="8"
+                                max="128"
+                                value="16"
+                            />
+                            <span class="font-size-unit">px</span>
+                        </div>
+                    </div>
+                    <label class="toggle-row">
+                        <span>Line numbers</span>
+                        <input
+                            type="checkbox"
+                            id="toggle-line-numbers"
+                            data-state-key="showLineNumbers"
+                        />
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Monospace font</span>
+                        <input
+                            type="checkbox"
+                            id="toggle-monospace"
+                            data-state-key="useMonospace"
+                        />
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Wide mode</span>
+                        <input
+                            type="checkbox"
+                            id="toggle-wide"
+                            data-state-key="enableWideMode"
+                        />
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Tooltips</span>
+                        <input
+                            type="checkbox"
+                            id="toggle-tooltips"
+                            data-state-key="showTooltips"
+                        />
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Word count</span>
+                        <input
+                            type="checkbox"
+                            id="toggle-word-count"
+                            data-state-key="showWordCount"
+                        />
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <label class="toggle-row">
+                        <span>Focus mode</span>
+                        <input
+                            type="checkbox"
+                            id="toggle-focus-mode"
+                        />
+                        <span class="toggle-switch"></span>
+                    </label>
+                    <div class="settings-hint">
+                        Hides the menu. Refresh or Cmd/Ctrl+, to reopen settings.
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Custom Colors</h3>
+                    <div class="settings-error" id="diy-color-error"></div>
+                    <div class="settings-color-row">
+                        <input
+                            type="color"
+                            class="settings-swatch"
+                            id="diy-bg-picker"
+                            data-field="bg"
+                        />
+                        <label>Background</label>
+                        <input
+                            type="text"
+                            class="settings-color-input"
+                            id="diy-bg-hex"
+                            spellcheck="false"
+                            placeholder="#faf9f5"
+                            data-field="bg"
+                        />
+                    </div>
+                    <div class="settings-color-row">
+                        <input
+                            type="color"
+                            class="settings-swatch"
+                            id="diy-text-picker"
+                            data-field="text"
+                        />
+                        <label>Text</label>
+                        <input
+                            type="text"
+                            class="settings-color-input"
+                            id="diy-text-hex"
+                            spellcheck="false"
+                            placeholder="#141413"
+                            data-field="text"
+                        />
+                    </div>
+                    <div class="settings-color-row">
+                        <input
+                            type="color"
+                            class="settings-swatch"
+                            id="diy-accent-picker"
+                            data-field="accent"
+                        />
+                        <label>Accent</label>
+                        <input
+                            type="text"
+                            class="settings-color-input"
+                            id="diy-accent-hex"
+                            spellcheck="false"
+                            placeholder="#d97757"
+                            data-field="accent"
+                        />
+                    </div>
+                    <div class="settings-color-row">
+                        <input
+                            type="color"
+                            class="settings-swatch"
+                            id="diy-border-picker"
+                            data-field="border"
+                        />
+                        <label>Border</label>
+                        <input
+                            type="text"
+                            class="settings-color-input"
+                            id="diy-border-hex"
+                            spellcheck="false"
+                            placeholder="#e8e6dc"
+                            data-field="border"
+                        />
+                    </div>
+                </div>
+
+                <div class="settings-modal-buttons">
+                    <button type="button" id="btn-close-settings">Close</button>
+                </div>
+            </div>
+        </div>
+        <!-- Settings -->
 
         <script type="module">
         </script>
-  </body>
+    </body>
 </html>

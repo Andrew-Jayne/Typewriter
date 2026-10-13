@@ -1,8 +1,24 @@
-import "@/styles/index.css";
-
 import { state } from "@/state.js";
-import { syncFullscreenIcon } from "@/ui.js";
-
+import {
+  syncFullscreenIcon,
+  toggleToolbar,
+  toggleThemePicker,
+  toggleSettings,
+  toggleFullscreen,
+  closeSettings,
+  toggleFocusMode,
+  selectTheme,
+} from "@/ui.js";
+import {
+  openFile,
+  clearText,
+  saveFile,
+  toggleMode,
+  handleFileSelect,
+  updateWordCount,
+} from "@/editor.js";
+import { handleDiyPickerInput } from "@/state_functions.js";
+import { Mode } from "@/enums.js";
 /**
  * @param {KeyboardEvent} keyEvent
  */
