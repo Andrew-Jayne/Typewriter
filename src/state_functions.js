@@ -1,5 +1,5 @@
 import { parse } from "marked";
-import { updateLineNumbers, updateWordCount } from "@/editor.js";
+import { updateLineNumbers } from "@/editor.js";
 import { DIY_FIELDS, DIY_STATE_KEY, Mode, StateKey, Theme } from "@/enums.js";
 import { state } from "@/state.js";
 import { THEME_CLASSES, themeIcons } from "@/themes.js";
@@ -178,8 +178,6 @@ function renderViewMode() {
  */
 function handleEditorInput(inputEvent) {
   state.set(StateKey.EDITOR_TEXT, inputEvent.currentTarget.value);
-  updateWordCount();
-  updateLineNumbers();
 }
 
 /**

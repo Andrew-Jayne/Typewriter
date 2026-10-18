@@ -2,12 +2,12 @@ import { Mode, StateKey } from "@/enums.js";
 import { state } from "@/state.js";
 
 function updateLineNumbers() {
-  const TEXT = state.get(StateKey.EDITOR_TEXT);
   const lineNumEl = document.getElementById("line-numbers");
   if (lineNumEl === null) {
     return;
   }
 
+  const TEXT = state.get(StateKey.EDITOR_TEXT);
   let nums = "";
   for (let idx = 1; idx <= TEXT.split("\n").length; idx++) {
     if (idx > 1) {
@@ -19,8 +19,7 @@ function updateLineNumbers() {
 }
 
 function updateWordCount() {
-  const text = state.get(StateKey.EDITOR_TEXT);
-  const trimmed = text.trim();
+  const trimmed = state.get(StateKey.EDITOR_TEXT).trim();
   let word_count = 0;
   if (trimmed.length > 0) {
     word_count = trimmed.split(/\s+/).length;
@@ -29,16 +28,14 @@ function updateWordCount() {
     `${word_count} words · ${text.length} characters`;
 }
 
-function clearModeToggleFlash() {
-  document.getElementById("mode-toggle").classList.remove("flash");
-}
-
-function flashModeToggle() {
-  document.getElementById("mode-toggle").classList.add("flash");
-  setTimeout(clearModeToggleFlash, 400);
-}
-
 function toggleMode() {
+  function flashModeToggle() {
+    const modeToggle = document.getElementById("mode-toggle");
+    modeToggle.classList.add("flash"); //I don't think this is doing anything?
+
+    setTimeout(modeToggle.classList.remove("flash"), 400);
+  }
+
   switch (state.get(StateKey.MODE)) {
     case Mode.EDIT:
       state.set(StateKey.MODE, Mode.VIEW);

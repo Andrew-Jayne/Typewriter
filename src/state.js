@@ -1,4 +1,5 @@
 import { StateTree } from "aspen";
+import { updateLineNumbers, updateWordCount } from "@/editor.js";
 import { Mode, StateKey, Theme } from "@/enums.js";
 import {
   handleFontSizeChange,
@@ -16,6 +17,7 @@ const state = new StateTree("tw.", {
     type: "string",
     default: "",
     persistent: true,
+    onUpdate: [updateWordCount, updateLineNumbers],
   },
   [StateKey.FILE_NAME]: {
     type: "string",
