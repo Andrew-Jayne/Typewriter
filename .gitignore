@@ -8,6 +8,7 @@ CLAUDE.MD
 
 #lock files because yolo
 bun.lock
+pnpm-lock.yaml
 
 # Logs
 logs
