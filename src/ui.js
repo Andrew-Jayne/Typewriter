@@ -1,18 +1,15 @@
 import { StateKey } from "@/enums.js";
 import { state } from "@/state.js";
 import { syncDiyField } from "@/state_functions.js";
-import { THEMES } from "@/themes.js";
+import { getElement, getInputElement } from "./utils.js";
 
 function toggleToolbar() {
-  document.getElementById("toolbar").classList.toggle("collapsed");
+  getElement("toolbar").classList.toggle("collapsed");
 }
 
-let focusModeActive = false; // move to aspen non-persistent
-
 function toggleFocusMode() {
-  focusModeActive = focusModeActive === false;
-  const toolbar = document.getElementById("toolbar");
-  switch (focusModeActive) {
+  const toolbar = getElement("toolbar");
+  switch (state.get(StateKey.FOCUS_MODE)) {
     case true:
       toolbar.style.display = "none";
       return;
@@ -25,49 +22,26 @@ function toggleFocusMode() {
 function toggleFullscreen() {
   switch (document.fullscreenElement === null) {
     case true:
+      state.set(StateKey.FULLSCREEN, true);
       document.documentElement.requestFullscreen();
       return;
     case false:
+      state.set(StateKey.FULLSCREEN, false);
       document.exitFullscreen();
       return;
   }
 }
 
-function syncFullscreenIcon() {
-  const enterIcon = document.getElementById("icon-fullscreen-enter");
-  const exitIcon = document.getElementById("icon-fullscreen-exit");
-  switch (document.fullscreenElement === null) {
-    case true:
-      enterIcon.classList.remove("hidden");
-      exitIcon.classList.add("hidden");
-      return;
-    case false:
-      enterIcon.classList.add("hidden");
-      exitIcon.classList.remove("hidden");
-      return;
-  }
-}
-
 function syncSettingsControls() {
-  document.getElementById("setting-font-size").value = state.get(
-    StateKey.FONT_SIZE,
-  );
-  document.getElementById("toggle-line-numbers").checked = state.get(
+  getInputElement("setting-font-size").value = `${state.get(StateKey.FONT_SIZE)}p`;
+  getInputElement("toggle-line-numbers").checked = state.get(
     StateKey.SHOW_LINE_NUMBERS,
   );
-  document.getElementById("toggle-monospace").checked = state.get(
-    StateKey.USE_MONOSPACE,
-  );
-  document.getElementById("toggle-wide").checked = state.get(
-    StateKey.ENABLE_WIDE_MODE,
-  );
-  document.getElementById("toggle-tooltips").checked = state.get(
-    StateKey.SHOW_TOOLTIPS,
-  );
-  document.getElementById("toggle-word-count").checked = state.get(
-    StateKey.SHOW_WORD_COUNT,
-  );
-  document.getElementById("toggle-focus-mode").checked = focusModeActive;
+  getInputElement("toggle-monospace").checked = state.get(StateKey.USE_MONOSPACE);
+  getInputElement("toggle-wide").checked = state.get(StateKey.ENABLE_WIDE_MODE);
+  getInputElement("toggle-tooltips").checked = state.get(StateKey.SHOW_TOOLTIPS);
+  getInputElement("toggle-word-count").checked = state.get(StateKey.SHOW_WORD_COUNT);
+  getInputElement("toggle-focus-mode").checked = state.get(StateKey.FOCUS_MODE);
   syncDiyField({ field: "bg", hexColor: state.get(StateKey.DIY_BG) });
   syncDiyField({ field: "text", hexColor: state.get(StateKey.DIY_TEXT) });
   syncDiyField({ field: "accent", hexColor: state.get(StateKey.DIY_ACCENT) });
@@ -76,7 +50,7 @@ function syncSettingsControls() {
 
 //this should move to the aspen state, either as a non persistent key or a perisitent one
 function toggleSettings() {
-  const modal = document.getElementById("settings-modal");
+  const modal = getElement("settings-modal");
   switch (modal.classList.contains("show")) {
     case true:
       modal.classList.remove("show");
@@ -89,11 +63,11 @@ function toggleSettings() {
 }
 
 function closeSettings() {
-  document.getElementById("settings-modal").classList.remove("show");
+  getElement("settings-modal").classList.remove("show");
 }
 
 function toggleThemePicker() {
-  const themePickerMenu = document.getElementById("theme-picker-menu");
+  const themePickerMenu = getElement("theme-picker-menu");
   switch (themePickerMenu.classList.contains("show")) {
     case true:
       themePickerMenu.classList.remove("show");
@@ -105,27 +79,25 @@ function toggleThemePicker() {
 }
 
 function updatePickerActiveState() {
-  const options = document
-    .getElementById("theme-picker-menu")
-    .querySelectorAll(".theme-option");
+  const theme = state.get(StateKey.THEME);
+  const options = getElement("theme-picker-menu").querySelectorAll(".theme-option");
   for (const option of options) {
-    option.classList.remove("active");
-  }
-  const index = THEMES.indexOf(state.get(StateKey.THEME));
-  if (index >= 0) {
-    options[index].classList.add("active");
+    if (option instanceof HTMLElement === false) continue;
+    option.classList.toggle("active", option.dataset.theme === theme);
   }
 }
 
-function selectTheme({ theme }) {
-  document.getElementById("theme-picker-menu").classList.remove("show");
+/**
+ * @param {string} theme
+ */
+function selectTheme(theme) {
+  getElement("theme-picker-menu").classList.remove("show");
   state.set(StateKey.THEME, theme);
 }
 
 export {
   closeSettings,
   selectTheme,
-  syncFullscreenIcon,
   toggleFocusMode,
   toggleFullscreen,
   toggleSettings,

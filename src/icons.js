@@ -13,6 +13,7 @@ import openFile from "./icons/open-file.svg?raw";
 import save from "./icons/save.svg?raw";
 import settings from "./icons/settings.svg?raw";
 import viewMode from "./icons/view-mode.svg?raw";
+import { isKeyOf } from "./utils.js";
 
 const ICONS = Object.freeze({
   clear: clear,
@@ -34,12 +35,13 @@ const ICONS = Object.freeze({
 
 function buildIcons() {
   for (const element of document.querySelectorAll("[data-icon]")) {
-    const svg = ICONS[element.dataset.icon];
-    if (svg === undefined) {
-      console.warn(`Missing icon: ${element.dataset.icon}`);
+    if (element instanceof HTMLElement === false) continue;
+    const name = element.dataset.icon;
+    if (isKeyOf(ICONS, name) === false) {
+      console.warn(`Missing icon: ${name}`);
       continue;
     }
-    element.innerHTML = svg;
+    element.innerHTML = ICONS[name];
   }
 }
 

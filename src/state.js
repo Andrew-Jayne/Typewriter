@@ -10,6 +10,7 @@ import {
   handleTooltips,
   handleWideMode,
   handleWordCount,
+  syncFullscreenIcon,
 } from "@/state_functions.js";
 
 const state = new StateTree("tw.", {
@@ -66,13 +67,7 @@ const state = new StateTree("tw.", {
     type: "string",
     default: Theme.DAYLIGHT,
     persistent: true,
-    allowed: [
-      Theme.DAWN,
-      Theme.DAYLIGHT,
-      Theme.DUSK,
-      Theme.DARKNESS,
-      Theme.DIY,
-    ],
+    allowed: [Theme.DAWN, Theme.DAYLIGHT, Theme.DUSK, Theme.DARKNESS, Theme.DIY],
     onUpdate: [handleThemeChange],
   },
   [StateKey.MODE]: {
@@ -99,6 +94,18 @@ const state = new StateTree("tw.", {
     default: false,
     persistent: true,
     onUpdate: [handleMonospace],
+  },
+  [StateKey.FULLSCREEN]: {
+    type: "boolean",
+    default: false,
+    persistent: false,
+    onUpdate: [syncFullscreenIcon],
+  },
+  [StateKey.FOCUS_MODE]: {
+    type: "boolean",
+    default: false,
+    persistent: false,
+    onUpdate: [syncFullscreenIcon],
   },
 });
 

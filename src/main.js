@@ -4,22 +4,21 @@ import {
   openFile,
   saveFile,
   toggleMode,
-  updateWordCount,
 } from "@/editor.js";
 import { Mode, StateKey } from "@/enums.js";
 import { buildIcons } from "@/icons.js";
 import { state } from "@/state.js";
-import { handleDiyPickerInput } from "@/state_functions.js";
+import { handleDiyColorInput, handleDiyPickerInput } from "@/state_functions.js";
 import {
   closeSettings,
   selectTheme,
-  syncFullscreenIcon,
   toggleFocusMode,
   toggleFullscreen,
   toggleSettings,
   toggleThemePicker,
   toggleToolbar,
 } from "@/ui.js";
+import { getElement, isStateKey } from "./utils.js";
 
 /**
  * @param {KeyboardEvent} keyEvent
@@ -31,9 +30,10 @@ function handleKeydown(keyEvent) {
   const modifierHeld = keyEvent.metaKey === true || keyEvent.ctrlKey === true;
   if (keyEvent.key === "Tab" && state.get(StateKey.MODE) === Mode.EDIT) {
     keyEvent.preventDefault();
-    const textarea = document
-      .getElementById("typewriter-container")
-      .querySelector("textarea");
+    const textarea = getElement("typewriter-container").querySelector("textarea");
+    if (textarea === undefined || textarea === null) {
+      throw new Error("Element #typewriter-container#textarea is missing");
+    }
     const start = textarea.selectionStart;
     textarea.value =
       textarea.value.substring(0, start) +
@@ -65,12 +65,10 @@ function handleKeydown(keyEvent) {
 /**
  * @param {MouseEvent} clickEvent
  */
-function handleDocumentClick(clickEvent) {
-  if (
-    document.getElementById("theme-picker").contains(clickEvent.target) ===
-    false
-  ) {
-    document.getElementById("theme-picker-menu").classList.remove("show");
+function handleThemePickerClick(clickEvent) {
+  if (clickEvent.target instanceof Node === false) return;
+  if (getElement("theme-picker").contains(clickEvent.target) === false) {
+    getElement("theme-picker-menu").classList.remove("show");
   }
 }
 
@@ -78,14 +76,16 @@ function handleDocumentClick(clickEvent) {
  * @param {MouseEvent} clickEvent
  */
 function handleThemeOptionClick(clickEvent) {
-  selectTheme({ theme: clickEvent.currentTarget.dataset.theme });
+  if (clickEvent.currentTarget instanceof HTMLElement === false) return;
+  const theme = clickEvent.currentTarget.dataset.theme;
+  if (theme === undefined) return;
+  selectTheme(theme);
 }
-
 /**
  * @param {MouseEvent} clickEvent
  */
 function handleSettingsModalClick(clickEvent) {
-  if (clickEvent.target === document.getElementById("settings-modal")) {
+  if (clickEvent.target === getElement("settings-modal")) {
     closeSettings();
   }
 }
@@ -94,6 +94,7 @@ function handleSettingsModalClick(clickEvent) {
  * @param {Event} changeEvent
  */
 function handleFontSizeInput(changeEvent) {
+  if (changeEvent.currentTarget instanceof HTMLInputElement === false) return;
   state.set(StateKey.FONT_SIZE, parseInt(changeEvent.currentTarget.value, 10));
 }
 
@@ -101,16 +102,33 @@ function handleFontSizeInput(changeEvent) {
  * @param {Event} changeEvent
  */
 function handleStateToggleChange(changeEvent) {
+  if (changeEvent.currentTarget instanceof HTMLElement === false) return;
   const key = changeEvent.currentTarget.dataset.stateKey;
-  state.set(key, state.get(key) === false);
+  if (key === undefined) return;
+  if (isStateKey(key) === false) return;
+
+  switch (state.get(key)) {
+    case true:
+      state.set(key, false);
+      break;
+    case false:
+      state.set(key, true);
+      break;
+    default:
+      throw new Error(`State "${key}" is not a boolean`);
+  }
 }
 
 /**
  * @param {Event} inputEvent
  */
 function handleDiyPickerChange(inputEvent) {
+  if (inputEvent.currentTarget instanceof HTMLInputElement === false) return;
+  const field = inputEvent.currentTarget.dataset.field;
+  if (field === undefined) return;
+
   handleDiyPickerInput({
-    field: inputEvent.currentTarget.dataset.field,
+    field: field,
     hexColor: inputEvent.currentTarget.value,
   });
 }
@@ -119,81 +137,59 @@ function handleDiyPickerChange(inputEvent) {
  * @param {Event} changeEvent
  */
 function handleDiyHexChange(changeEvent) {
+  if (changeEvent.currentTarget instanceof HTMLInputElement === false) return;
+  const field = changeEvent.currentTarget.dataset.field;
+  if (field === undefined) return;
+
   handleDiyColorInput({
-    field: changeEvent.currentTarget.dataset.field,
+    field: field,
     rawInput: changeEvent.currentTarget.value,
   });
 }
 
-function main() {
-  buildIcons();
-  state.validateStorage();
-
-  document.addEventListener("fullscreenchange", syncFullscreenIcon);
-
+function addAllEventListerners() {
   document.addEventListener("keydown", handleKeydown);
+  document.addEventListener("click", handleThemePickerClick);
 
-  document.addEventListener("click", handleDocumentClick);
-
-  document
-    .getElementById("toolbar-open")
-    .addEventListener("click", toggleToolbar);
-  document
-    .getElementById("toolbar-close")
-    .addEventListener("click", toggleToolbar);
-  document.getElementById("btn-open").addEventListener("click", openFile);
-  document.getElementById("btn-clear").addEventListener("click", clearText);
-  document.getElementById("btn-save").addEventListener("click", saveFile);
-  document.getElementById("mode-toggle").addEventListener("click", toggleMode);
-  document
-    .getElementById("theme-toggle")
-    .addEventListener("click", toggleThemePicker);
-  document
-    .getElementById("btn-settings")
-    .addEventListener("click", toggleSettings);
-  document
-    .getElementById("btn-fullscreen")
-    .addEventListener("click", toggleFullscreen);
-  document
-    .getElementById("file-input")
-    .addEventListener("change", handleFileSelect);
+  getElement("toolbar-open").addEventListener("click", toggleToolbar);
+  getElement("toolbar-close").addEventListener("click", toggleToolbar);
+  getElement("btn-open").addEventListener("click", openFile);
+  getElement("btn-clear").addEventListener("click", clearText);
+  getElement("btn-save").addEventListener("click", saveFile);
+  getElement("mode-toggle").addEventListener("click", toggleMode);
+  getElement("theme-toggle").addEventListener("click", toggleThemePicker);
+  getElement("btn-settings").addEventListener("click", toggleSettings);
+  getElement("btn-fullscreen").addEventListener("click", toggleFullscreen);
+  getElement("file-input").addEventListener("change", handleFileSelect);
 
   for (const option of document.querySelectorAll(".theme-option[data-theme]")) {
+    if (option instanceof HTMLElement === false) continue;
     option.addEventListener("click", handleThemeOptionClick);
   }
 
-  document
-    .getElementById("settings-modal")
-    .addEventListener("click", handleSettingsModalClick);
-  document
-    .getElementById("btn-close-settings")
-    .addEventListener("click", closeSettings);
-  document
-    .getElementById("setting-font-size")
-    .addEventListener("change", handleFontSizeInput);
-  document
-    .getElementById("toggle-focus-mode")
-    .addEventListener("change", toggleFocusMode);
+  getElement("settings-modal").addEventListener("click", handleSettingsModalClick);
+  getElement("btn-close-settings").addEventListener("click", closeSettings);
+  getElement("setting-font-size").addEventListener("change", handleFontSizeInput);
+  getElement("toggle-focus-mode").addEventListener("change", toggleFocusMode);
 
   for (const toggle of document.querySelectorAll("[data-state-key]")) {
     toggle.addEventListener("change", handleStateToggleChange);
   }
 
-  for (const picker of document.querySelectorAll(
-    ".settings-swatch[data-field]",
-  )) {
+  for (const picker of document.querySelectorAll(".settings-swatch[data-field]")) {
     picker.addEventListener("input", handleDiyPickerChange);
   }
 
-  for (const input of document.querySelectorAll(
-    ".settings-color-input[data-field]",
-  )) {
+  for (const input of document.querySelectorAll(".settings-color-input[data-field]")) {
     input.addEventListener("change", handleDiyHexChange);
   }
+}
 
+function main() {
+  addAllEventListerners();
+  buildIcons();
+  state.validateStorage();
   state.bootstrap();
-
-  updateWordCount();
   window.scrollTo(0, 0);
 }
 

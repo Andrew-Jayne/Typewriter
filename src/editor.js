@@ -1,5 +1,6 @@
 import { Mode, StateKey } from "@/enums.js";
 import { state } from "@/state.js";
+import { getElement } from "./utils.js";
 
 function updateLineNumbers() {
   const lineNumEl = document.getElementById("line-numbers");
@@ -24,16 +25,16 @@ function updateWordCount() {
   if (trimmed.length > 0) {
     word_count = trimmed.split(/\s+/).length;
   }
-  document.getElementById("word-count").textContent =
-    `${word_count} words · ${text.length} characters`;
+  getElement("word-count").textContent =
+    `${word_count} words · ${trimmed.length} characters`;
 }
 
 function toggleMode() {
   function flashModeToggle() {
-    const modeToggle = document.getElementById("mode-toggle");
-    modeToggle.classList.add("flash"); //I don't think this is doing anything?
+    const modeToggle = getElement("mode-toggle");
+    modeToggle.classList.add("flash");
 
-    setTimeout(modeToggle.classList.remove("flash"), 400);
+    setTimeout(() => modeToggle.classList.remove("flash"), 400);
   }
 
   switch (state.get(StateKey.MODE)) {
@@ -56,42 +57,33 @@ function clearText() {
     state.set(StateKey.EDITOR_TEXT, "");
     state.set(StateKey.FILE_NAME, "untitled.txt");
     state.set(StateKey.MODE, Mode.EDIT);
-    updateWordCount();
-    updateLineNumbers();
   }
 }
 
 function openFile() {
-  document.getElementById("file-input").click();
-}
-
-/**
- * @param {ProgressEvent<FileReader>} loadEvent
- */
-function handleFileLoad(loadEvent) {
-  const NORMALIZED = loadEvent.target.result
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n");
-  state.set(StateKey.EDITOR_TEXT, NORMALIZED);
-  state.set(StateKey.MODE, Mode.EDIT);
-  updateWordCount();
+  getElement("file-input").click();
 }
 
 /**
  * @param {Event} event
  */
-function handleFileSelect(event) {
-  const file = event.target.files[0];
-  if (file === undefined) {
-    return;
+async function handleFileSelect(event) {
+  if (event.currentTarget instanceof HTMLInputElement === false) return;
+  const input = event.currentTarget;
+  if (input.files === null) return;
+  const file = input.files.item(0);
+  if (file === null) return;
+
+  try {
+    const text = await file.text();
+    state.set(StateKey.EDITOR_TEXT, text.replace(/\r\n?/g, "\n"));
+    state.set(StateKey.FILE_NAME, file.name);
+    state.set(StateKey.MODE, Mode.EDIT);
+  } catch (error) {
+    console.error(`Could not read ${file.name}`, error);
+  } finally {
+    input.value = "";
   }
-
-  state.set(StateKey.FILE_NAME, file.name);
-
-  const reader = new FileReader();
-  reader.onload = handleFileLoad;
-  reader.readAsText(file);
-  document.getElementById("file-input").value = "";
 }
 
 function saveFile() {

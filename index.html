@@ -318,6 +318,31 @@
         </div>
         <!-- Settings -->
 
+
+        <script>
+        (() => {
+            const THEMES = {
+            dawn: { background: "#______", scheme: "light" },
+            daylight: { background: "#faf9f5", scheme: "light" },
+            dusk: { background: "#______", scheme: "dark" },
+            darkness: { background: "#______", scheme: "dark" },
+            diy: { background: "#777777", scheme: "light dark" },
+            };
+
+            try {
+            const theme = JSON.parse(localStorage.getItem("tw.theme"));
+            } catch (error) {}
+
+            if (typeof theme !== "string" || Object.hasOwn(THEMES, theme) === false) {
+            theme = "daylight";
+            }
+
+            const root = document.documentElement;
+            root.dataset.theme = theme;
+            root.style.backgroundColor = THEMES[theme].background;
+            root.style.colorScheme = THEMES[theme].scheme;
+        })();
+        </script>
         <script type="module">
         </script>
     </body>
