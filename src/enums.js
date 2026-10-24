@@ -28,8 +28,8 @@ const StateKey = Object.freeze({
   FOCUS_MODE: "focusMode",
 });
 
-const DIY_FIELDS = Object.freeze(["bg", "text", "accent", "border"]);
-const DIY_STATE_KEY = Object.freeze({
+const DiyFields = Object.freeze(["bg", "text", "accent", "border"]);
+const DiyStateKeys = Object.freeze({
   bg: StateKey.DIY_BG,
   text: StateKey.DIY_TEXT,
   accent: StateKey.DIY_ACCENT,
@@ -44,31 +44,34 @@ const Theme = Object.freeze({
   DIY: "diy",
 });
 
-const THEMES = Object.values(Theme);
+const Themes = Object.values(Theme);
 
-const THEME_CLASSES = {
+const ThemeClasses = Object.freeze({
   [Theme.DAYLIGHT]: "daylight-mode",
   [Theme.DAWN]: "dawn-mode",
   [Theme.DUSK]: "dusk-mode",
   [Theme.DARKNESS]: "darkness-mode",
   [Theme.DIY]: "diy-mode",
-};
+});
 
-const themeIcons = {
+const ThemeIcons = Object.freeze({
   [Theme.DAYLIGHT]: daylight,
   [Theme.DAWN]: dawn,
   [Theme.DUSK]: dusk,
   [Theme.DARKNESS]: darkness,
   [Theme.DIY]: diy,
-};
+});
+
+const Elements = Object.freeze({});
 
 export {
-  DIY_FIELDS,
-  DIY_STATE_KEY,
+  DiyFields,
+  DiyStateKeys,
+  Elements,
   Mode,
   StateKey,
-  THEME_CLASSES,
-  THEMES,
   Theme,
-  themeIcons,
+  ThemeClasses,
+  ThemeIcons,
+  Themes,
 };

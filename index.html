@@ -142,7 +142,6 @@
             <input
                 type="file"
                 id="file-input"
-                accept=".txt"
                 class="hidden"
             />
         </div>
@@ -322,18 +321,16 @@
         <script>
         (() => {
             const THEMES = {
-            dawn: { background: "#______", scheme: "light" },
-            daylight: { background: "#faf9f5", scheme: "light" },
-            dusk: { background: "#______", scheme: "dark" },
-            darkness: { background: "#______", scheme: "dark" },
-            diy: { background: "#777777", scheme: "light dark" },
+            dawn: { background: "#dfd4c5", scheme: "dawn" },
+            daylight: { background: "#f5f7fa", scheme: "daylight" },
+            dusk: { background: "#2b2826", scheme: "dusk" },
+            darkness: { background: "#000000", scheme: "darkness" },
+            diy: { background: localStorage.getItem("tw.diy.bg"), scheme: "diy" },
             };
 
-            try {
-            const theme = JSON.parse(localStorage.getItem("tw.theme"));
-            } catch (error) {}
+            let theme = localStorage.getItem("tw.theme");
 
-            if (typeof theme !== "string" || Object.hasOwn(THEMES, theme) === false) {
+            if (theme === undefined) {
             theme = "daylight";
             }
 
@@ -343,7 +340,6 @@
             root.style.colorScheme = THEMES[theme].scheme;
         })();
         </script>
-        <script type="module">
-        </script>
+        <script type="module"></script>
     </body>
 </html>

@@ -1,5 +1,4 @@
 import { StateTree } from "aspen";
-import { updateLineNumbers, updateWordCount } from "@/editor.js";
 import { Mode, StateKey, Theme } from "@/enums.js";
 import {
   handleFontSizeChange,
@@ -11,9 +10,26 @@ import {
   handleWideMode,
   handleWordCount,
   syncFullscreenIcon,
+  updateLineNumbers,
+  updateWordCount,
 } from "@/state_functions.js";
 
+// key order matters becuase boostrap() activates them in order lol
 const state = new StateTree("tw.", {
+  [StateKey.MODE]: {
+    type: "string",
+    default: Mode.EDIT,
+    persistent: true,
+    allowed: Object.values(Mode),
+    onUpdate: [handleModeChange, updateWordCount, updateLineNumbers],
+  },
+  [StateKey.THEME]: {
+    type: "string",
+    default: Theme.DAYLIGHT,
+    persistent: true,
+    allowed: Object.values(Theme),
+    onUpdate: [handleThemeChange],
+  },
   [StateKey.EDITOR_TEXT]: {
     type: "string",
     default: "",
@@ -62,20 +78,6 @@ const state = new StateTree("tw.", {
     type: "string",
     default: "#e8e6dc",
     persistent: true,
-  },
-  [StateKey.THEME]: {
-    type: "string",
-    default: Theme.DAYLIGHT,
-    persistent: true,
-    allowed: [Theme.DAWN, Theme.DAYLIGHT, Theme.DUSK, Theme.DARKNESS, Theme.DIY],
-    onUpdate: [handleThemeChange],
-  },
-  [StateKey.MODE]: {
-    type: "string",
-    default: Mode.EDIT,
-    persistent: true,
-    allowed: [Mode.EDIT, Mode.VIEW],
-    onUpdate: [handleModeChange],
   },
   [StateKey.FONT_SIZE]: {
     type: "number",

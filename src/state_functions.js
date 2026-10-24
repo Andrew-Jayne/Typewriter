@@ -1,30 +1,34 @@
 import {
-  DIY_FIELDS,
-  DIY_STATE_KEY,
+  DiyFields,
+  DiyStateKeys,
   Mode,
   StateKey,
-  THEME_CLASSES,
   Theme,
-  themeIcons,
+  ThemeClasses,
+  ThemeIcons,
 } from "@/enums.js";
 import { state } from "@/state.js";
 import { getElement, getInputElement, isKeyOf, isValueOf } from "./utils.js";
 
-/**
- * @param {string} hexColor
- * @returns {boolean}
- */
-function isValidHexColor(hexColor) {
-  return /^#[0-9a-fA-F]{6}$/.test(hexColor);
-}
-
 function applyDiyColors() {
+  /**
+   * @param {string} hexColor
+   * @returns {boolean}
+   */
+  function isValidHexColor(hexColor) {
+    return /^#[0-9a-fA-F]{6}$/.test(hexColor);
+  }
+
   const body = document.body;
-  for (const field of DIY_FIELDS) {
-    if (isKeyOf(DIY_STATE_KEY, field) === false) {
+  for (const field of DiyFields) {
+    if (!isKeyOf(DiyStateKeys, field)) {
       throw new Error(`Unknown DIY_FIELD "${field}"`);
     }
-    body.style.setProperty(`--diy-${field}`, state.get(DIY_STATE_KEY[field]));
+    const value = state.get(DiyStateKeys[field]);
+    if (typeof value !== "string" || !isValidHexColor(value)) {
+      throw new Error(`Invalid color for "${field}": ${value}`);
+    }
+    body.style.setProperty(`--diy-${field}`, value);
   }
 
   const bg = state.get(StateKey.DIY_BG);
@@ -60,9 +64,9 @@ function handleThemeChange() {
     throw new Error(`Unknown theme "${theme}"`);
   }
 
-  getElement("theme-toggle").innerHTML = themeIcons[theme];
-  document.body.classList.remove(...Object.values(THEME_CLASSES));
-  document.body.classList.add(THEME_CLASSES[theme]);
+  getElement("theme-toggle").innerHTML = ThemeIcons[theme];
+  document.body.classList.remove(...Object.values(ThemeClasses));
+  document.body.classList.add(ThemeClasses[theme]);
 
   if (theme === Theme.DIY) {
     applyDiyColors();
@@ -135,14 +139,14 @@ function handleWordCount() {
 }
 
 function handleFontSizeChange() {
-  const px = `${state.get(StateKey.FONT_SIZE)}px`;
+  const font_size = `${state.get(StateKey.FONT_SIZE)}px`;
   switch (state.get(StateKey.MODE)) {
     case Mode.EDIT:
-      getElement("editor").style.fontSize = px;
-      getElement("line-numbers").style.fontSize = px;
+      getElement("editor").style.fontSize = font_size;
+      getElement("line-numbers").style.fontSize = font_size;
       return;
     case Mode.VIEW:
-      getElement("view-mode").style.fontSize = px;
+      getElement("view-mode").style.fontSize = font_size;
       return;
   }
 }
@@ -257,10 +261,10 @@ function syncDiyField({ field, hexColor }) {
  * @param {{ field: string, hexColor: string }} params
  */
 function handleDiyPickerInput({ field, hexColor }) {
-  if (isKeyOf(DIY_STATE_KEY, field) === false) {
+  if (isKeyOf(DiyStateKeys, field) === false) {
     throw new Error(`Unknown DIY_FIELD "${field}"`);
   }
-  state.set(DIY_STATE_KEY[field], hexColor);
+  state.set(DiyStateKeys[field], hexColor);
   syncDiyField({ field: field, hexColor: hexColor });
   state.set(StateKey.THEME, Theme.DIY);
 }
@@ -280,10 +284,10 @@ function handleDiyColorInput({ field, rawInput }) {
   }
   errorEl.textContent = "";
   const hexColor = `#${hexMatch[1]}`;
-  if (isKeyOf(DIY_STATE_KEY, field) === false) {
+  if (isKeyOf(DiyStateKeys, field) === false) {
     throw new Error(`Unknown DIY_FIELD "${field}"`);
   }
-  state.set(DIY_STATE_KEY[field], hexColor);
+  state.set(DiyStateKeys[field], hexColor);
   syncDiyField({ field: field, hexColor: hexColor });
   state.set(StateKey.THEME, Theme.DIY);
 }
@@ -303,6 +307,34 @@ function syncFullscreenIcon() {
   }
 }
 
+function updateLineNumbers() {
+  if (
+    state.get(StateKey.SHOW_LINE_NUMBERS) === true &&
+    state.get(StateKey.MODE) === Mode.EDIT
+  ) {
+    let nums = "";
+    const LINE_COUNT = state.get(StateKey.EDITOR_TEXT).split("\n").length;
+    for (let idx = 1; idx <= LINE_COUNT; idx++) {
+      if (idx > 1) {
+        nums += "\n";
+      }
+      nums += String(idx);
+    }
+    getElement("line-numbers").textContent = nums;
+  }
+}
+
+function updateWordCount() {
+  const numberFormat = new Intl.NumberFormat("en-US");
+  const trimmed = state.get(StateKey.EDITOR_TEXT).trim();
+  let word_count = 0;
+  if (trimmed.length > 0) {
+    word_count = trimmed.split(/\s+/).length; // WTF does this regex do?
+  }
+  getElement("word-count").textContent =
+    `${numberFormat.format(word_count)} words · ${numberFormat.format(trimmed.length)} characters`;
+}
+
 export {
   handleDiyColorInput,
   handleDiyPickerInput,
@@ -316,4 +348,6 @@ export {
   handleWordCount,
   syncDiyField,
   syncFullscreenIcon,
+  updateLineNumbers,
+  updateWordCount,
 };

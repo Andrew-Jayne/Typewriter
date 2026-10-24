@@ -35,6 +35,7 @@ button {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid transparent;
+  font-variant-numeric: tabular-nums;
 }
 
 #typewriter-container {

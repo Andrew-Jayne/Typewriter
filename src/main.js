@@ -1,19 +1,17 @@
-import {
-  clearText,
-  handleFileSelect,
-  openFile,
-  saveFile,
-  toggleMode,
-} from "@/editor.js";
 import { Mode, StateKey } from "@/enums.js";
 import { buildIcons } from "@/icons.js";
 import { state } from "@/state.js";
 import { handleDiyColorInput, handleDiyPickerInput } from "@/state_functions.js";
 import {
+  clearText,
   closeSettings,
+  handleFileSelect,
+  openFile,
+  saveFile,
   selectTheme,
   toggleFocusMode,
   toggleFullscreen,
+  toggleMode,
   toggleSettings,
   toggleThemePicker,
   toggleToolbar,

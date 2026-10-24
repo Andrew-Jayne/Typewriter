@@ -1,4 +1,4 @@
-import { StateKey } from "@/enums.js";
+import { Mode, StateKey } from "@/enums.js";
 import { state } from "@/state.js";
 import { syncDiyField } from "@/state_functions.js";
 import { getElement, getInputElement } from "./utils.js";
@@ -33,7 +33,7 @@ function toggleFullscreen() {
 }
 
 function syncSettingsControls() {
-  getInputElement("setting-font-size").value = `${state.get(StateKey.FONT_SIZE)}p`;
+  getInputElement("setting-font-size").value = String(state.get(StateKey.FONT_SIZE));
   getInputElement("toggle-line-numbers").checked = state.get(
     StateKey.SHOW_LINE_NUMBERS,
   );
@@ -95,11 +95,92 @@ function selectTheme(theme) {
   state.set(StateKey.THEME, theme);
 }
 
+function toggleMode() {
+  function flashModeToggle() {
+    const modeToggle = getElement("mode-toggle");
+    modeToggle.classList.add("flash");
+
+    setTimeout(() => modeToggle.classList.remove("flash"), 400);
+  }
+
+  switch (state.get(StateKey.MODE)) {
+    case Mode.EDIT:
+      state.set(StateKey.MODE, Mode.VIEW);
+      flashModeToggle();
+      return;
+    case Mode.VIEW:
+      state.set(StateKey.MODE, Mode.EDIT);
+      flashModeToggle();
+      return;
+  }
+}
+
+function clearText() {
+  if (state.get(StateKey.EDITOR_TEXT).trim() === "") {
+    return;
+  }
+  if (confirm("Are you sure you want to clear all text?") === true) {
+    state.set(StateKey.EDITOR_TEXT, "");
+    state.set(StateKey.FILE_NAME, "untitled.txt");
+    state.set(StateKey.MODE, Mode.EDIT);
+  }
+}
+
+function openFile() {
+  getElement("file-input").click();
+}
+
+/**
+ * @param {Event} event
+ */
+async function handleFileSelect(event) {
+  if (event.currentTarget instanceof HTMLInputElement === false) return;
+  const input = event.currentTarget;
+  if (input.files === null) return;
+  const file = input.files.item(0);
+  if (file === null) return;
+
+  try {
+    const text = await file.text();
+    state.set(StateKey.EDITOR_TEXT, text.replace(/\r\n?/g, "\n"));
+    state.set(StateKey.FILE_NAME, file.name);
+    state.set(StateKey.MODE, Mode.EDIT);
+  } catch (error) {
+    console.error(`Could not read ${file.name}`, error);
+  } finally {
+    input.value = "";
+  }
+}
+
+function saveFile() {
+  const fileName = prompt("Save as:", state.get(StateKey.FILE_NAME));
+  if (fileName === null || fileName.trim().length === 0) {
+    return;
+  }
+  state.set(StateKey.FILE_NAME, fileName.trim());
+  const BLOB = new Blob([state.get(StateKey.EDITOR_TEXT)], {
+    type: "text/plain",
+  });
+  const url = URL.createObjectURL(BLOB);
+  const downloadLink = document.createElement("a");
+  downloadLink.href = url;
+  downloadLink.download = fileName.trim();
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(url);
+}
+
 export {
+  clearText,
   closeSettings,
+  handleFileSelect,
+  openFile,
+  saveFile,
   selectTheme,
   toggleFocusMode,
   toggleFullscreen,
+  toggleMode,
   toggleSettings,
   toggleThemePicker,
   toggleToolbar,
