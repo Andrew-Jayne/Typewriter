@@ -9,7 +9,7 @@ function toggleToolbar() {
 
 function toggleFocusMode() {
   const toolbar = getElement("toolbar");
-  switch (state.get(StateKey.FOCUS_MODE)) {
+  switch (state[StateKey.FOCUS_MODE].read()) {
     case true:
       toolbar.style.display = "none";
       return;
@@ -22,30 +22,28 @@ function toggleFocusMode() {
 function toggleFullscreen() {
   switch (document.fullscreenElement === null) {
     case true:
-      state.set(StateKey.FULLSCREEN, true);
+      state[StateKey.FULLSCREEN].update(true);
       document.documentElement.requestFullscreen();
       return;
     case false:
-      state.set(StateKey.FULLSCREEN, false);
+      state[StateKey.FULLSCREEN].update(false);
       document.exitFullscreen();
       return;
   }
 }
 
 function syncSettingsControls() {
-  getInputElement("setting-font-size").value = String(state.get(StateKey.FONT_SIZE));
-  getInputElement("toggle-line-numbers").checked = state.get(
-    StateKey.SHOW_LINE_NUMBERS,
-  );
-  getInputElement("toggle-monospace").checked = state.get(StateKey.USE_MONOSPACE);
-  getInputElement("toggle-wide").checked = state.get(StateKey.ENABLE_WIDE_MODE);
-  getInputElement("toggle-tooltips").checked = state.get(StateKey.SHOW_TOOLTIPS);
-  getInputElement("toggle-word-count").checked = state.get(StateKey.SHOW_WORD_COUNT);
-  getInputElement("toggle-focus-mode").checked = state.get(StateKey.FOCUS_MODE);
-  syncDiyField({ field: "bg", hexColor: state.get(StateKey.DIY_BG) });
-  syncDiyField({ field: "text", hexColor: state.get(StateKey.DIY_TEXT) });
-  syncDiyField({ field: "accent", hexColor: state.get(StateKey.DIY_ACCENT) });
-  syncDiyField({ field: "border", hexColor: state.get(StateKey.DIY_BORDER) });
+  getInputElement("setting-font-size").value = String(state[StateKey.FONT_SIZE].read());
+  getInputElement("toggle-line-numbers").checked = state[StateKey.SHOW_LINE_NUMBERS].read();
+  getInputElement("toggle-monospace").checked = state[StateKey.USE_MONOSPACE].read();
+  getInputElement("toggle-wide").checked = state[StateKey.ENABLE_WIDE_MODE].read();
+  getInputElement("toggle-tooltips").checked = state[StateKey.SHOW_TOOLTIPS].read();
+  getInputElement("toggle-word-count").checked = state[StateKey.SHOW_WORD_COUNT].read();
+  getInputElement("toggle-focus-mode").checked = state[StateKey.FOCUS_MODE].read();
+  syncDiyField({ field: "bg", hexColor: state[StateKey.DIY_BG].read() });
+  syncDiyField({ field: "text", hexColor: state[StateKey.DIY_TEXT].read() });
+  syncDiyField({ field: "accent", hexColor: state[StateKey.DIY_ACCENT].read() });
+  syncDiyField({ field: "border", hexColor: state[StateKey.DIY_BORDER].read() });
 }
 
 //this should move to the aspen state, either as a non persistent key or a perisitent one
@@ -79,7 +77,7 @@ function toggleThemePicker() {
 }
 
 function updatePickerActiveState() {
-  const theme = state.get(StateKey.THEME);
+  const theme = state[StateKey.THEME].read();
   const options = getElement("theme-picker-menu").querySelectorAll(".theme-option");
   for (const option of options) {
     if (option instanceof HTMLElement === false) continue;
@@ -92,7 +90,7 @@ function updatePickerActiveState() {
  */
 function selectTheme(theme) {
   getElement("theme-picker-menu").classList.remove("show");
-  state.set(StateKey.THEME, theme);
+  state[StateKey.THEME].update(theme);
 }
 
 function toggleMode() {
@@ -103,26 +101,26 @@ function toggleMode() {
     setTimeout(() => modeToggle.classList.remove("flash"), 400);
   }
 
-  switch (state.get(StateKey.MODE)) {
+  switch (state[StateKey.MODE].read()) {
     case Mode.EDIT:
-      state.set(StateKey.MODE, Mode.VIEW);
+      state[StateKey.MODE].update(Mode.VIEW);
       flashModeToggle();
       return;
     case Mode.VIEW:
-      state.set(StateKey.MODE, Mode.EDIT);
+      state[StateKey.MODE].update(Mode.EDIT);
       flashModeToggle();
       return;
   }
 }
 
 function clearText() {
-  if (state.get(StateKey.EDITOR_TEXT).trim() === "") {
+  if (state[StateKey.EDITOR_TEXT].read().trim() === "") {
     return;
   }
   if (confirm("Are you sure you want to clear all text?") === true) {
-    state.set(StateKey.EDITOR_TEXT, "");
-    state.set(StateKey.FILE_NAME, "untitled.txt");
-    state.set(StateKey.MODE, Mode.EDIT);
+    state[StateKey.EDITOR_TEXT].update("");
+    state[StateKey.FILE_NAME].update("untitled.txt");
+    state[StateKey.MODE].update(Mode.EDIT);
   }
 }
 
@@ -142,9 +140,9 @@ async function handleFileSelect(event) {
 
   try {
     const text = await file.text();
-    state.set(StateKey.EDITOR_TEXT, text.replace(/\r\n?/g, "\n"));
-    state.set(StateKey.FILE_NAME, file.name);
-    state.set(StateKey.MODE, Mode.EDIT);
+    state[StateKey.EDITOR_TEXT].update(text.replace(/\r\n?/g, "\n"));
+    state[StateKey.FILE_NAME].update(file.name);
+    state[StateKey.MODE].update(Mode.EDIT);
   } catch (error) {
     console.error(`Could not read ${file.name}`, error);
   } finally {
@@ -153,12 +151,12 @@ async function handleFileSelect(event) {
 }
 
 function saveFile() {
-  const fileName = prompt("Save as:", state.get(StateKey.FILE_NAME));
+  const fileName = prompt("Save as:", state[StateKey.FILE_NAME].read());
   if (fileName === null || fileName.trim().length === 0) {
     return;
   }
-  state.set(StateKey.FILE_NAME, fileName.trim());
-  const BLOB = new Blob([state.get(StateKey.EDITOR_TEXT)], {
+  state[StateKey.FILE_NAME].update(fileName.trim());
+  const BLOB = new Blob([state[StateKey.EDITOR_TEXT].read()], {
     type: "text/plain",
   });
   const url = URL.createObjectURL(BLOB);

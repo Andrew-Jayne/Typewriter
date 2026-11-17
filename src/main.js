@@ -26,7 +26,7 @@ function handleKeydown(keyEvent) {
     return;
   }
   const modifierHeld = keyEvent.metaKey === true || keyEvent.ctrlKey === true;
-  if (keyEvent.key === "Tab" && state.get(StateKey.MODE) === Mode.EDIT) {
+  if (keyEvent.key === "Tab" && state[StateKey.MODE].read() === Mode.EDIT) {
     keyEvent.preventDefault();
     const textarea = getElement("typewriter-container").querySelector("textarea");
     if (textarea === undefined || textarea === null) {
@@ -39,7 +39,7 @@ function handleKeydown(keyEvent) {
       textarea.value.substring(textarea.selectionEnd);
     textarea.selectionStart = start + 1;
     textarea.selectionEnd = start + 1;
-    state.set(StateKey.EDITOR_TEXT, textarea.value);
+    state[StateKey.EDITOR_TEXT].update(textarea.value);
   }
 
   if (modifierHeld === true && keyEvent.key === "s") {
@@ -93,7 +93,7 @@ function handleSettingsModalClick(clickEvent) {
  */
 function handleFontSizeInput(changeEvent) {
   if (changeEvent.currentTarget instanceof HTMLInputElement === false) return;
-  state.set(StateKey.FONT_SIZE, parseInt(changeEvent.currentTarget.value, 10));
+  state[StateKey.FONT_SIZE].update(parseInt(changeEvent.currentTarget.value, 10));
 }
 
 /**
@@ -105,12 +105,12 @@ function handleStateToggleChange(changeEvent) {
   if (key === undefined) return;
   if (isStateKey(key) === false) return;
 
-  switch (state.get(key)) {
+  switch (state[key].read()) {
     case true:
-      state.set(key, false);
+      state[key].update(false);
       break;
     case false:
-      state.set(key, true);
+      state[key].update(true);
       break;
     default:
       throw new Error(`State "${key}" is not a boolean`);
@@ -183,10 +183,10 @@ function addAllEventListerners() {
   }
 }
 
-function main() {
+async function main() {
   addAllEventListerners();
   buildIcons();
-  state.validateStorage();
+  await state.validateStorage();
   state.bootstrap();
   window.scrollTo(0, 0);
 }

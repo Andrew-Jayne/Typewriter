@@ -24,14 +24,14 @@ function applyDiyColors() {
     if (!isKeyOf(DiyStateKeys, field)) {
       throw new Error(`Unknown DIY_FIELD "${field}"`);
     }
-    const value = state.get(DiyStateKeys[field]);
+    const value = state[DiyStateKeys[field]].read();
     if (typeof value !== "string" || !isValidHexColor(value)) {
       throw new Error(`Invalid color for "${field}": ${value}`);
     }
     body.style.setProperty(`--diy-${field}`, value);
   }
 
-  const bg = state.get(StateKey.DIY_BG);
+  const bg = state[StateKey.DIY_BG].read();
   const brightness =
     parseInt(bg.slice(1, 3), 16) * 0.299 +
     parseInt(bg.slice(3, 5), 16) * 0.587 +
@@ -59,7 +59,7 @@ function applyDiyColors() {
 }
 
 function handleThemeChange() {
-  const theme = state.get(StateKey.THEME);
+  const theme = state[StateKey.THEME].read();
   if (isValueOf(Theme, theme) === false) {
     throw new Error(`Unknown theme "${theme}"`);
   }
@@ -74,12 +74,12 @@ function handleThemeChange() {
 }
 
 function handleShowLineNumbers() {
-  if (state.get(StateKey.MODE) === Mode.VIEW) {
+  if (state[StateKey.MODE].read() === Mode.VIEW) {
     return;
   }
   const wrap = document.querySelector(".edit-mode");
   if (wrap === null) return;
-  switch (state.get(StateKey.SHOW_LINE_NUMBERS)) {
+  switch (state[StateKey.SHOW_LINE_NUMBERS].read()) {
     case true:
       getElement("line-numbers").style.display = "block";
       wrap.classList.add("no-wrap");
@@ -92,10 +92,10 @@ function handleShowLineNumbers() {
 }
 
 function handleMonospace() {
-  if (state.get(StateKey.MODE) === Mode.VIEW) {
+  if (state[StateKey.MODE].read() === Mode.VIEW) {
     return;
   }
-  switch (state.get(StateKey.USE_MONOSPACE)) {
+  switch (state[StateKey.USE_MONOSPACE].read()) {
     case true:
       getElement("editor").classList.add("monospace-mode");
       return;
@@ -106,7 +106,7 @@ function handleMonospace() {
 }
 
 function handleWideMode() {
-  switch (state.get(StateKey.ENABLE_WIDE_MODE)) {
+  switch (state[StateKey.ENABLE_WIDE_MODE].read()) {
     case true:
       getElement("typewriter-container").classList.add("wide");
       return;
@@ -117,7 +117,7 @@ function handleWideMode() {
 }
 
 function handleTooltips() {
-  switch (state.get(StateKey.SHOW_TOOLTIPS)) {
+  switch (state[StateKey.SHOW_TOOLTIPS].read()) {
     case true:
       document.body.classList.remove("no-tooltips");
       return;
@@ -128,7 +128,7 @@ function handleTooltips() {
 }
 
 function handleWordCount() {
-  switch (state.get(StateKey.SHOW_WORD_COUNT)) {
+  switch (state[StateKey.SHOW_WORD_COUNT].read()) {
     case true:
       getElement("word-count").style.display = "block";
       return;
@@ -139,8 +139,8 @@ function handleWordCount() {
 }
 
 function handleFontSizeChange() {
-  const font_size = `${state.get(StateKey.FONT_SIZE)}px`;
-  switch (state.get(StateKey.MODE)) {
+  const font_size = `${state[StateKey.FONT_SIZE].read()}px`;
+  switch (state[StateKey.MODE].read()) {
     case Mode.EDIT:
       getElement("editor").style.fontSize = font_size;
       getElement("line-numbers").style.fontSize = font_size;
@@ -163,22 +163,22 @@ async function renderMarkdown(text) {
 function handleModeChange() {
   const container = getElement("typewriter-container");
 
-  switch (state.get(StateKey.MODE)) {
+  switch (state[StateKey.MODE].read()) {
     case Mode.VIEW: {
       container.innerHTML = "";
       const viewDiv = document.createElement("div");
       viewDiv.id = "view-mode";
       viewDiv.className = "view-content";
-      viewDiv.style.fontSize = `${state.get(StateKey.FONT_SIZE)}px`;
+      viewDiv.style.fontSize = `${state[StateKey.FONT_SIZE].read()}px`;
       container.appendChild(viewDiv);
 
-      renderMarkdown(state.get(StateKey.EDITOR_TEXT))
+      renderMarkdown(state[StateKey.EDITOR_TEXT].read())
         .then((html) => {
           viewDiv.innerHTML = html;
         })
         .catch((error) => {
           console.error(error);
-          viewDiv.textContent = state.get(StateKey.EDITOR_TEXT);
+          viewDiv.textContent = state[StateKey.EDITOR_TEXT].read();
         });
 
       getElement("icon-edit-mode").classList.add("hidden");
@@ -193,7 +193,7 @@ function handleModeChange() {
          */
         function handleEditorInput(inputEvent) {
           if (inputEvent.currentTarget instanceof HTMLTextAreaElement === false) return;
-          state.set(StateKey.EDITOR_TEXT, inputEvent.currentTarget.value);
+          state[StateKey.EDITOR_TEXT].update(inputEvent.currentTarget.value);
         }
 
         /**
@@ -205,7 +205,7 @@ function handleModeChange() {
           getElement("line-numbers").scrollTop = scrollEvent.currentTarget.scrollTop;
         }
 
-        const fontSize = state.get(StateKey.FONT_SIZE);
+        const fontSize = state[StateKey.FONT_SIZE].read();
 
         container.innerHTML = "";
         const wrap = document.createElement("div");
@@ -219,15 +219,15 @@ function handleModeChange() {
         textarea.id = "editor";
         textarea.placeholder = "Start writing...";
         textarea.spellcheck = true;
-        textarea.value = state.get(StateKey.EDITOR_TEXT);
+        textarea.value = state[StateKey.EDITOR_TEXT].read();
         textarea.style.fontSize = `${fontSize}px`;
         lineNums.style.fontSize = `${fontSize}px`;
 
-        if (state.get(StateKey.USE_MONOSPACE) === true) {
+        if (state[StateKey.USE_MONOSPACE].read() === true) {
           textarea.classList.add("monospace-mode");
         }
 
-        if (state.get(StateKey.SHOW_LINE_NUMBERS) === true) {
+        if (state[StateKey.SHOW_LINE_NUMBERS].read() === true) {
           wrap.classList.add("no-wrap");
         } else {
           lineNums.style.display = "none";
@@ -264,9 +264,9 @@ function handleDiyPickerInput({ field, hexColor }) {
   if (isKeyOf(DiyStateKeys, field) === false) {
     throw new Error(`Unknown DIY_FIELD "${field}"`);
   }
-  state.set(DiyStateKeys[field], hexColor);
+  state[DiyStateKeys[field]].update(hexColor);
   syncDiyField({ field: field, hexColor: hexColor });
-  state.set(StateKey.THEME, Theme.DIY);
+  state[StateKey.THEME].update(Theme.DIY);
 }
 
 /**
@@ -287,9 +287,9 @@ function handleDiyColorInput({ field, rawInput }) {
   if (isKeyOf(DiyStateKeys, field) === false) {
     throw new Error(`Unknown DIY_FIELD "${field}"`);
   }
-  state.set(DiyStateKeys[field], hexColor);
+  state[DiyStateKeys[field]].update(hexColor);
   syncDiyField({ field: field, hexColor: hexColor });
-  state.set(StateKey.THEME, Theme.DIY);
+  state[StateKey.THEME].update(Theme.DIY);
 }
 
 function syncFullscreenIcon() {
@@ -309,11 +309,11 @@ function syncFullscreenIcon() {
 
 function updateLineNumbers() {
   if (
-    state.get(StateKey.SHOW_LINE_NUMBERS) === true &&
-    state.get(StateKey.MODE) === Mode.EDIT
+    state[StateKey.SHOW_LINE_NUMBERS].read() === true &&
+    state[StateKey.MODE].read() === Mode.EDIT
   ) {
     let nums = "";
-    const LINE_COUNT = state.get(StateKey.EDITOR_TEXT).split("\n").length;
+    const LINE_COUNT = state[StateKey.EDITOR_TEXT].read().split("\n").length;
     for (let idx = 1; idx <= LINE_COUNT; idx++) {
       if (idx > 1) {
         nums += "\n";
@@ -326,7 +326,7 @@ function updateLineNumbers() {
 
 function updateWordCount() {
   const numberFormat = new Intl.NumberFormat("en-US");
-  const trimmed = state.get(StateKey.EDITOR_TEXT).trim();
+  const trimmed = state[StateKey.EDITOR_TEXT].read().trim();
   let word_count = 0;
   if (trimmed.length > 0) {
     word_count = trimmed.split(/\s+/).length; // WTF does this regex do?
