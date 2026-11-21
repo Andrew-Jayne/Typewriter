@@ -1,5 +1,3 @@
-import { state } from "./state.js";
-
 /**
  * @param {string} id
  * @returns {HTMLElement}
@@ -28,29 +26,6 @@ export function getInputElement(id) {
     throw new Error(`Element #${id} is missing`);
   }
   return element;
-}
-
-/** @typedef {typeof state.keys[keyof typeof state.keys]} StateKeyValue */
-
-/**
- * @param {string} value
- * @returns {value is StateKeyValue}
- */
-export function isStateKey(value) {
-  /** @type {readonly string[]} */
-  const allowed = Object.values(state.keys);
-  return allowed.includes(value);
-}
-
-/**
- * @param {Event} event
- * @returns {{ field: string, value: string } | null}
- */
-export function readFieldInput(event) {
-  if (event.currentTarget instanceof HTMLInputElement === false) return null;
-  const field = event.currentTarget.dataset.field;
-  if (field === undefined) return null;
-  return { field: field, value: event.currentTarget.value };
 }
 
 /**

@@ -10,11 +10,11 @@
     "lint": "explicitjs src/"
   },
   "dependencies": {
-    "aspen": "https://github.com/Andrew-Jayne/Aspen/releases/download/v2beta1/aspen-v2beta1.tgz",
+    "aspen": "https://github.com/Andrew-Jayne/Aspen/releases/download/v2beta2/aspen-v2beta2.tgz",
     "marked": "latest"
   },
   "devDependencies": {
-    "explicitjs": "https://github.com/Andrew-Jayne/ExplicitJS/releases/download/v1beta5/explicitjs-1beta5.tgz",
+    "explicitjs": "https://github.com/Andrew-Jayne/ExplicitJS/releases/download/v1beta7/explicitjs-1beta7.tgz",
     "vite": "latest",
     "vite-plugin-singlefile": "latest"
   },

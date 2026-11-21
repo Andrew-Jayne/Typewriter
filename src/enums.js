@@ -9,31 +9,13 @@ const Mode = Object.freeze({
   VIEW: "view",
 });
 
-const StateKey = Object.freeze({
-  THEME: "theme",
-  EDITOR_TEXT: "editorText",
-  FILE_NAME: "fileName",
-  MODE: "mode",
-  FONT_SIZE: "fontSize",
-  SHOW_LINE_NUMBERS: "showLineNumbers",
-  USE_MONOSPACE: "useMonospace",
-  ENABLE_WIDE_MODE: "enableWideMode",
-  SHOW_TOOLTIPS: "showTooltips",
-  SHOW_WORD_COUNT: "showWordCount",
-  DIY_BG: "diyBg",
-  DIY_TEXT: "diyText",
-  DIY_ACCENT: "diyAccent",
-  DIY_BORDER: "diyBorder",
-  FULLSCREEN: "fullscreen",
-  FOCUS_MODE: "focusMode",
-});
-
 const DiyFields = Object.freeze(["bg", "text", "accent", "border"]);
+
 const DiyStateKeys = Object.freeze({
-  bg: StateKey.DIY_BG,
-  text: StateKey.DIY_TEXT,
-  accent: StateKey.DIY_ACCENT,
-  border: StateKey.DIY_BORDER,
+  bg: "diyBg",
+  text: "diyText",
+  accent: "diyAccent",
+  border: "diyBorder",
 });
 
 const Theme = Object.freeze({
@@ -69,7 +51,6 @@ export {
   DiyStateKeys,
   Elements,
   Mode,
-  StateKey,
   Theme,
   ThemeClasses,
   ThemeIcons,

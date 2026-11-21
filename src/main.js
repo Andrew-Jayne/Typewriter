@@ -1,7 +1,12 @@
-import { Mode, StateKey } from "@/enums.js";
+import { Mode } from "@/enums.js";
 import { buildIcons } from "@/icons.js";
 import { state } from "@/state.js";
-import { handleDiyColorInput, handleDiyPickerInput } from "@/state_functions.js";
+import {
+  discardPendingEditorText,
+  flushEditorText,
+  handleDiyColorInput,
+  handleDiyPickerInput,
+} from "@/state_functions.js";
 import {
   clearText,
   closeSettings,
@@ -9,14 +14,15 @@ import {
   openFile,
   saveFile,
   selectTheme,
-  toggleFocusMode,
+  handleFullscreenChange,
+  syncSettingsControls,
   toggleFullscreen,
   toggleMode,
   toggleSettings,
   toggleThemePicker,
   toggleToolbar,
 } from "@/ui.js";
-import { getElement, isStateKey } from "./utils.js";
+import { getElement } from "./utils.js";
 
 /**
  * @param {KeyboardEvent} keyEvent
@@ -26,7 +32,7 @@ function handleKeydown(keyEvent) {
     return;
   }
   const modifierHeld = keyEvent.metaKey === true || keyEvent.ctrlKey === true;
-  if (keyEvent.key === "Tab" && state[StateKey.MODE].read() === Mode.EDIT) {
+  if (keyEvent.key === "Tab" && state.mode.read() === Mode.EDIT) {
     keyEvent.preventDefault();
     const textarea = getElement("typewriter-container").querySelector("textarea");
     if (textarea === undefined || textarea === null) {
@@ -39,7 +45,8 @@ function handleKeydown(keyEvent) {
       textarea.value.substring(textarea.selectionEnd);
     textarea.selectionStart = start + 1;
     textarea.selectionEnd = start + 1;
-    state[StateKey.EDITOR_TEXT].update(textarea.value);
+    state.editorText.update(textarea.value);
+    discardPendingEditorText();
   }
 
   if (modifierHeld === true && keyEvent.key === "s") {
@@ -93,28 +100,7 @@ function handleSettingsModalClick(clickEvent) {
  */
 function handleFontSizeInput(changeEvent) {
   if (changeEvent.currentTarget instanceof HTMLInputElement === false) return;
-  state[StateKey.FONT_SIZE].update(parseInt(changeEvent.currentTarget.value, 10));
-}
-
-/**
- * @param {Event} changeEvent
- */
-function handleStateToggleChange(changeEvent) {
-  if (changeEvent.currentTarget instanceof HTMLElement === false) return;
-  const key = changeEvent.currentTarget.dataset.stateKey;
-  if (key === undefined) return;
-  if (isStateKey(key) === false) return;
-
-  switch (state[key].read()) {
-    case true:
-      state[key].update(false);
-      break;
-    case false:
-      state[key].update(true);
-      break;
-    default:
-      throw new Error(`State "${key}" is not a boolean`);
-  }
+  state.fontSize.update(parseInt(changeEvent.currentTarget.value, 10));
 }
 
 /**
@@ -168,10 +154,20 @@ function addAllEventListerners() {
   getElement("settings-modal").addEventListener("click", handleSettingsModalClick);
   getElement("btn-close-settings").addEventListener("click", closeSettings);
   getElement("setting-font-size").addEventListener("change", handleFontSizeInput);
-  getElement("toggle-focus-mode").addEventListener("change", toggleFocusMode);
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  window.addEventListener("pagehide", flushEditorText);
+  document.addEventListener("visibilitychange", flushEditorText);
 
-  for (const toggle of document.querySelectorAll("[data-state-key]")) {
-    toggle.addEventListener("change", handleStateToggleChange);
+  const toggles = {
+    "toggle-line-numbers": state.showLineNumbers,
+    "toggle-monospace": state.useMonospace,
+    "toggle-wide": state.enableWideMode,
+    "toggle-tooltips": state.showTooltips,
+    "toggle-word-count": state.showWordCount,
+    "toggle-focus-mode": state.focusMode,
+  };
+  for (const [id, key] of Object.entries(toggles)) {
+    getElement(id).addEventListener("change", () => key.toggle());
   }
 
   for (const picker of document.querySelectorAll(".settings-swatch[data-field]")) {
@@ -183,8 +179,28 @@ function addAllEventListerners() {
   }
 }
 
+function listenForSettingsSync() {
+  const MIRRORED = [
+    state.fontSize,
+    state.showLineNumbers,
+    state.useMonospace,
+    state.enableWideMode,
+    state.showTooltips,
+    state.showWordCount,
+    state.focusMode,
+    state.diyBg,
+    state.diyText,
+    state.diyAccent,
+    state.diyBorder,
+  ];
+  for (const key of MIRRORED) {
+    key.listen(syncSettingsControls);
+  }
+}
+
 async function main() {
   addAllEventListerners();
+  listenForSettingsSync();
   buildIcons();
   await state.validateStorage();
   state.bootstrap();

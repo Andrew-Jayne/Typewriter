@@ -1,6 +1,7 @@
 import { AspenKey, StateTree } from "aspen";
-import { Mode, StateKey, Theme } from "@/enums.js";
+import { Mode, Theme } from "@/enums.js";
 import {
+  applyFocusMode,
   handleFontSizeChange,
   handleModeChange,
   handleMonospace,
@@ -17,116 +18,100 @@ import {
 class TypewriterState extends StateTree {
   namespace = "tw.";
 
-  [StateKey.MODE] = new AspenKey({
+  mode = new AspenKey({
     type: String,
     default: Mode.EDIT,
-    persistent: true,
     allowed: Object.values(Mode),
     onUpdate: [handleModeChange, updateWordCount, updateLineNumbers],
   });
 
-  [StateKey.THEME] = new AspenKey({
+  theme = new AspenKey({
     type: String,
     default: Theme.DAYLIGHT,
-    persistent: true,
     allowed: Object.values(Theme),
     onUpdate: [handleThemeChange],
   });
 
-  [StateKey.EDITOR_TEXT] = new AspenKey({
+  editorText = new AspenKey({
     type: String,
     default: "",
-    persistent: true,
     onUpdate: [updateWordCount, updateLineNumbers],
   });
 
-  [StateKey.FILE_NAME] = new AspenKey({
+  fileName = new AspenKey({
     type: String,
     default: "untitled.txt",
-    persistent: true,
   });
 
-  [StateKey.ENABLE_WIDE_MODE] = new AspenKey({
+  enableWideMode = new AspenKey({
     type: Boolean,
     default: false,
-    persistent: true,
     onUpdate: [handleWideMode],
   });
 
-  [StateKey.SHOW_TOOLTIPS] = new AspenKey({
+  showTooltips = new AspenKey({
     type: Boolean,
     default: true,
-    persistent: true,
     onUpdate: [handleTooltips],
   });
 
-  [StateKey.SHOW_WORD_COUNT] = new AspenKey({
+  showWordCount = new AspenKey({
     type: Boolean,
     default: true,
-    persistent: true,
     onUpdate: [handleWordCount],
   });
 
-  [StateKey.DIY_BG] = new AspenKey({
+  diyBg = new AspenKey({
     type: String,
     default: "#faf9f5",
-    persistent: true,
   });
 
-  [StateKey.DIY_TEXT] = new AspenKey({
+  diyText = new AspenKey({
     type: String,
     default: "#141413",
-    persistent: true,
   });
 
-  [StateKey.DIY_ACCENT] = new AspenKey({
+  diyAccent = new AspenKey({
     type: String,
     default: "#d97757",
-    persistent: true,
   });
 
-  [StateKey.DIY_BORDER] = new AspenKey({
+  diyBorder = new AspenKey({
     type: String,
     default: "#e8e6dc",
-    persistent: true,
   });
 
-  [StateKey.FONT_SIZE] = new AspenKey({
+  fontSize = new AspenKey({
     type: Number,
     default: 16,
-    persistent: true,
     onUpdate: [handleFontSizeChange],
   });
 
-  [StateKey.SHOW_LINE_NUMBERS] = new AspenKey({
+  showLineNumbers = new AspenKey({
     type: Boolean,
     default: false,
-    persistent: true,
     onUpdate: [handleShowLineNumbers],
   });
 
-  [StateKey.USE_MONOSPACE] = new AspenKey({
+  useMonospace = new AspenKey({
     type: Boolean,
     default: false,
-    persistent: true,
     onUpdate: [handleMonospace],
   });
 
-  [StateKey.FULLSCREEN] = new AspenKey({
+  fullscreen = new AspenKey({
     type: Boolean,
     default: false,
     persistent: false,
     onUpdate: [syncFullscreenIcon],
   });
 
-  [StateKey.FOCUS_MODE] = new AspenKey({
+  focusMode = new AspenKey({
     type: Boolean,
     default: false,
     persistent: false,
-    onUpdate: [syncFullscreenIcon],
+    onUpdate: [applyFocusMode],
   });
 }
 
-const state = await StateTree.create.call(TypewriterState, null);
-
-export { state };
+export const state = await TypewriterState.create();
