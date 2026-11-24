@@ -5,8 +5,11 @@ import {
   handleFontSizeChange,
   handleModeChange,
   handleMonospace,
+  handleSettingsOpen,
   handleShowLineNumbers,
   handleThemeChange,
+  handleThemePickerOpen,
+  handleToolbarCollapsed,
   handleTooltips,
   handleWideMode,
   handleWordCount,
@@ -14,6 +17,7 @@ import {
   updateLineNumbers,
   updateWordCount,
 } from "@/state_functions.js";
+import { syncSettingsControls } from "@/ui.js";
 
 class TypewriterState extends StateTree {
   namespace = "tw.";
@@ -29,6 +33,7 @@ class TypewriterState extends StateTree {
     type: String,
     default: Theme.DAYLIGHT,
     allowed: Object.values(Theme),
+    bootMirror: true,
     onUpdate: [handleThemeChange],
   });
 
@@ -46,57 +51,62 @@ class TypewriterState extends StateTree {
   enableWideMode = new AspenKey({
     type: Boolean,
     default: false,
-    onUpdate: [handleWideMode],
+    onUpdate: [handleWideMode, syncSettingsControls],
   });
 
   showTooltips = new AspenKey({
     type: Boolean,
     default: true,
-    onUpdate: [handleTooltips],
+    onUpdate: [handleTooltips, syncSettingsControls],
   });
 
   showWordCount = new AspenKey({
     type: Boolean,
     default: true,
-    onUpdate: [handleWordCount],
+    onUpdate: [handleWordCount, syncSettingsControls],
   });
 
   diyBg = new AspenKey({
     type: String,
     default: "#faf9f5",
+    bootMirror: true,
+    onUpdate: [syncSettingsControls],
   });
 
   diyText = new AspenKey({
     type: String,
     default: "#141413",
+    onUpdate: [syncSettingsControls],
   });
 
   diyAccent = new AspenKey({
     type: String,
     default: "#d97757",
+    onUpdate: [syncSettingsControls],
   });
 
   diyBorder = new AspenKey({
     type: String,
     default: "#e8e6dc",
+    onUpdate: [syncSettingsControls],
   });
 
   fontSize = new AspenKey({
     type: Number,
     default: 16,
-    onUpdate: [handleFontSizeChange],
+    onUpdate: [handleFontSizeChange, syncSettingsControls],
   });
 
   showLineNumbers = new AspenKey({
     type: Boolean,
     default: false,
-    onUpdate: [handleShowLineNumbers],
+    onUpdate: [handleShowLineNumbers, syncSettingsControls],
   });
 
   useMonospace = new AspenKey({
     type: Boolean,
     default: false,
-    onUpdate: [handleMonospace],
+    onUpdate: [handleMonospace, syncSettingsControls],
   });
 
   fullscreen = new AspenKey({
@@ -106,11 +116,32 @@ class TypewriterState extends StateTree {
     onUpdate: [syncFullscreenIcon],
   });
 
+  settingsOpen = new AspenKey({
+    type: Boolean,
+    default: false,
+    persistent: false,
+    onUpdate: [handleSettingsOpen],
+  });
+
+  themePickerOpen = new AspenKey({
+    type: Boolean,
+    default: false,
+    persistent: false,
+    onUpdate: [handleThemePickerOpen],
+  });
+
+  toolbarCollapsed = new AspenKey({
+    type: Boolean,
+    default: true,
+    persistent: false,
+    onUpdate: [handleToolbarCollapsed],
+  });
+
   focusMode = new AspenKey({
     type: Boolean,
     default: false,
     persistent: false,
-    onUpdate: [applyFocusMode],
+    onUpdate: [applyFocusMode, syncSettingsControls],
   });
 }
 

@@ -320,12 +320,12 @@
             daylight: { background: "#f5f7fa", scheme: "daylight" },
             dusk: { background: "#2b2826", scheme: "dusk" },
             darkness: { background: "#000000", scheme: "darkness" },
-            diy: { background: localStorage.getItem("tw.diy.bg"), scheme: "diy" },
+            diy: { background: localStorage.getItem("tw.diyBg") ?? "#faf9f5", scheme: "diy" },
             };
 
             let theme = localStorage.getItem("tw.theme");
 
-            if (theme === undefined) {
+            if (theme === null || !(theme in THEMES)) {
             theme = "daylight";
             }
 

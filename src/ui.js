@@ -7,10 +7,6 @@ import {
 } from "@/state_functions.js";
 import { getElement, getInputElement } from "./utils.js";
 
-function toggleToolbar() {
-  getElement("toolbar").classList.toggle("collapsed");
-}
-
 function toggleFullscreen() {
   switch (document.fullscreenElement === null) {
     case true:
@@ -40,49 +36,11 @@ function syncSettingsControls() {
   syncDiyField({ field: "border", hexColor: state.diyBorder.read() });
 }
 
-//this should move to the aspen state, either as a non persistent key or a perisitent one
-function toggleSettings() {
-  const modal = getElement("settings-modal");
-  switch (modal.classList.contains("show")) {
-    case true:
-      modal.classList.remove("show");
-      return;
-    case false:
-      modal.classList.add("show");
-      return;
-  }
-}
-
-function closeSettings() {
-  getElement("settings-modal").classList.remove("show");
-}
-
-function toggleThemePicker() {
-  const themePickerMenu = getElement("theme-picker-menu");
-  switch (themePickerMenu.classList.contains("show")) {
-    case true:
-      themePickerMenu.classList.remove("show");
-      return;
-    case false:
-      updatePickerActiveState();
-      themePickerMenu.classList.add("show");
-  }
-}
-
-function updatePickerActiveState() {
-  const theme = state.theme.read();
-  const options = getElement("theme-picker-menu").querySelectorAll(".theme-option");
-  for (const option of options) {
-    if (option instanceof HTMLElement === false) continue;
-    option.classList.toggle("active", option.dataset.theme === theme);
-  }
-}
-
 /**
  * @param {string} theme
  */
 function selectTheme(theme) {
-  getElement("theme-picker-menu").classList.remove("show");
+  state.themePickerOpen.update(false);
   state.theme.update(theme);
 }
 
@@ -168,7 +126,6 @@ function saveFile() {
 
 export {
   clearText,
-  closeSettings,
   handleFileSelect,
   handleFullscreenChange,
   openFile,
@@ -177,7 +134,4 @@ export {
   syncSettingsControls,
   toggleFullscreen,
   toggleMode,
-  toggleSettings,
-  toggleThemePicker,
-  toggleToolbar,
 };
