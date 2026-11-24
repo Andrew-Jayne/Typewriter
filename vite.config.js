@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, renameSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
@@ -17,9 +17,26 @@ const inlineFavicon = () => {
   };
 };
 
+const renameOutput = () => {
+  let outDir = "dist";
+  return {
+    name: "rename-output",
+    apply: "build",
+    configResolved(config) {
+      outDir = resolve(config.root, config.build.outDir);
+    },
+    closeBundle: {
+      order: "post",
+      handler() {
+        renameSync(resolve(outDir, "index.html"), resolve(outDir, "typewriter.html"));
+      },
+    },
+  };
+};
+
 export default defineConfig(() => {
   return {
-    plugins: [viteSingleFile(), inlineFavicon()],
+    plugins: [viteSingleFile(), inlineFavicon(), renameOutput()],
     resolve: {
       alias: {
         "@": resolve(import.meta.dirname, "src"),
