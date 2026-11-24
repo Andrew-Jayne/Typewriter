@@ -26,6 +26,8 @@ const Theme = Object.freeze({
   DIY: "diy",
 });
 
+/** @typedef {(typeof Theme)[keyof typeof Theme]} ThemeName */
+
 const Themes = Object.values(Theme);
 
 const ThemeClasses = Object.freeze({

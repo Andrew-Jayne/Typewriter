@@ -1,4 +1,4 @@
-import { Mode } from "@/enums.js";
+import { Mode, Themes } from "@/enums.js";
 import { buildIcons } from "@/icons.js";
 import { state } from "@/state.js";
 import {
@@ -78,8 +78,9 @@ function handleThemePickerClick(clickEvent) {
 function handleThemeOptionClick(clickEvent) {
   if (clickEvent.currentTarget instanceof HTMLElement === false) return;
   const theme = clickEvent.currentTarget.dataset.theme;
-  if (theme === undefined) return;
-  selectTheme(theme);
+  const match = Themes.find((candidate) => candidate === theme);
+  if (match === undefined) return;
+  selectTheme(match);
 }
 /**
  * @param {MouseEvent} clickEvent

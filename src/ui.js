@@ -37,7 +37,7 @@ function syncSettingsControls() {
 }
 
 /**
- * @param {string} theme
+ * @param {import("@/enums.js").ThemeName} theme
  */
 function selectTheme(theme) {
   state.themePickerOpen.update(false);

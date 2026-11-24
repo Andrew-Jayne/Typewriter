@@ -10,7 +10,7 @@
     "lint": "explicitjs src/"
   },
   "dependencies": {
-    "aspen": "https://github.com/Andrew-Jayne/Aspen/releases/download/v2beta2/aspen-v2beta2.tgz",
+    "aspen": "https://github.com/Andrew-Jayne/Aspen/releases/download/v2beta3/aspen-v2beta3.tgz",
     "marked": "latest"
   },
   "devDependencies": {
