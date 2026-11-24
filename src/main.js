@@ -1,22 +1,23 @@
-import { Mode, StateKey } from "@/enums.js";
+import { Mode } from "@/enums.js";
 import { buildIcons } from "@/icons.js";
 import { state } from "@/state.js";
-import { handleDiyColorInput, handleDiyPickerInput } from "@/state_functions.js";
+import {
+  discardPendingEditorText,
+  flushEditorText,
+  handleDiyColorInput,
+  handleDiyPickerInput,
+} from "@/state_functions.js";
 import {
   clearText,
-  closeSettings,
   handleFileSelect,
   openFile,
   saveFile,
   selectTheme,
-  toggleFocusMode,
+  handleFullscreenChange,
   toggleFullscreen,
   toggleMode,
-  toggleSettings,
-  toggleThemePicker,
-  toggleToolbar,
 } from "@/ui.js";
-import { getElement, isStateKey } from "./utils.js";
+import { getElement } from "./utils.js";
 
 /**
  * @param {KeyboardEvent} keyEvent
@@ -26,7 +27,7 @@ function handleKeydown(keyEvent) {
     return;
   }
   const modifierHeld = keyEvent.metaKey === true || keyEvent.ctrlKey === true;
-  if (keyEvent.key === "Tab" && state.get(StateKey.MODE) === Mode.EDIT) {
+  if (keyEvent.key === "Tab" && state.mode.read() === Mode.EDIT) {
     keyEvent.preventDefault();
     const textarea = getElement("typewriter-container").querySelector("textarea");
     if (textarea === undefined || textarea === null) {
@@ -39,7 +40,8 @@ function handleKeydown(keyEvent) {
       textarea.value.substring(textarea.selectionEnd);
     textarea.selectionStart = start + 1;
     textarea.selectionEnd = start + 1;
-    state.set(StateKey.EDITOR_TEXT, textarea.value);
+    state.editorText.update(textarea.value);
+    discardPendingEditorText();
   }
 
   if (modifierHeld === true && keyEvent.key === "s") {
@@ -48,7 +50,7 @@ function handleKeydown(keyEvent) {
   }
   if (modifierHeld === true && keyEvent.key === "d") {
     keyEvent.preventDefault();
-    toggleThemePicker();
+    state.themePickerOpen.toggle();
   }
   if (modifierHeld === true && keyEvent.key === "r") {
     keyEvent.preventDefault();
@@ -56,7 +58,7 @@ function handleKeydown(keyEvent) {
   }
   if (modifierHeld === true && keyEvent.key === ",") {
     keyEvent.preventDefault();
-    toggleSettings();
+    state.settingsOpen.toggle();
   }
 }
 
@@ -66,7 +68,7 @@ function handleKeydown(keyEvent) {
 function handleThemePickerClick(clickEvent) {
   if (clickEvent.target instanceof Node === false) return;
   if (getElement("theme-picker").contains(clickEvent.target) === false) {
-    getElement("theme-picker-menu").classList.remove("show");
+    state.themePickerOpen.update(false);
   }
 }
 
@@ -84,7 +86,7 @@ function handleThemeOptionClick(clickEvent) {
  */
 function handleSettingsModalClick(clickEvent) {
   if (clickEvent.target === getElement("settings-modal")) {
-    closeSettings();
+    state.settingsOpen.update(false);
   }
 }
 
@@ -93,28 +95,7 @@ function handleSettingsModalClick(clickEvent) {
  */
 function handleFontSizeInput(changeEvent) {
   if (changeEvent.currentTarget instanceof HTMLInputElement === false) return;
-  state.set(StateKey.FONT_SIZE, parseInt(changeEvent.currentTarget.value, 10));
-}
-
-/**
- * @param {Event} changeEvent
- */
-function handleStateToggleChange(changeEvent) {
-  if (changeEvent.currentTarget instanceof HTMLElement === false) return;
-  const key = changeEvent.currentTarget.dataset.stateKey;
-  if (key === undefined) return;
-  if (isStateKey(key) === false) return;
-
-  switch (state.get(key)) {
-    case true:
-      state.set(key, false);
-      break;
-    case false:
-      state.set(key, true);
-      break;
-    default:
-      throw new Error(`State "${key}" is not a boolean`);
-  }
+  state.fontSize.update(parseInt(changeEvent.currentTarget.value, 10));
 }
 
 /**
@@ -149,14 +130,14 @@ function addAllEventListerners() {
   document.addEventListener("keydown", handleKeydown);
   document.addEventListener("click", handleThemePickerClick);
 
-  getElement("toolbar-open").addEventListener("click", toggleToolbar);
-  getElement("toolbar-close").addEventListener("click", toggleToolbar);
+  getElement("toolbar-open").addEventListener("click", () => state.toolbarCollapsed.toggle());
+  getElement("toolbar-close").addEventListener("click", () => state.toolbarCollapsed.toggle());
   getElement("btn-open").addEventListener("click", openFile);
   getElement("btn-clear").addEventListener("click", clearText);
   getElement("btn-save").addEventListener("click", saveFile);
   getElement("mode-toggle").addEventListener("click", toggleMode);
-  getElement("theme-toggle").addEventListener("click", toggleThemePicker);
-  getElement("btn-settings").addEventListener("click", toggleSettings);
+  getElement("theme-toggle").addEventListener("click", () => state.themePickerOpen.toggle());
+  getElement("btn-settings").addEventListener("click", () => state.settingsOpen.toggle());
   getElement("btn-fullscreen").addEventListener("click", toggleFullscreen);
   getElement("file-input").addEventListener("change", handleFileSelect);
 
@@ -166,12 +147,22 @@ function addAllEventListerners() {
   }
 
   getElement("settings-modal").addEventListener("click", handleSettingsModalClick);
-  getElement("btn-close-settings").addEventListener("click", closeSettings);
+  getElement("btn-close-settings").addEventListener("click", () => state.settingsOpen.update(false));
   getElement("setting-font-size").addEventListener("change", handleFontSizeInput);
-  getElement("toggle-focus-mode").addEventListener("change", toggleFocusMode);
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  window.addEventListener("pagehide", flushEditorText);
+  document.addEventListener("visibilitychange", flushEditorText);
 
-  for (const toggle of document.querySelectorAll("[data-state-key]")) {
-    toggle.addEventListener("change", handleStateToggleChange);
+  const toggles = {
+    "toggle-line-numbers": state.showLineNumbers,
+    "toggle-monospace": state.useMonospace,
+    "toggle-wide": state.enableWideMode,
+    "toggle-tooltips": state.showTooltips,
+    "toggle-word-count": state.showWordCount,
+    "toggle-focus-mode": state.focusMode,
+  };
+  for (const [id, key] of Object.entries(toggles)) {
+    getElement(id).addEventListener("change", () => key.toggle());
   }
 
   for (const picker of document.querySelectorAll(".settings-swatch[data-field]")) {
@@ -183,10 +174,10 @@ function addAllEventListerners() {
   }
 }
 
-function main() {
+async function main() {
   addAllEventListerners();
   buildIcons();
-  state.validateStorage();
+  await state.validateStorage();
   state.bootstrap();
   window.scrollTo(0, 0);
 }

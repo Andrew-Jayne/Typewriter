@@ -1,11 +1,15 @@
-import { StateTree } from "aspen";
-import { Mode, StateKey, Theme } from "@/enums.js";
+import { AspenKey, StateTree } from "aspen";
+import { Mode, Theme } from "@/enums.js";
 import {
+  applyFocusMode,
   handleFontSizeChange,
   handleModeChange,
   handleMonospace,
+  handleSettingsOpen,
   handleShowLineNumbers,
   handleThemeChange,
+  handleThemePickerOpen,
+  handleToolbarCollapsed,
   handleTooltips,
   handleWideMode,
   handleWordCount,
@@ -13,102 +17,132 @@ import {
   updateLineNumbers,
   updateWordCount,
 } from "@/state_functions.js";
+import { syncSettingsControls } from "@/ui.js";
 
-// key order matters becuase boostrap() activates them in order lol
-const state = new StateTree("tw.", {
-  [StateKey.MODE]: {
-    type: "string",
+class TypewriterState extends StateTree {
+  namespace = "tw.";
+
+  mode = new AspenKey({
+    type: String,
     default: Mode.EDIT,
-    persistent: true,
     allowed: Object.values(Mode),
     onUpdate: [handleModeChange, updateWordCount, updateLineNumbers],
-  },
-  [StateKey.THEME]: {
-    type: "string",
-    default: Theme.DAYLIGHT,
-    persistent: true,
-    allowed: Object.values(Theme),
-    onUpdate: [handleThemeChange],
-  },
-  [StateKey.EDITOR_TEXT]: {
-    type: "string",
-    default: "",
-    persistent: true,
-    onUpdate: [updateWordCount, updateLineNumbers],
-  },
-  [StateKey.FILE_NAME]: {
-    type: "string",
-    default: "untitled.txt",
-    persistent: true,
-  },
-  [StateKey.ENABLE_WIDE_MODE]: {
-    type: "boolean",
-    default: false,
-    persistent: true,
-    onUpdate: [handleWideMode],
-  },
-  [StateKey.SHOW_TOOLTIPS]: {
-    type: "boolean",
-    default: true,
-    persistent: true,
-    onUpdate: [handleTooltips],
-  },
-  [StateKey.SHOW_WORD_COUNT]: {
-    type: "boolean",
-    default: true,
-    persistent: true,
-    onUpdate: [handleWordCount],
-  },
-  [StateKey.DIY_BG]: {
-    type: "string",
-    default: "#faf9f5",
-    persistent: true,
-  },
-  [StateKey.DIY_TEXT]: {
-    type: "string",
-    default: "#141413",
-    persistent: true,
-  },
-  [StateKey.DIY_ACCENT]: {
-    type: "string",
-    default: "#d97757",
-    persistent: true,
-  },
-  [StateKey.DIY_BORDER]: {
-    type: "string",
-    default: "#e8e6dc",
-    persistent: true,
-  },
-  [StateKey.FONT_SIZE]: {
-    type: "number",
-    default: 16,
-    persistent: true,
-    onUpdate: [handleFontSizeChange],
-  },
-  [StateKey.SHOW_LINE_NUMBERS]: {
-    type: "boolean",
-    default: false,
-    persistent: true,
-    onUpdate: [handleShowLineNumbers],
-  },
-  [StateKey.USE_MONOSPACE]: {
-    type: "boolean",
-    default: false,
-    persistent: true,
-    onUpdate: [handleMonospace],
-  },
-  [StateKey.FULLSCREEN]: {
-    type: "boolean",
-    default: false,
-    persistent: false,
-    onUpdate: [syncFullscreenIcon],
-  },
-  [StateKey.FOCUS_MODE]: {
-    type: "boolean",
-    default: false,
-    persistent: false,
-    onUpdate: [syncFullscreenIcon],
-  },
-});
+  });
 
-export { state };
+  theme = new AspenKey({
+    type: String,
+    default: Theme.DAYLIGHT,
+    allowed: Object.values(Theme),
+    bootMirror: true,
+    onUpdate: [handleThemeChange],
+  });
+
+  editorText = new AspenKey({
+    type: String,
+    default: "",
+    onUpdate: [updateWordCount, updateLineNumbers],
+  });
+
+  fileName = new AspenKey({
+    type: String,
+    default: "untitled.txt",
+  });
+
+  enableWideMode = new AspenKey({
+    type: Boolean,
+    default: false,
+    onUpdate: [handleWideMode, syncSettingsControls],
+  });
+
+  showTooltips = new AspenKey({
+    type: Boolean,
+    default: true,
+    onUpdate: [handleTooltips, syncSettingsControls],
+  });
+
+  showWordCount = new AspenKey({
+    type: Boolean,
+    default: true,
+    onUpdate: [handleWordCount, syncSettingsControls],
+  });
+
+  diyBg = new AspenKey({
+    type: String,
+    default: "#faf9f5",
+    bootMirror: true,
+    onUpdate: [syncSettingsControls],
+  });
+
+  diyText = new AspenKey({
+    type: String,
+    default: "#141413",
+    onUpdate: [syncSettingsControls],
+  });
+
+  diyAccent = new AspenKey({
+    type: String,
+    default: "#d97757",
+    onUpdate: [syncSettingsControls],
+  });
+
+  diyBorder = new AspenKey({
+    type: String,
+    default: "#e8e6dc",
+    onUpdate: [syncSettingsControls],
+  });
+
+  fontSize = new AspenKey({
+    type: Number,
+    default: 16,
+    onUpdate: [handleFontSizeChange, syncSettingsControls],
+  });
+
+  showLineNumbers = new AspenKey({
+    type: Boolean,
+    default: false,
+    onUpdate: [handleShowLineNumbers, syncSettingsControls],
+  });
+
+  useMonospace = new AspenKey({
+    type: Boolean,
+    default: false,
+    onUpdate: [handleMonospace, syncSettingsControls],
+  });
+
+  fullscreen = new AspenKey({
+    type: Boolean,
+    default: false,
+    persistent: false,
+    onUpdate: [syncFullscreenIcon],
+  });
+
+  settingsOpen = new AspenKey({
+    type: Boolean,
+    default: false,
+    persistent: false,
+    onUpdate: [handleSettingsOpen],
+  });
+
+  themePickerOpen = new AspenKey({
+    type: Boolean,
+    default: false,
+    persistent: false,
+    onUpdate: [handleThemePickerOpen],
+  });
+
+  toolbarCollapsed = new AspenKey({
+    type: Boolean,
+    default: true,
+    persistent: false,
+    onUpdate: [handleToolbarCollapsed],
+  });
+
+  focusMode = new AspenKey({
+    type: Boolean,
+    default: false,
+    persistent: false,
+    onUpdate: [applyFocusMode, syncSettingsControls],
+  });
+}
+
+export const state = await TypewriterState.create();
