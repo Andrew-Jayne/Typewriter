@@ -344,6 +344,27 @@ function applyFocusMode() {
   }
 }
 
+function handleSettingsOpen() {
+  getElement("settings-modal").classList.toggle("show", state.settingsOpen.read());
+}
+
+function handleThemePickerOpen() {
+  const isOpen = state.themePickerOpen.read();
+  const menu = getElement("theme-picker-menu");
+  if (isOpen === true) {
+    const theme = state.theme.read();
+    for (const option of menu.querySelectorAll(".theme-option")) {
+      if (option instanceof HTMLElement === false) continue;
+      option.classList.toggle("active", option.dataset.theme === theme);
+    }
+  }
+  menu.classList.toggle("show", isOpen);
+}
+
+function handleToolbarCollapsed() {
+  getElement("toolbar").classList.toggle("collapsed", state.toolbarCollapsed.read());
+}
+
 function updateLineNumbers() {
   if (
     state.showLineNumbers.read() === true &&
@@ -381,8 +402,11 @@ export {
   handleFontSizeChange,
   handleModeChange,
   handleMonospace,
+  handleSettingsOpen,
   handleShowLineNumbers,
   handleThemeChange,
+  handleThemePickerOpen,
+  handleToolbarCollapsed,
   handleTooltips,
   handleWideMode,
   handleWordCount,

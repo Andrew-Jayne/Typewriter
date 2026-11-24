@@ -9,18 +9,13 @@ import {
 } from "@/state_functions.js";
 import {
   clearText,
-  closeSettings,
   handleFileSelect,
   openFile,
   saveFile,
   selectTheme,
   handleFullscreenChange,
-  syncSettingsControls,
   toggleFullscreen,
   toggleMode,
-  toggleSettings,
-  toggleThemePicker,
-  toggleToolbar,
 } from "@/ui.js";
 import { getElement } from "./utils.js";
 
@@ -55,7 +50,7 @@ function handleKeydown(keyEvent) {
   }
   if (modifierHeld === true && keyEvent.key === "d") {
     keyEvent.preventDefault();
-    toggleThemePicker();
+    state.themePickerOpen.toggle();
   }
   if (modifierHeld === true && keyEvent.key === "r") {
     keyEvent.preventDefault();
@@ -63,7 +58,7 @@ function handleKeydown(keyEvent) {
   }
   if (modifierHeld === true && keyEvent.key === ",") {
     keyEvent.preventDefault();
-    toggleSettings();
+    state.settingsOpen.toggle();
   }
 }
 
@@ -73,7 +68,7 @@ function handleKeydown(keyEvent) {
 function handleThemePickerClick(clickEvent) {
   if (clickEvent.target instanceof Node === false) return;
   if (getElement("theme-picker").contains(clickEvent.target) === false) {
-    getElement("theme-picker-menu").classList.remove("show");
+    state.themePickerOpen.update(false);
   }
 }
 
@@ -91,7 +86,7 @@ function handleThemeOptionClick(clickEvent) {
  */
 function handleSettingsModalClick(clickEvent) {
   if (clickEvent.target === getElement("settings-modal")) {
-    closeSettings();
+    state.settingsOpen.update(false);
   }
 }
 
@@ -135,14 +130,14 @@ function addAllEventListerners() {
   document.addEventListener("keydown", handleKeydown);
   document.addEventListener("click", handleThemePickerClick);
 
-  getElement("toolbar-open").addEventListener("click", toggleToolbar);
-  getElement("toolbar-close").addEventListener("click", toggleToolbar);
+  getElement("toolbar-open").addEventListener("click", () => state.toolbarCollapsed.toggle());
+  getElement("toolbar-close").addEventListener("click", () => state.toolbarCollapsed.toggle());
   getElement("btn-open").addEventListener("click", openFile);
   getElement("btn-clear").addEventListener("click", clearText);
   getElement("btn-save").addEventListener("click", saveFile);
   getElement("mode-toggle").addEventListener("click", toggleMode);
-  getElement("theme-toggle").addEventListener("click", toggleThemePicker);
-  getElement("btn-settings").addEventListener("click", toggleSettings);
+  getElement("theme-toggle").addEventListener("click", () => state.themePickerOpen.toggle());
+  getElement("btn-settings").addEventListener("click", () => state.settingsOpen.toggle());
   getElement("btn-fullscreen").addEventListener("click", toggleFullscreen);
   getElement("file-input").addEventListener("change", handleFileSelect);
 
@@ -152,7 +147,7 @@ function addAllEventListerners() {
   }
 
   getElement("settings-modal").addEventListener("click", handleSettingsModalClick);
-  getElement("btn-close-settings").addEventListener("click", closeSettings);
+  getElement("btn-close-settings").addEventListener("click", () => state.settingsOpen.update(false));
   getElement("setting-font-size").addEventListener("change", handleFontSizeInput);
   document.addEventListener("fullscreenchange", handleFullscreenChange);
   window.addEventListener("pagehide", flushEditorText);
@@ -179,28 +174,8 @@ function addAllEventListerners() {
   }
 }
 
-function listenForSettingsSync() {
-  const MIRRORED = [
-    state.fontSize,
-    state.showLineNumbers,
-    state.useMonospace,
-    state.enableWideMode,
-    state.showTooltips,
-    state.showWordCount,
-    state.focusMode,
-    state.diyBg,
-    state.diyText,
-    state.diyAccent,
-    state.diyBorder,
-  ];
-  for (const key of MIRRORED) {
-    key.listen(syncSettingsControls);
-  }
-}
-
 async function main() {
   addAllEventListerners();
-  listenForSettingsSync();
   buildIcons();
   await state.validateStorage();
   state.bootstrap();
