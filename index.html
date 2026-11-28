@@ -179,6 +179,37 @@
                             <span class="font-size-unit">px</span>
                         </div>
                     </div>
+                    <div class="settings-row">
+                        <label for="setting-text-font">Font</label>
+                        <select class="settings-select" id="setting-text-font">
+                            <option value="georgia">Georgia</option>
+                            <option value="chicago">Chicago</option>
+                            <option value="tnr">Times New Roman</option>
+                            <option value="helvetica">Helvetica</option>
+                            <option value="custom" id="option-text-custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="settings-custom-font">
+                        <span class="custom-font-name" id="custom-text-font-name"></span>
+                        <button type="button" id="btn-upload-text-font" data-slot="text">Upload font</button>
+                        <button type="button" id="btn-remove-text-font" data-slot="text">Remove</button>
+                        <input type="file" class="hidden" id="file-text-font" data-slot="text" accept=".woff,.woff2,.ttf,.otf,font/woff,font/woff2" />
+                    </div>
+                    <div class="settings-row">
+                        <label for="setting-mono-font">Monospace font</label>
+                        <select class="settings-select" id="setting-mono-font">
+                            <option value="classic">Courier</option>
+                            <option value="default">Menlo</option>
+                            <option value="custom" id="option-mono-custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="settings-custom-font">
+                        <span class="custom-font-name" id="custom-mono-font-name"></span>
+                        <button type="button" id="btn-upload-mono-font" data-slot="mono">Upload mono font</button>
+                        <button type="button" id="btn-remove-mono-font" data-slot="mono">Remove</button>
+                        <input type="file" class="hidden" id="file-mono-font" data-slot="mono" accept=".woff,.woff2,.ttf,.otf,font/woff,font/woff2" />
+                    </div>
+                    <div class="settings-error" id="custom-font-error"></div>
                     <label class="toggle-row">
                         <span>Line numbers</span>
                         <input
@@ -188,7 +219,7 @@
                         <span class="toggle-switch"></span>
                     </label>
                     <label class="toggle-row">
-                        <span>Monospace font</span>
+                        <span>Use monospace</span>
                         <input
                             type="checkbox"
                             id="toggle-monospace"

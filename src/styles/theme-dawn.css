@@ -111,11 +111,13 @@ body.dawn-mode .settings-row {
   border-bottom-color: var(--dawn-border);
 }
 
-body.dawn-mode .font-size-setting input[type="number"] {
+body.dawn-mode .font-size-setting input[type="number"],
+body.dawn-mode .settings-select {
   border-color: var(--dawn-border);
 }
 
-body.dawn-mode .toggle-row {
+body.dawn-mode .toggle-row,
+body.dawn-mode .settings-custom-font {
   border-bottom-color: var(--dawn-border);
 }
 
@@ -159,7 +161,8 @@ body.dawn-mode .settings-hint {
   color: var(--dawn-mid-gray);
 }
 
-body.dawn-mode .font-size-setting input[type="number"]:focus {
+body.dawn-mode .font-size-setting input[type="number"]:focus,
+body.dawn-mode .settings-select:focus {
   border-color: var(--dawn-accent);
 }
 

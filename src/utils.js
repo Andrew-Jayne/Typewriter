@@ -29,6 +29,19 @@ export function getInputElement(id) {
 }
 
 /**
+ * @param {string} id
+ * @returns {HTMLSelectElement}
+ * Get a select element, and throw if null, should never fail
+ */
+export function getSelectElement(id) {
+  const element = document.getElementById(id);
+  if (element instanceof HTMLSelectElement === false) {
+    throw new Error(`Element #${id} is missing`);
+  }
+  return element;
+}
+
+/**
  * @template {Record<string, unknown>} T
  * @param {T} enumObject
  * @param {unknown} value

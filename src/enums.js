@@ -46,13 +46,37 @@ const ThemeIcons = Object.freeze({
   [Theme.DIY]: diy,
 });
 
+const TextFont = Object.freeze({
+  GEORGIA: "georgia",
+  CHICAGO: "chicago",
+  TNR: "tnr",
+  HELVETICA: "helvetica",
+  CUSTOM: "custom",
+});
+
+const MonoFont = Object.freeze({
+  CLASSIC: "classic",
+  DEFAULT: "default",
+  CUSTOM: "custom",
+});
+
+const FontSlot = Object.freeze({
+  TEXT: "text",
+  MONO: "mono",
+});
+
+/** @typedef {(typeof FontSlot)[keyof typeof FontSlot]} FontSlotName */
+
 const Elements = Object.freeze({});
 
 export {
   DiyFields,
   DiyStateKeys,
   Elements,
+  FontSlot,
   Mode,
+  MonoFont,
+  TextFont,
   Theme,
   ThemeClasses,
   ThemeIcons,

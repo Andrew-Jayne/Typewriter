@@ -1,5 +1,37 @@
 :root {
   --editor-line-height: 1.8;
+
+  /* Standard fonts */
+  --font-georgia: Georgia, "Times New Roman", Times, serif;
+  --font-chicago: Chicago, "Iowan Old Style", Georgia, serif;
+  --font-tnr: "Times New Roman", Times, Tinos, "Liberation Serif", serif;
+  --font-helvetica: "Helvetica Neue", Helvetica, Arimo, Arial, sans-serif;
+
+  /* Monospace */
+  --font-mono-default: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --font-mono-classic: "Courier New", "Courier Prime", Cousine, monospace;
+
+  --font-text: var(--font-georgia);
+  --font-mono: var(--font-mono-classic);
+}
+
+:root[data-font="chicago"] {
+  --font-text: var(--font-chicago);
+}
+:root[data-font="tnr"] {
+  --font-text: var(--font-tnr);
+}
+:root[data-font="helvetica"] {
+  --font-text: var(--font-helvetica);
+}
+:root[data-font="custom"] {
+  --font-text: "Typewriter Custom Text", var(--font-georgia);
+}
+:root[data-mono-font="default"] {
+  --font-mono: var(--font-mono-default);
+}
+:root[data-mono-font="custom"] {
+  --font-mono: "Typewriter Custom Mono", var(--font-mono-classic);
 }
 
 .edit-mode {
@@ -8,7 +40,7 @@
 }
 
 .line-numbers {
-  font-family: "Courier New", monospace;
+  font-family: var(--font-mono);
   font-size: 16px;
   line-height: var(--editor-line-height);
   padding-right: 12px;
@@ -28,7 +60,7 @@ textarea {
   min-height: 100vh;
   border: none;
   outline: none;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: var(--font-text);
   font-size: 16px;
   line-height: var(--editor-line-height);
   resize: none;
@@ -41,7 +73,7 @@ textarea {
 }
 
 textarea.monospace-mode {
-  font-family: "Courier New", monospace;
+  font-family: var(--font-mono);
   line-height: var(--editor-line-height);
   tab-size: 4;
 }

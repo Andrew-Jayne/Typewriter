@@ -112,11 +112,13 @@ body.darkness-mode .settings-row {
   border-bottom-color: var(--darkness-border);
 }
 
-body.darkness-mode .font-size-setting input[type="number"] {
+body.darkness-mode .font-size-setting input[type="number"],
+body.darkness-mode .settings-select {
   border-color: var(--darkness-border);
 }
 
-body.darkness-mode .toggle-row {
+body.darkness-mode .toggle-row,
+body.darkness-mode .settings-custom-font {
   border-bottom-color: var(--darkness-border);
 }
 
@@ -160,7 +162,8 @@ body.darkness-mode .settings-hint {
   color: var(--darkness-mid-gray);
 }
 
-body.darkness-mode .font-size-setting input[type="number"]:focus {
+body.darkness-mode .font-size-setting input[type="number"]:focus,
+body.darkness-mode .settings-select:focus {
   border-color: var(--darkness-accent);
 }
 

@@ -111,11 +111,13 @@ body.dusk-mode .settings-row {
   border-bottom-color: var(--dusk-border);
 }
 
-body.dusk-mode .font-size-setting input[type="number"] {
+body.dusk-mode .font-size-setting input[type="number"],
+body.dusk-mode .settings-select {
   border-color: var(--dusk-border);
 }
 
-body.dusk-mode .toggle-row {
+body.dusk-mode .toggle-row,
+body.dusk-mode .settings-custom-font {
   border-bottom-color: var(--dusk-border);
 }
 
@@ -159,7 +161,8 @@ body.dusk-mode .settings-hint {
   color: var(--dusk-mid-gray);
 }
 
-body.dusk-mode .font-size-setting input[type="number"]:focus {
+body.dusk-mode .font-size-setting input[type="number"]:focus,
+body.dusk-mode .settings-select:focus {
   border-color: var(--dusk-accent);
 }
 

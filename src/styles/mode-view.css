@@ -1,5 +1,5 @@
 .view-content {
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: var(--font-text);
   line-height: 1.8;
   font-size: 16px;
 }
@@ -28,7 +28,7 @@
 .view-content code {
   padding: 2px 6px;
   border-radius: 3px;
-  font-family: "Courier New", monospace;
+  font-family: var(--font-mono);
   font-size: 14px;
 }
 

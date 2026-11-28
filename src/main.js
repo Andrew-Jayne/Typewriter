@@ -1,4 +1,5 @@
-import { Mode, Themes } from "@/enums.js";
+import { FontSlot, Mode, MonoFont, TextFont, Themes } from "@/enums.js";
+import { loadStoredFonts, removeCustomFont, saveCustomFont } from "@/fonts.js";
 import { buildIcons } from "@/icons.js";
 import { state } from "@/state.js";
 import {
@@ -17,7 +18,7 @@ import {
   toggleFullscreen,
   toggleMode,
 } from "@/ui.js";
-import { getElement } from "./utils.js";
+import { getElement, isValueOf } from "./utils.js";
 
 /**
  * @param {KeyboardEvent} keyEvent
@@ -27,7 +28,7 @@ function handleKeydown(keyEvent) {
     return;
   }
   const modifierHeld = keyEvent.metaKey === true || keyEvent.ctrlKey === true;
-  if (keyEvent.key === "Tab" && state.mode.read() === Mode.EDIT) {
+  if (keyEvent.key === "Tab" && state.mode.value === Mode.EDIT) {
     keyEvent.preventDefault();
     const textarea = getElement("typewriter-container").querySelector("textarea");
     if (textarea === undefined || textarea === null) {
@@ -100,6 +101,113 @@ function handleFontSizeInput(changeEvent) {
 }
 
 /**
+ * @param {Event} changeEvent
+ */
+function handleTextFontInput(changeEvent) {
+  if (changeEvent.currentTarget instanceof HTMLSelectElement === false) return;
+  const value = changeEvent.currentTarget.value;
+  if (isValueOf(TextFont, value) === false) return;
+  state.textFont.update(value);
+}
+
+/**
+ * @param {Event} changeEvent
+ */
+function handleMonoFontInput(changeEvent) {
+  if (changeEvent.currentTarget instanceof HTMLSelectElement === false) return;
+  const value = changeEvent.currentTarget.value;
+  if (isValueOf(MonoFont, value) === false) return;
+  state.monoFont.update(value);
+}
+
+/**
+ * @param {import("@/enums.js").FontSlotName} slot
+ * @param {string} fileName empty string clears the custom font
+ */
+function setCustomFont(slot, fileName) {
+  switch (slot) {
+    case FontSlot.TEXT:
+      state.customTextFontName.update(fileName);
+      if (fileName !== "") {
+        state.textFont.update(TextFont.CUSTOM);
+      } else if (state.textFont.value === TextFont.CUSTOM) {
+        state.textFont.update(TextFont.GEORGIA);
+      }
+      return;
+    case FontSlot.MONO:
+      state.customMonoFontName.update(fileName);
+      if (fileName !== "") {
+        state.monoFont.update(MonoFont.CUSTOM);
+      } else if (state.monoFont.value === MonoFont.CUSTOM) {
+        state.monoFont.update(MonoFont.CLASSIC);
+      }
+      return;
+  }
+}
+
+/**
+ * @param {unknown} error
+ */
+function showFontError(error) {
+  const errorEl = getElement("custom-font-error");
+  if (error instanceof Error) {
+    errorEl.textContent = error.message;
+  } else {
+    errorEl.textContent = String(error);
+  }
+}
+
+/**
+ * @param {MouseEvent} clickEvent
+ */
+function handleUploadFontClick(clickEvent) {
+  if (clickEvent.currentTarget instanceof HTMLElement === false) return;
+  const slot = clickEvent.currentTarget.dataset.slot;
+  if (isValueOf(FontSlot, slot) === false) return;
+  getElement(`file-${slot}-font`).click();
+}
+
+/**
+ * @param {Event} changeEvent
+ */
+async function handleFontFileSelect(changeEvent) {
+  if (changeEvent.currentTarget instanceof HTMLInputElement === false) return;
+  const input = changeEvent.currentTarget;
+  const slot = input.dataset.slot;
+  if (isValueOf(FontSlot, slot) === false) return;
+  if (input.files === null) return;
+  const file = input.files.item(0);
+  if (file === null) return;
+
+  getElement("custom-font-error").textContent = "";
+  try {
+    await saveCustomFont(slot, file);
+    setCustomFont(slot, file.name);
+  } catch (error) {
+    showFontError(error);
+  } finally {
+    input.value = "";
+  }
+}
+
+/**
+ * @param {MouseEvent} clickEvent
+ */
+async function handleRemoveFontClick(clickEvent) {
+  if (clickEvent.currentTarget instanceof HTMLElement === false) return;
+  const slot = clickEvent.currentTarget.dataset.slot;
+  if (isValueOf(FontSlot, slot) === false) return;
+
+  getElement("custom-font-error").textContent = "";
+  try {
+    await removeCustomFont(slot);
+    setCustomFont(slot, "");
+  } catch (error) {
+    showFontError(error);
+  }
+}
+
+/**
  * @param {Event} inputEvent
  */
 function handleDiyPickerChange(inputEvent) {
@@ -150,6 +258,13 @@ function addAllEventListerners() {
   getElement("settings-modal").addEventListener("click", handleSettingsModalClick);
   getElement("btn-close-settings").addEventListener("click", () => state.settingsOpen.update(false));
   getElement("setting-font-size").addEventListener("change", handleFontSizeInput);
+  getElement("setting-text-font").addEventListener("change", handleTextFontInput);
+  getElement("setting-mono-font").addEventListener("change", handleMonoFontInput);
+  for (const slot of Object.values(FontSlot)) {
+    getElement(`btn-upload-${slot}-font`).addEventListener("click", handleUploadFontClick);
+    getElement(`btn-remove-${slot}-font`).addEventListener("click", handleRemoveFontClick);
+    getElement(`file-${slot}-font`).addEventListener("change", handleFontFileSelect);
+  }
   document.addEventListener("fullscreenchange", handleFullscreenChange);
   window.addEventListener("pagehide", flushEditorText);
   document.addEventListener("visibilitychange", flushEditorText);
@@ -179,7 +294,13 @@ async function main() {
   addAllEventListerners();
   buildIcons();
   await state.validateStorage();
+  const loadedFonts = await loadStoredFonts();
   state.bootstrap();
+  for (const slot of Object.values(FontSlot)) {
+    if (loadedFonts.has(slot) === false) {
+      setCustomFont(slot, "");
+    }
+  }
   window.scrollTo(0, 0);
 }
 

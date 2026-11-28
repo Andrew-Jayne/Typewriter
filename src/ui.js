@@ -1,11 +1,11 @@
-import { Mode } from "@/enums.js";
+import { FontSlot, Mode } from "@/enums.js";
 import { state } from "@/state.js";
 import {
   discardPendingEditorText,
   flushEditorText,
   syncDiyField,
 } from "@/state_functions.js";
-import { getElement, getInputElement } from "./utils.js";
+import { getElement, getInputElement, getSelectElement } from "./utils.js";
 
 function toggleFullscreen() {
   switch (document.fullscreenElement === null) {
@@ -22,18 +22,48 @@ function handleFullscreenChange() {
   state.fullscreen.update(document.fullscreenElement !== null);
 }
 
+/**
+ * @param {import("@/enums.js").FontSlotName} slot
+ * @param {string} fileName
+ */
+function syncCustomFontControls(slot, fileName) {
+  const hasFont = fileName !== "";
+  const option = getElement(`option-${slot}-custom`);
+  if (option instanceof HTMLOptionElement === false) {
+    throw new Error(`Element #option-${slot}-custom is not an option`);
+  }
+  option.disabled = hasFont === false;
+  const nameEl = getElement(`custom-${slot}-font-name`);
+  if (hasFont === true) {
+    option.textContent = `Custom (${fileName})`;
+    nameEl.textContent = fileName;
+  } else {
+    option.textContent = "Custom (upload below)";
+    nameEl.textContent = "No custom font";
+  }
+  const removeButton = getElement(`btn-remove-${slot}-font`);
+  if (removeButton instanceof HTMLButtonElement === false) {
+    throw new Error(`Element #btn-remove-${slot}-font is not a button`);
+  }
+  removeButton.disabled = hasFont === false;
+}
+
 function syncSettingsControls() {
-  getInputElement("setting-font-size").value = String(state.fontSize.read());
-  getInputElement("toggle-line-numbers").checked = state.showLineNumbers.read();
-  getInputElement("toggle-monospace").checked = state.useMonospace.read();
-  getInputElement("toggle-wide").checked = state.enableWideMode.read();
-  getInputElement("toggle-tooltips").checked = state.showTooltips.read();
-  getInputElement("toggle-word-count").checked = state.showWordCount.read();
-  getInputElement("toggle-focus-mode").checked = state.focusMode.read();
-  syncDiyField({ field: "bg", hexColor: state.diyBg.read() });
-  syncDiyField({ field: "text", hexColor: state.diyText.read() });
-  syncDiyField({ field: "accent", hexColor: state.diyAccent.read() });
-  syncDiyField({ field: "border", hexColor: state.diyBorder.read() });
+  getInputElement("setting-font-size").value = String(state.fontSize.value);
+  getInputElement("toggle-line-numbers").checked = state.showLineNumbers.value;
+  getInputElement("toggle-monospace").checked = state.useMonospace.value;
+  getSelectElement("setting-text-font").value = state.textFont.value;
+  getSelectElement("setting-mono-font").value = state.monoFont.value;
+  syncCustomFontControls(FontSlot.TEXT, state.customTextFontName.value);
+  syncCustomFontControls(FontSlot.MONO, state.customMonoFontName.value);
+  getInputElement("toggle-wide").checked = state.enableWideMode.value;
+  getInputElement("toggle-tooltips").checked = state.showTooltips.value;
+  getInputElement("toggle-word-count").checked = state.showWordCount.value;
+  getInputElement("toggle-focus-mode").checked = state.focusMode.value;
+  syncDiyField({ field: "bg", hexColor: state.diyBg.value });
+  syncDiyField({ field: "text", hexColor: state.diyText.value });
+  syncDiyField({ field: "accent", hexColor: state.diyAccent.value });
+  syncDiyField({ field: "border", hexColor: state.diyBorder.value });
 }
 
 /**
@@ -52,7 +82,7 @@ function toggleMode() {
     setTimeout(() => modeToggle.classList.remove("flash"), 400);
   }
 
-  switch (state.mode.read()) {
+  switch (state.mode.value) {
     case Mode.EDIT:
       state.mode.update(Mode.VIEW);
       flashModeToggle();
@@ -66,7 +96,7 @@ function toggleMode() {
 
 function clearText() {
   flushEditorText();
-  if (state.editorText.read().trim() === "") {
+  if (state.editorText.value.trim() === "") {
     return;
   }
   if (confirm("Are you sure you want to clear all text?") === true) {
@@ -106,12 +136,12 @@ async function handleFileSelect(event) {
 
 function saveFile() {
   flushEditorText();
-  const fileName = prompt("Save as:", state.fileName.read());
+  const fileName = prompt("Save as:", state.fileName.value);
   if (fileName === null || fileName.trim().length === 0) {
     return;
   }
   state.fileName.update(fileName.trim());
-  const BLOB = new Blob([state.editorText.read()], {
+  const BLOB = new Blob([state.editorText.value], {
     type: "text/plain",
   });
   const url = URL.createObjectURL(BLOB);
