@@ -14,13 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - uses: pnpm/action-setup@v4
         with:
-          python-version: "3.14"
+          version: 12.23.0
 
-      - run: python compile.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26.12.1
+
+      - run: pnpm install
+
+      - run: pnpm build
 
       - name: Create release and upload artifact
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" build/typewriter.html --generate-notes
+        run: gh release create "${{ github.ref_name }}" dist/typewriter.html --generate-notes --prerelease

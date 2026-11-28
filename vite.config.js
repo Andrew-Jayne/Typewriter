@@ -17,6 +17,16 @@ const inlineFavicon = () => {
   };
 };
 
+const stampVersion = () => {
+  const pkg = JSON.parse(readFileSync(resolve(import.meta.dirname, "package.json"), "utf8"));
+  return {
+    name: "stamp-version",
+    transformIndexHtml(html) {
+      return html.replace("{{version}}", pkg.version);
+    },
+  };
+};
+
 const renameOutput = () => {
   let outDir = "dist";
   return {
@@ -36,7 +46,7 @@ const renameOutput = () => {
 
 export default defineConfig(() => {
   return {
-    plugins: [viteSingleFile(), inlineFavicon(), renameOutput()],
+    plugins: [viteSingleFile(), inlineFavicon(), stampVersion(), renameOutput()],
     resolve: {
       alias: {
         "@": resolve(import.meta.dirname, "src"),
