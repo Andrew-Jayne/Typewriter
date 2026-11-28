@@ -1,6 +1,6 @@
 {
   "name": "typewriter",
-  "version": "v2beta1",
+  "version": "v2beta2",
   "private": true,
   "type": "module",
   "scripts": {
